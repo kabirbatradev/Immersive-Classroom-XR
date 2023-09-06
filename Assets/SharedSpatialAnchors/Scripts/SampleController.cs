@@ -21,7 +21,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Oculus.Interaction;
 using System.Collections.Generic;
+using Photon.Pun;
 
 /// <summary>
 /// Main manager for sample interaction
@@ -60,6 +62,8 @@ public class SampleController : MonoBehaviour
 
     private List<SharedAnchor> sharedanchorList = new List<SharedAnchor>();
 
+    private RayInteractor _rayInteractor;
+
     private void Awake()
     {
         if (Instance == null)
@@ -78,23 +82,17 @@ public class SampleController : MonoBehaviour
         placementPreview.transform.localRotation = Quaternion.identity;
         placementPreview.transform.localScale = Vector3.one;
         placementPreview.SetActive(false);
-    }
-
-    private void Start()
-    {
-        if(automaticCoLocation)
-        {
-            PlaceAnchorAtRoot(placementRoot);
-        }
+        _rayInteractor = FindObjectOfType<RayInteractor>();
     }
 
     private void Update()
     {
-        var shouldPlaceNewAnchor = _isPlacementMode && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
+        var rayInteractorHoveringUI = _rayInteractor == null || (_rayInteractor != null && _rayInteractor.Candidate == null);
+        var shouldPlaceNewAnchor = _isPlacementMode && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger) && rayInteractorHoveringUI;
 
         if (shouldPlaceNewAnchor)
         {
-            PlaceAnchorAtRoot(placementRoot);
+            PlaceAnchorAtRoot();
         }
     }
 
@@ -111,18 +109,29 @@ public class SampleController : MonoBehaviour
         placementPreview.SetActive(false);
     }
 
-    private void PlaceAnchorAtRoot(Transform root)
+    public void PlaceAnchorAtRoot()
     {
-        Log("PlaceAnchorAtRoot: root: " + root.ToOVRPose().ToPosef());
+        Log("PlaceAnchorAtRoot: root: " + placementRoot.ToOVRPose().ToPosef());
 
-        colocationAnchor = Instantiate(anchorPrefab, root.position, root.rotation).GetComponent<SharedAnchor>();
-        if(automaticCoLocation)
-        {
-            colocationAnchor.OnAlignButtonPressed();
-        }
+        colocationAnchor = Instantiate(anchorPrefab, placementRoot.position, placementRoot.rotation).GetComponent<SharedAnchor>();
+
+        if (automaticCoLocation)
+            StartCoroutine(WaitingForAnchorLocalization());
     }
 
-    public void Log(string message)
+    private System.Collections.IEnumerator WaitingForAnchorLocalization()
+    {
+        while (!colocationAnchor.GetComponent<OVRSpatialAnchor>().Localized)
+        {
+            Log(nameof(WaitingForAnchorLocalization) + "...");
+            yield return null;
+        }
+
+        Log($"{nameof(WaitingForAnchorLocalization)}: Anchor Localized");
+        colocationAnchor.OnAlignButtonPressed();
+    }
+
+    public void Log(string message, bool error = false)
     {
         // In VR Logging
 
@@ -132,9 +141,17 @@ public class SampleController : MonoBehaviour
         // Console logging (goes to logcat on device)
 
         const string anchorTag = "SpatialAnchorsUnity: ";
-        Debug.Log(anchorTag + message);
+        if (error)
+            Debug.LogError(anchorTag + message);
+        else
+            Debug.Log(anchorTag + message);
 
         pageText.text = SampleController.Instance.logText.pageToDisplay + "/" + logText.textInfo.pageCount;
+    }
+
+    public void LogError(string message)
+    {
+        Log(message, true);
     }
 
     public void AddSharedAnchorToLocalPlayer(SharedAnchor anchor)

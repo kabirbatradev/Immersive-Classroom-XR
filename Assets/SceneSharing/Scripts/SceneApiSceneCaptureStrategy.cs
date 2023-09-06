@@ -1,28 +1,39 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Collections;
+﻿/*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+* All rights reserved.
+*
+* Licensed under the Oculus SDK License Agreement (the "License");
+* you may not use the Oculus SDK except in compliance with the License,
+* which is provided at the time of installation or download, or which
+* otherwise accompanies this software in either electronic or hard copy form.
+*
+* You may obtain a copy of the License at
+*
+* https://developer.oculus.com/licenses/oculussdk/
+*
+* Unless required by applicable law or agreed to in writing, the Oculus SDK
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using Plane = Common.Plane;
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Common
 {
-    public class SceneApiSceneCaptureStrategy : SceneCaptureStrategy
+    public class SceneApiSceneCaptureStrategy: MonoBehaviour
     {
         private static readonly Dictionary<string, ObstacleType> _obstacleTypeMap = new Dictionary<string, ObstacleType>()
-{
-{"DESK", ObstacleType.Desk}, {"COUCH", ObstacleType.Couch}, {"OTHER", ObstacleType.Misc}
-};
-
-        private Action<Scene> _onComplete;
+        {
+            {"DESK", ObstacleType.Desk}, {"COUCH", ObstacleType.Couch}, {"DOOR_FRAME", ObstacleType.Door}, {"WINDOW_FRAME", ObstacleType.Window}, {"TABLE", ObstacleType.Table}, {"STORAGE", ObstacleType.Storage}, {"OTHER", ObstacleType.Other}
+        };
 
         private ulong _roomLayoutQuery = ulong.MinValue;
         private ulong _roomEntitiesQuery = ulong.MinValue;
@@ -39,17 +50,17 @@ namespace Common
         [SerializeField]
         WorldGenerationController worldGenerationController;
 
-        public override void Start()
-        {
-
-        }
+        bool _callbacksInitialized = false;
 
         public void InitSceneCapture()
         {
-            Debug.Log("Subscribing all OVRManager listeners");
-            OVRManager.SceneCaptureComplete += OnSceneCaptureComplete;
-            OVRManager.SpaceQueryComplete += OnSpaceQueryCompleted;
-            OVRManager.SpaceSetComponentStatusComplete += OnSpaceSetComponentStatusComplete;
+            if (!_callbacksInitialized)
+            {
+                Debug.Log("Subscribing all OVRManager listeners");
+                OVRManager.SceneCaptureComplete += OnSceneCaptureComplete;
+                OVRManager.SpaceQueryComplete += OnSpaceQueryCompleted;
+                OVRManager.SpaceSetComponentStatusComplete += OnSpaceSetComponentStatusComplete;
+            }
         }
 
         private void OnDestroy()
@@ -59,20 +70,15 @@ namespace Common
 
         public void BeginCaptureScene()
         {
-            CaptureScene(OnSceneCreated);
+            SampleController.Instance.Log(nameof(BeginCaptureScene));
+            CaptureScene();
         }
 
-        public override void CaptureScene(Action<Scene> onComplete)
+        public void CaptureScene()
         {
-            SampleController.Instance.Log("SceneApiSceneCaptureStrategy::CaptureScene - Scene Capture Started");
+            SampleController.Instance.Log($"{nameof(SceneApiSceneCaptureStrategy)} - Scene Capture Started");
 
-            _onComplete = onComplete;
             StartRoomCapture();
-        }
-
-        private void OnSceneCreated(Scene scene)
-        {
-            SampleController.Instance.Log("PhotonAnchorManager::OnSceneCreated - Scene Capture Complete");
         }
 
         private void Cleanup()
@@ -81,6 +87,7 @@ namespace Common
             OVRManager.SceneCaptureComplete -= OnSceneCaptureComplete;
             OVRManager.SpaceQueryComplete -= OnSpaceQueryCompleted;
             OVRManager.SpaceSetComponentStatusComplete -= OnSpaceSetComponentStatusComplete;
+            _callbacksInitialized = false;
         }
 
         private void StartRoomCapture()
@@ -150,7 +157,7 @@ namespace Common
             {
                 EnableBaseComponents(results);
                 _idQueryCompleted = true;
-                EndRoomCaptureIfReady();
+                EndSceneModelLoadingIfReady();
             }
             else
             {
@@ -176,7 +183,6 @@ namespace Common
                 foreach (var uuid in entityUuids)
                 {
                     Debug.Log($"SpatialEntityGetContainer: UUID [{uuid.ToString()}]");
-                    // TODO check if uuid is valid? (i.e. non-zero)
                     idsToQuery.Add(uuid);
                 }
             }
@@ -323,7 +329,8 @@ namespace Common
                     }
                 case "DESK":
                 case "COUCH":
-                case "OTHER":
+                case "WINDOW_FRAME":
+                case "DOOR_FRAME":
                     {
                         if (!_obstacleTypeMap.TryGetValue(labels, out var obstacleType))
                         {
@@ -366,14 +373,11 @@ namespace Common
 
         private static Obstacle CreateObstacle(OVRPose worldPose, OVRPlugin.Rectf rectf, string labels, ObstacleType obstacleType)
         {
-            var position = worldPose.position;
-            position.y /= 2.0f;
-
             var size = new Vector3(rectf.Size.w, rectf.Size.h, worldPose.position.y);
 
             var obstacle = new Obstacle
             {
-                position = position,
+                position = worldPose.position,
                 rotation = worldPose.orientation,
                 type = obstacleType,
                 boundingBox = new Bounds(Vector3.zero, size)
@@ -385,14 +389,11 @@ namespace Common
 
         private static Obstacle CreateObstacle(OVRPose worldPose, OVRPlugin.Boundsf boundsf, string labels, ObstacleType obstacleType)
         {
-            var position = worldPose.position;
-            position.y /= 2.0f;
-
             var size = new Vector3(boundsf.Size.w, boundsf.Size.h, boundsf.Size.d);
 
             var obstacle = new Obstacle
             {
-                position = position,
+                position = worldPose.position,
                 rotation = worldPose.orientation,
                 type = obstacleType,
                 boundingBox = new Bounds(Vector3.zero, size)
@@ -433,31 +434,25 @@ namespace Common
                 AddEntityToRoom(space);
             }
 
-            EndRoomCaptureIfReady();
+            EndSceneModelLoadingIfReady();
         }
 
         /// <summary>
         /// Ends the room capture if we're not waiting on any callbacks anymore
         /// </summary>
-        private void EndRoomCaptureIfReady()
+        private void EndSceneModelLoadingIfReady()
         {
-            //AnchorSession.Log($"EndRoomCaptureIfReady _idQueryCompleted [{_idQueryCompleted}] _componentEnablingInProgress [{_componentEnablingInProgress}]");
             if (!_idQueryCompleted || _componentEnablingInProgress > 0) return;
 
             _scene.walls = _walls.ToArray();
             _scene.obstacles = _obstacles.ToArray();
-            EndRoomCapture(_scene);
+            UpdateLoadedSceneModel(_scene);
         }
 
-        private void EndRoomCapture(Scene scene)
+        private void UpdateLoadedSceneModel(Scene scene)
         {
-            //OMEGA TODO - Clean up the callbacks to not conflict with the shared anchor system
-            //Cleanup();
-
+            SampleController.Instance.Log(nameof(UpdateLoadedSceneModel));
             ShareRoomOnPhoton(scene);
-
-            if (_onComplete != null)
-                _onComplete(scene);
         }
 
         public void ShareRoomOnPhoton(Scene scene = null)
@@ -477,6 +472,7 @@ namespace Common
                     };
 
                     PhotonNetwork.CurrentRoom.SetCustomProperties(roomProps);
+                    SampleController.Instance.Log($"{nameof(ShareRoomOnPhoton)}- Room Shared over Photon room properties");
                 }
             }
         }

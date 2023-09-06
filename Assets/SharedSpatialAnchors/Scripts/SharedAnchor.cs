@@ -54,7 +54,6 @@ public class SharedAnchor : MonoBehaviour
 
     private OVRSpatialAnchor _spatialAnchor;
 
-
     public bool IsSavedLocally
     {
         set
@@ -110,12 +109,7 @@ public class SharedAnchor : MonoBehaviour
         }
 
         if (SampleController.Instance.automaticCoLocation)
-        {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-        }
+            transform.Find("Canvas").gameObject.SetActive(false);
     }
 
     public void OnSaveLocalButtonPressed()
@@ -132,6 +126,8 @@ public class SharedAnchor : MonoBehaviour
             if (isSuccessful)
             {
                 IsSavedLocally = true;
+
+                SampleController.Instance.GetComponent<SharedAnchorLoader>().AddLocallySavedAnchor(_spatialAnchor);
             }
         });
     }
@@ -156,13 +152,14 @@ public class SharedAnchor : MonoBehaviour
         {
             if (isSuccessful)
             {
+                SampleController.Instance.GetComponent<SharedAnchorLoader>().RemoveLocallySavedAnchor(_spatialAnchor);
                 Destroy(gameObject);
             }
         });
     }
 
     private bool IsReadyToShare()
-    {        
+    {
         if (!Photon.Pun.PhotonNetwork.IsConnected)
         {
             SampleController.Instance.Log("Can't share - no users to share with because you are no longer connected to the Photon network");
@@ -194,11 +191,15 @@ public class SharedAnchor : MonoBehaviour
         }
 
         IsSelectedForShare = true;
+        SaveToCloudThenShare();
+    }
 
+    private void SaveToCloudThenShare()
+    {
         OVRSpatialAnchor.SaveOptions saveOptions;
         saveOptions.Storage = OVRSpace.StorageLocation.Cloud;
         _spatialAnchor.Save(saveOptions, (spatialAnchor, isSuccessful) =>
-        {            
+        {
             if (isSuccessful)
             {
                 SampleController.Instance.Log("Successfully saved anchor(s) to the cloud");
@@ -216,7 +217,8 @@ public class SharedAnchor : MonoBehaviour
             }
             else
             {
-                SampleController.Instance.Log("Saving anchor(s) failed. Possible reasons include an unsupported device.");               
+                SampleController.Instance.Log("Saving anchor(s) failed. Retrying...");
+                SaveToCloudThenShare();
             }
         });
     }
