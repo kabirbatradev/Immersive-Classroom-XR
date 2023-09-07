@@ -113,6 +113,7 @@ MonoBehaviour:
   _forwardElement: {fileID: 0}
   _oneGrabTransformer: {fileID: 8488393094715532146}
   _twoGrabTransformer: {fileID: 0}
+  _targetTransform: {fileID: 0}
   _maxGrabPoints: -1
 --- !u!114 &8488393094715532146
 MonoBehaviour:
@@ -276,8 +277,8 @@ MonoBehaviour:
   _data: {fileID: 0}
   _pointableElement: {fileID: 6991219106398992493}
   _rigidbody: {fileID: 5018166209383245865}
-  _resetGrabOnGrabsUpdated: 1
   _physicsGrabbable: {fileID: 8360913207784568672}
+  _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
     _positionRotationWeight: 0
   _supportedGrabTypes: 1
@@ -311,8 +312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 622db80eec0bd344f920b1aa056ae8d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _relativeTo: {fileID: 4845915175992131303}
   _surface: {fileID: 5635664587236325805}
+  _relativeTo: {fileID: 4845915175992131303}
   _usesHandPose: 0
   _handPose:
     _handedness: 0
