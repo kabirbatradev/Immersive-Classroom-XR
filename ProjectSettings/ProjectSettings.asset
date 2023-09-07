@@ -12,12 +12,12 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: Oculus
-  productName: Unity-SharedSpatialAnchors
+  companyName: TheKabirians
+  productName: SharedSceneSample
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
-  m_ShowUnitySplashScreen: 0
+  m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -509,6 +509,12 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: fa3fffa2e684f7f4a8ba6975e0c7d092, type: 2}
+  - {fileID: 7480733010254389227, guid: e618e6ad86b9a954096d9f36d6b5bba4, type: 2}
+  - {fileID: 11400000, guid: ca8e257eaef0c3042a86010b1fb019f0, type: 2}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -527,8 +533,8 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.ssa.sample
-    Standalone: com.DefaultCompany.Unity-SharedSpatialAnchors
+    Android: com.thekabirians.shared_scene_sample
+    Standalone: com.thekabirians.shared-scene-sample
   buildNumber:
     Standalone: 0
     iPhone: 0
