@@ -2486,7 +2486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spherePrefab: {fileID: 3221958905156704162, guid: 2a65cc0290668c54fbfaacc19b3d9718, type: 3}
-  jengaPrefab: {fileID: 3221958905156704162, guid: 2d3b3e25930c4814794777c176d511fc, type: 3}
+  jengaPrefab: {fileID: 6045215365055848710, guid: 364b6121d72120449ac024fd895faa3f, type: 3}
   spawnPoint: {fileID: 1774543904}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
