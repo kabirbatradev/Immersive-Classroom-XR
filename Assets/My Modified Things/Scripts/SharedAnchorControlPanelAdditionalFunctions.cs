@@ -45,7 +45,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private void SpawnJenga()
     {
         var networkedCube = PhotonPun.PhotonNetwork.Instantiate(jengaPrefab.name, spawnPoint.position, spawnPoint.rotation);
-        var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
-        photonGrabbable.TransferOwnershipToLocalPlayer();
+        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+        // photonGrabbable.TransferOwnershipToLocalPlayer();
     }
 }
