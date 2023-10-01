@@ -17,8 +17,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     [SerializeField]
     private GameObject jengaPrefab;
 
+    [SerializeField]
+    private GameObject tablePrefab;
 
-        [SerializeField]
+
+    [SerializeField]
     private Transform spawnPoint;
 
     public void OnSpawnSphereButtonPressed()
@@ -27,7 +30,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         SpawnSphere();
     }
-    
+
     private void SpawnSphere()
     {
         var networkedCube = PhotonPun.PhotonNetwork.Instantiate(spherePrefab.name, spawnPoint.position, spawnPoint.rotation);
@@ -41,10 +44,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         SpawnJenga();
     }
-    
+
     private void SpawnJenga()
     {
         var networkedCube = PhotonPun.PhotonNetwork.Instantiate(jengaPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+        // photonGrabbable.TransferOwnershipToLocalPlayer();
+    }
+
+    public void OnSpawnTableButtonPressed()
+    {
+        SampleController.Instance.Log("OnSpawnTableButtonPressed");
+
+        SpawnTable();
+    }
+
+    private void SpawnTable()
+    {
+        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
         // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
         // photonGrabbable.TransferOwnershipToLocalPlayer();
     }
