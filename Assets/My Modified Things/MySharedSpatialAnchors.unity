@@ -3331,7 +3331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spherePrefab: {fileID: 3221958905156704162, guid: 2a65cc0290668c54fbfaacc19b3d9718, type: 3}
-  jengaPrefab: {fileID: 6045215365055848710, guid: 364b6121d72120449ac024fd895faa3f, type: 3}
+  jengaPrefab: {fileID: 3221958905156704162, guid: e213f45ddde577243ae33bad89284183, type: 3}
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
   spawnPoint: {fileID: 1774543904}
 --- !u!1660057539 &9223372036854775807
