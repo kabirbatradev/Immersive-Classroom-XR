@@ -28,20 +28,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     private bool alignTableMode = false;
+    private int countAButton = 0;
 
     public void Update() {
-        // SampleController.Instance.Log("this is a test");
 
-        // if (alignTableMode) {
+        if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
             bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.A);
-            // OVRInput.RawButton
             
             if (buttonPressed) {
-                SampleController.Instance.Log("A button presssed!");
+                SampleController.Instance.Log("The A button was pressed!");
+                countAButton++;
+                if (countAButton == 2) {
+                    countAButton = 0;
+                    alignTableMode = false;
+                }
             }
-        // }
+        }
 
     }
 
@@ -103,14 +107,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private void SpawnAlignedTable()
     {
 
-        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
+        // var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
         // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
         // photonGrabbable.TransferOwnershipToLocalPlayer();
 
 
 
         alignTableMode = true;
-        SampleController.Instance.Log(alignTableMode.ToString());
+        // SampleController.Instance.Log(alignTableMode.ToString());
         
     }
 }
