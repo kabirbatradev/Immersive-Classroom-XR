@@ -24,6 +24,29 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     [SerializeField]
     private Transform spawnPoint;
 
+
+
+
+    private bool alignTableMode = false;
+
+    public void Update() {
+        // SampleController.Instance.Log("this is a test");
+
+        // if (alignTableMode) {
+
+            bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
+            
+            if (buttonPressed) {
+                SampleController.Instance.Log("button pressed!");
+            }
+        // }
+
+    }
+
+
+
+
+
     public void OnSpawnSphereButtonPressed()
     {
         SampleController.Instance.Log("OnSpawnSphereButtonPressed");
@@ -64,5 +87,28 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
         // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
         // photonGrabbable.TransferOwnershipToLocalPlayer();
+    }
+
+
+
+    public void OnSpawnAlignedTableButtonPressed()
+    {
+        SampleController.Instance.Log("OnSpawnAlignedTableButtonPressed");
+
+        SpawnAlignedTable();
+    }
+
+    private void SpawnAlignedTable()
+    {
+
+        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
+        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+        // photonGrabbable.TransferOwnershipToLocalPlayer();
+
+
+
+        alignTableMode = true;
+        SampleController.Instance.Log(alignTableMode.ToString());
+        
     }
 }
