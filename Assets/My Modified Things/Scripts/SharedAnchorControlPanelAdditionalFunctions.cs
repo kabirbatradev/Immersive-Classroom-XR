@@ -36,9 +36,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
             bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.A);
+
+            var controllerType = OVRInput.Controller.RTouch; // the right controller
+            Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
             
             if (buttonPressed) {
                 SampleController.Instance.Log("The A button was pressed!");
+                string x = controllerPosition.x.ToString("0.00");
+                string y = controllerPosition.y.ToString("0.00");
+                string z = controllerPosition.z.ToString("0.00");
+                SampleController.Instance.Log(x + " " + y + " " + z);
+
+
                 countAButton++;
                 if (countAButton == 2) {
                     countAButton = 0;
