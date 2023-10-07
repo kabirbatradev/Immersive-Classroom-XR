@@ -34,10 +34,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // if (alignTableMode) {
 
-            bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
+            // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
+            bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.A);
+            // OVRInput.RawButton
             
             if (buttonPressed) {
-                SampleController.Instance.Log("button pressed!");
+                SampleController.Instance.Log("A button presssed!");
             }
         // }
 
