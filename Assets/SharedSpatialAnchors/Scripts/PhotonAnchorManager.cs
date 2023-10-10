@@ -306,7 +306,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
 
         SampleController.Instance.Log("JoinRoomFromLobby: attempting to create room: " + roomToCreate);
 
-        var roomOptions = new PhotonRealtime.RoomOptions { IsVisible = true, MaxPlayers = 16, EmptyRoomTtl = 0, PlayerTtl = 300000 };
+        var roomOptions = new PhotonRealtime.RoomOptions { IsVisible = true, MaxPlayers = 50, EmptyRoomTtl = 0, PlayerTtl = 300000 };
 
         PhotonPun.PhotonNetwork.JoinOrCreateRoom(roomToCreate, roomOptions, PhotonRealtime.TypedLobby.Default);
     }
@@ -353,7 +353,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
 
         SampleController.Instance.Log($"{nameof(JoinRoomFromLobby)}: Room Name: " + roomToJoin);
 
-        var roomOptions = new PhotonRealtime.RoomOptions { IsVisible = true, MaxPlayers = 16, EmptyRoomTtl = 0, PlayerTtl = 300000 };
+        var roomOptions = new PhotonRealtime.RoomOptions { IsVisible = true, MaxPlayers = 50, EmptyRoomTtl = 0, PlayerTtl = 300000 };
 
         PhotonPun.PhotonNetwork.JoinOrCreateRoom(roomToJoin, roomOptions, PhotonRealtime.TypedLobby.Default);
     }
