@@ -30,6 +30,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private bool alignTableMode = false;
     private int countAButton = 0;
 
+    private GameObject mostRecentSphere;
+
     public void Update() {
 
         if (alignTableMode) {
@@ -37,16 +39,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
             bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.A);
 
-            var controllerType = OVRInput.Controller.RTouch; // the right controller
-            Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
             
             if (buttonPressed) {
                 SampleController.Instance.Log("The A button was pressed!");
+
+                var controllerType = OVRInput.Controller.RTouch; // the right controller
+                Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
+
                 string x = controllerPosition.x.ToString("0.00");
                 string y = controllerPosition.y.ToString("0.00");
                 string z = controllerPosition.z.ToString("0.00");
                 SampleController.Instance.Log(x + " " + y + " " + z);
-
 
                 countAButton++;
                 if (countAButton == 2) {
@@ -56,6 +59,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
         }
 
+
+        // if the B button is pressed, then enable or disable the most recent spawned sphere
+        bool BButton = OVRInput.GetDown(OVRInput.RawButton.B);
+        if (BButton) {
+            // mostRecentSphere.SetActive(false);
+            mostRecentSphere.SetActive(!mostRecentSphere.activeSelf);
+        }
     }
 
 
@@ -74,6 +84,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         var networkedCube = PhotonPun.PhotonNetwork.Instantiate(spherePrefab.name, spawnPoint.position, spawnPoint.rotation);
         var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
         photonGrabbable.TransferOwnershipToLocalPlayer();
+
+
+        mostRecentSphere = networkedCube;
     }
 
     public void OnSpawnJengaButtonPressed()
