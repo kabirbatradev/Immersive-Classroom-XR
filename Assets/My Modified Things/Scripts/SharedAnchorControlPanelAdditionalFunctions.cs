@@ -78,7 +78,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // every frame, scan through all objects that have "object data" component
         // and enable or disable them based on if their group number matches the current 
         // user's group number
-        int currentUserGroupNumber = 0;
+        // int currentUserGroupNumber = 0;
+        int currentUserGroupNumber = gameObject.GetComponent<StudentData>().groupNumber;
         // need to include inactive (params are type, includeInactive)
         ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData), true);
 
