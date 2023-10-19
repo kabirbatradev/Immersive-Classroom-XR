@@ -63,8 +63,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // if the B button is pressed, then enable or disable the most recent spawned sphere
         bool BButton = OVRInput.GetDown(OVRInput.RawButton.B);
         if (BButton) {
-            // mostRecentSphere.SetActive(false);
-            mostRecentSphere.SetActive(!mostRecentSphere.activeSelf);
+            
+            // mostRecentSphere.SetActive(!mostRecentSphere.activeSelf);
+
+            // instead, lets change the group number and see if the code below works 
+            // (automatically set inactive if not same group number)
+            ObjectData data = mostRecentSphere.GetComponent<ObjectData>();
+            data.groupNumber = data.groupNumber == 0 ? 1 : 0;
+            SampleController.Instance.Log("set group number to " + data.groupNumber);
         }
 
 
@@ -73,7 +79,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // and enable or disable them based on if their group number matches the current 
         // user's group number
         int currentUserGroupNumber = 0;
-        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData));
+        // need to include inactive (params are type, includeInactive)
+        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData), true);
 
         foreach (ObjectData objectData in allNetworkObjectDatas) {
             GameObject gameObject = objectData.gameObject;
@@ -104,12 +111,19 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private void SpawnSphere()
     {
-        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(spherePrefab.name, spawnPoint.position, spawnPoint.rotation);
-        var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+        var sphereObject = PhotonPun.PhotonNetwork.Instantiate(spherePrefab.name, spawnPoint.position, spawnPoint.rotation);
+        var photonGrabbable = sphereObject.GetComponent<PhotonGrabbableObject>();
         photonGrabbable.TransferOwnershipToLocalPlayer();
 
 
-        mostRecentSphere = networkedCube;
+        // print the sphere's group number if it has an "object data" property
+        ObjectData data = sphereObject.GetComponent<ObjectData>();
+        
+        SampleController.Instance.Log("group number of this sphere is: " + data.groupNumber);
+
+
+
+        mostRecentSphere = sphereObject;
     }
 
     public void OnSpawnJengaButtonPressed()

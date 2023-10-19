@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 847531836235365747}
   - component: {fileID: 7399167091808761709}
   m_Layer: 0
-  m_Name: MyPhotonGrabbableSphere
+  m_Name: dodgeball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

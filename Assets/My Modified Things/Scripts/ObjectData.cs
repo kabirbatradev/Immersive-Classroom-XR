@@ -19,5 +19,9 @@ public class ObjectData : MonoBehaviour
         
     // }
 
+    public void SetGroupNumber(int groupNum) {
+        groupNumber = groupNum;
+    }
+
     
 }
