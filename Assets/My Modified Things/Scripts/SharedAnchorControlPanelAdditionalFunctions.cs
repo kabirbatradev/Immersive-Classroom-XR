@@ -119,10 +119,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // print the sphere's group number if it has an "object data" property
         ObjectData data = sphereObject.GetComponent<ObjectData>();
-        
+        data.SetGroupNumber(gameObject.GetComponent<StudentData>().groupNumber); // set the group number to current user's group number
         SampleController.Instance.Log("group number of this sphere is: " + data.groupNumber);
-
-
 
         mostRecentSphere = sphereObject;
     }
@@ -176,5 +174,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         alignTableMode = true;
         // SampleController.Instance.Log(alignTableMode.ToString());
         
+    }
+
+
+
+    public void OnSetGroupNumber(int groupNumber) {
+        SampleController.Instance.Log("Setting group number to " + groupNumber);
+        SetGroupNumber(groupNumber);
+    }
+    private void SetGroupNumber(int groupNumber) {
+        gameObject.GetComponent<StudentData>().SetGroupNumber(groupNumber);
+        SampleController.Instance.Log("Set group number to " + gameObject.GetComponent<StudentData>().groupNumber);
+
     }
 }

@@ -7,11 +7,15 @@ public class ObjectData : MonoBehaviour
 
     public int groupNumber;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public ObjectData() {
         groupNumber = 0;
     }
+
+    // Start is called before the first frame update
+    // void Start()
+    // {
+    //     groupNumber = 0;
+    // }
 
     // Update is called once per frame
     // void Update()
