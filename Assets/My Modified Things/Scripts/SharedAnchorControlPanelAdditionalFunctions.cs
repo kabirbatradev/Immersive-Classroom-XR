@@ -219,4 +219,35 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         SampleController.Instance.Log("Your group number is " + GetCurrentGroupNumber());
         
     }
+
+
+
+
+    public void OnSetEveryoneElseGroupNumber(int groupNumber) {
+
+        SampleController.Instance.Log("Setting everyone elses' group number to " + groupNumber);
+
+        SetEveryoneElseGroupNumber(groupNumber);
+
+    }
+
+    private void SetEveryoneElseGroupNumber(int groupNumber) {
+
+        // value collection (list) of PhotonRealtime.Player objects
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        foreach (PhotonRealtime.Player player in players) {
+            
+            // if the player is the current player, then skip
+            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+                SampleController.Instance.Log("(skipping current player)");
+                continue;
+            }
+
+            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
+        }
+
+    }
+
 }
