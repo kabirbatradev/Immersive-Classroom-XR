@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using TMPro;
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+// using PlayerProperties = Photon.Pun.PhotonNetwork.CustomProperties;
+// using PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
+// using LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
 
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
@@ -78,8 +81,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // every frame, scan through all objects that have "object data" component
         // and enable or disable them based on if their group number matches the current 
         // user's group number
+
         // int currentUserGroupNumber = 0;
-        int currentUserGroupNumber = gameObject.GetComponent<StudentData>().groupNumber;
+        // int currentUserGroupNumber = gameObject.GetComponent<StudentData>().groupNumber;
+        int currentUserGroupNumber = GetCurrentGroupNumber();
+
+
         // need to include inactive (params are type, includeInactive)
         ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData), true);
 
@@ -117,9 +124,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         photonGrabbable.TransferOwnershipToLocalPlayer();
 
 
+        int currentUserGroupNumber = GetCurrentGroupNumber();
+
         // print the sphere's group number if it has an "object data" property
         ObjectData data = sphereObject.GetComponent<ObjectData>();
-        data.SetGroupNumber(gameObject.GetComponent<StudentData>().groupNumber); // set the group number to current user's group number
+        data.SetGroupNumber(currentUserGroupNumber); // set the group number to current user's group number
         SampleController.Instance.Log("group number of this sphere is: " + data.groupNumber);
 
         mostRecentSphere = sphereObject;
@@ -183,8 +192,31 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         SetGroupNumber(groupNumber);
     }
     private void SetGroupNumber(int groupNumber) {
-        gameObject.GetComponent<StudentData>().SetGroupNumber(groupNumber);
-        SampleController.Instance.Log("Set group number to " + gameObject.GetComponent<StudentData>().groupNumber);
+        // gameObject.GetComponent<StudentData>().SetGroupNumber(groupNumber);
+        // SampleController.Instance.Log("Set group number to " + gameObject.GetComponent<StudentData>().groupNumber);
 
+        PhotonRealtime.Player LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
+
+        LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+
+
+    }
+
+
+
+    private int GetCurrentGroupNumber() {
+
+        ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
+
+        bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
+        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+
+        return currentUserGroupNumber;
+
+    }
+
+    public void OnLogCurrentGroupNumber() {
+        SampleController.Instance.Log("Your group number is " + GetCurrentGroupNumber());
+        
     }
 }
