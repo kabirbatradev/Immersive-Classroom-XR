@@ -5235,9 +5235,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1161621203827536574, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 8607079647158505911}
-    - targetCorrespondingSourceObject: {fileID: 1161621203827536574, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
-      insertIndex: 2
       addedObject: {fileID: 8607079647158505906}
   m_SourcePrefab: {fileID: 100100000, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
 --- !u!1 &8607079647158505905 stripped
@@ -5261,19 +5258,6 @@ MonoBehaviour:
   jengaPrefab: {fileID: 4257439788469908370, guid: e5481e89efcab0641ba811e7914bb017, type: 3}
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
   spawnPoint: {fileID: 1774543904}
---- !u!114 &8607079647158505911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8607079647158505905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f690888eb02263549ac006ec7257e5c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groupNumber: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
