@@ -232,7 +232,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     public void OnSetEveryoneElseGroupNumber(int groupNumber) {
 
-        SampleController.Instance.Log("Setting everyone elses' group number to " + groupNumber);
+        SampleController.Instance.Log("Setting everyone else's group number to " + groupNumber);
 
         SetEveryoneElseGroupNumber(groupNumber);
 
@@ -240,7 +240,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private void SetEveryoneElseGroupNumber(int groupNumber) {
 
-        // value collection (list) of PhotonRealtime.Player objects
+        // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         foreach (PhotonRealtime.Player player in players) {
@@ -292,6 +292,33 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         foreach (GameObject b in studentButtons) {
             b.SetActive(true);
+        }
+
+    }
+
+
+    public void OnSetEveryoneSeparateGroups() {
+        SampleController.Instance.Log("Setting everyone to separate groups (except admin)");
+        SetEveryoneSeparateGroups();
+    }
+
+    private void SetEveryoneSeparateGroups() {
+
+        // value collection (basically list) of PhotonRealtime.Player objects
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        int groupNumber = 1;
+        foreach (PhotonRealtime.Player player in players) {
+            
+            // if the player is the current player, then skip
+            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+                SampleController.Instance.Log("(skipping current player)");
+                continue;
+            }
+
+            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
+            groupNumber++;
         }
 
     }
