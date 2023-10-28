@@ -28,6 +28,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private Transform spawnPoint;
 
 
+    [SerializeField]
+    private GameObject[] adminButtons;
+
+    [SerializeField]
+    private GameObject[] studentButtons;
+
+
 
 
     private bool alignTableMode = false;
@@ -246,6 +253,45 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
             SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
+        }
+
+    }
+
+
+
+    public void OnSetToAdminMode() {
+        SampleController.Instance.Log("Setting to Admin Mode");
+        SetToAdminMode();
+    }
+
+    private void SetToAdminMode() {
+
+        // for every button in a list of buttons, make them active
+
+
+        foreach (GameObject b in studentButtons) {
+            b.SetActive(false);
+        }
+        foreach (GameObject b in adminButtons) {
+            b.SetActive(true);
+        }
+        
+
+    }
+
+    public void OnSetToStudentMode() {
+        SampleController.Instance.Log("Setting to Admin Mode");
+        SetToStudentMode();
+    }
+
+    private void SetToStudentMode() {
+
+        // for every button in a list of buttons, make them active
+        foreach (GameObject b in adminButtons) {
+            b.SetActive(false);
+        }
+        foreach (GameObject b in studentButtons) {
+            b.SetActive(true);
         }
 
     }
