@@ -84,6 +84,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
 
+        // Object Group Filtering:
 
         // every frame, scan through all objects that have "object data" component
         // and enable or disable them based on if their group number matches the current 
@@ -100,8 +101,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         foreach (ObjectData objectData in allNetworkObjectDatas) {
             GameObject gameObject = objectData.gameObject;
 
-            // if the group numbers match, then set the object to active
-            if (objectData.groupNumber == currentUserGroupNumber) {
+            // if group 0 or the group numbers match, then set the object to active
+            if (currentUserGroupNumber == 0 || objectData.groupNumber == currentUserGroupNumber) {
                 gameObject.SetActive(true);
             }
             // if they do not match, disable the object
