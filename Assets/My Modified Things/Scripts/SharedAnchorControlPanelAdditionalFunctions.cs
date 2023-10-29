@@ -117,7 +117,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         if (XPressed) {
             foreach (ObjectData objectData in allNetworkObjectDatas) {
                 GameObject obj = objectData.gameObject;
-                SampleController.Instance.Log(obj.GetInstanceID().ToString());
+                SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
+                SampleController.Instance.Log("view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
             }
         }
 
