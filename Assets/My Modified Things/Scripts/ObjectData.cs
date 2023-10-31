@@ -8,7 +8,7 @@ public class ObjectData : MonoBehaviour
     public int groupNumber;
 
     public ObjectData() {
-        groupNumber = 0;
+        groupNumber = 1;
     }
 
     // Start is called before the first frame update
