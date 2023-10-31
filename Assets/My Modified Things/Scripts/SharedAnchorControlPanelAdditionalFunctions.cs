@@ -112,13 +112,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
 
-        // if you press X, then print all spawned object's instance ids
+        // if you press X, then print all spawned object's data
         bool XPressed = OVRInput.GetDown(OVRInput.RawButton.X);
         if (XPressed) {
             foreach (ObjectData objectData in allNetworkObjectDatas) {
                 GameObject obj = objectData.gameObject;
-                SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
-                SampleController.Instance.Log("view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
+                // SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
+                SampleController.Instance.Log("object view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
+                SampleController.Instance.Log("object group number: " + objectData.groupNumber);
+                SampleController.Instance.Log("");
             }
         }
 
