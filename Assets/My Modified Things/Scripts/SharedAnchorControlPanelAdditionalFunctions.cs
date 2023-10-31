@@ -99,15 +99,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData), true);
 
         foreach (ObjectData objectData in allNetworkObjectDatas) {
-            GameObject gameObject = objectData.gameObject;
+            GameObject obj = objectData.gameObject;
+
+            string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
+            int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
 
             // if group 0 or the group numbers match, then set the object to active
-            if (currentUserGroupNumber == 0 || objectData.groupNumber == currentUserGroupNumber) {
-                gameObject.SetActive(true);
+            if (currentUserGroupNumber == 0 || objectGroupNumber == currentUserGroupNumber) {
+                obj.SetActive(true);
             }
             // if they do not match, disable the object
             else {
-                gameObject.SetActive(false);
+                obj.SetActive(false);
             }
         }
 
@@ -119,7 +122,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 GameObject obj = objectData.gameObject;
                 // SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
                 SampleController.Instance.Log("object view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
-                SampleController.Instance.Log("object group number: " + objectData.groupNumber);
+
+
+                string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
+                int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+
+                SampleController.Instance.Log("object group number: " + objectGroupNumber);
                 SampleController.Instance.Log("");
             }
         }
@@ -148,9 +156,21 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         int currentUserGroupNumber = GetCurrentGroupNumber();
 
         // print the sphere's group number if it has an "object data" property
-        ObjectData data = sphereObject.GetComponent<ObjectData>();
-        data.SetGroupNumber(currentUserGroupNumber); // set the group number to current user's group number
-        SampleController.Instance.Log("group number of this sphere is: " + data.groupNumber);
+        // ObjectData data = sphereObject.GetComponent<ObjectData>();
+        // data.SetGroupNumber(currentUserGroupNumber); // set the group number to current user's group number
+        // SampleController.Instance.Log("group number of this sphere is: " + data.groupNumber);
+
+        // we will actually store the group number in the room custom properties
+        // use the view id of the sphere
+
+        string key = "groupNum" + sphereObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        int value = currentUserGroupNumber;
+        var newValue = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newValue);
+
+        // the custom properties table is not set in time
+        // SampleController.Instance.Log("group number of this sphere is: " + PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key]);
+        SampleController.Instance.Log("setting group number of sphere to: " + currentUserGroupNumber);
 
         mostRecentSphere = sphereObject;
     }
