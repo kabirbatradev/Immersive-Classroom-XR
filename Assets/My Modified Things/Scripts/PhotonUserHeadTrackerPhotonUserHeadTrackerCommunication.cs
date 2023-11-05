@@ -12,7 +12,14 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
     // get the photon view of the gameobject
     private void Start() {
         photonView = GetComponent<PhotonView>();
-        // photonView.isMine() tells us if this object was instantiated locally or not
+        // photonView.isMine tells us if this object was instantiated locally or not
+        // use this to not render the cube if it is of the self
+
+        if (photonView.IsMine) {
+            foreach (Transform child in transform) {
+                child.gameObject.SetActive(false);
+            }
+        }
     }
 
     // this function is called every time this object tries to update itself
