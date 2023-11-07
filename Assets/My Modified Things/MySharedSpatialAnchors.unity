@@ -8675,17 +8675,18 @@ MonoBehaviour:
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
   spawnPoint: {fileID: 1774543904}
   adminButtons:
+  - {fileID: 392236200}
   - {fileID: 99205691}
   - {fileID: 1168084150}
   - {fileID: 1514679365}
+  - {fileID: 1967644966}
   - {fileID: 1012869676}
   - {fileID: 2138925932}
-  - {fileID: 392236200}
   - {fileID: 1333396387}
-  - {fileID: 1967644966}
   - {fileID: 1276483078}
   studentButtons:
   - {fileID: 99205691}
+  - {fileID: 392236200}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
