@@ -14,16 +14,15 @@ public class UserHeadPositionTrackerManager : PhotonPun.MonoBehaviourPunCallback
     public Transform localHeadTransform;
 
     private void Awake() {
-        Instance = this;
 
-        // if (Instance == null)
-        // {
-        //     Instance = this;
-        // }
-        // else
-        // {
-        //     Destroy(this);
-        // }
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
 
