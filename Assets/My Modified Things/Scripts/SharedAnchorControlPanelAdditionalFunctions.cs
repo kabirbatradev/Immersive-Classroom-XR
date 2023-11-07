@@ -390,4 +390,40 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     }
 
+
+
+
+    public void OnCreateMainObjectContainerPerGroup() {
+        SampleController.Instance.Log("Creating a Main Object Container Per Group (except group 0)");
+        CreateMainObjectContainerPerGroup();
+    }
+
+    private void CreateMainObjectContainerPerGroup() {
+
+        SampleController.Instance.Log("TODO");
+
+        // // value collection (basically list) of PhotonRealtime.Player objects
+        // // values because players are like a dictionary (we dont want the keys)
+        // var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        // int groupNumber = 1;
+        // int counter = 0;
+        // foreach (PhotonRealtime.Player player in players) {
+            
+        //     // if the player is the current player, then skip
+        //     if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+        //         SampleController.Instance.Log("(skipping current player)");
+        //         continue;
+        //     }
+
+        //     player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+        //     SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
+        //     counter++;
+        //     if (counter % 2 == 0) {
+        //         groupNumber++;
+        //     }
+        // }
+
+    }
+
 }
