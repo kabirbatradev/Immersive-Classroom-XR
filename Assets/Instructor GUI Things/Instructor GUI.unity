@@ -1201,7 +1201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd37886bf1897d43919385b4dc1c259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPanel: {fileID: 0}
+  controlPanel: {fileID: 1523730821}
   usePhotonMatchmaking: 1
 --- !u!4 &543581507
 Transform:
