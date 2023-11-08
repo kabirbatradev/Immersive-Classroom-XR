@@ -161,6 +161,15 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
             PhotonPun.PhotonNetwork.JoinLobby();
     }
 
+
+    // once we have connected to the master and joined the lobby, automatically create a room
+    public override void OnJoinedLobby() {
+
+        // pretend that the create room button was pressed: 
+        OnCreateRoomButtonPressed();
+
+    }
+
     public override void OnDisconnected(PhotonRealtime.DisconnectCause cause)
     {
         SampleController.Instance.Log("Photon::OnDisconnected: failed to connect: " + cause);
