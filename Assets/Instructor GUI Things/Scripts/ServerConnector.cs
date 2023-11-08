@@ -82,7 +82,15 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
         SampleController.Instance.Log("System version: " + OVRPlugin.version);
 
         Core.Initialize();
-        Users.GetLoggedInUser().OnComplete(GetLoggedInUserCallback);
+        // Users.GetLoggedInUser().OnComplete(GetLoggedInUserCallback);
+
+
+        // set usernames
+        _oculusUsername = "instructor gui";
+        _oculusUserId = 0;
+        PhotonPun.PhotonNetwork.LocalPlayer.NickName = _oculusUsername;
+
+
 
         Array.Resize(ref _fakePacket, 1 + UuidSize);
         _fakePacket[0] = PacketFormat;
@@ -95,33 +103,33 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
 
     #endregion
 
-    private void GetLoggedInUserCallback(Message msg)
-    {
-        if (msg.IsError)
-        {
-            SampleController.Instance.Log("GetLoggedInUserCallback: failed with error: " + msg.GetError());
-            return;
-        }
+    // private void GetLoggedInUserCallback(Message msg)
+    // {
+    //     if (msg.IsError)
+    //     {
+    //         SampleController.Instance.Log("GetLoggedInUserCallback: failed with error: " + msg.GetError());
+    //         return;
+    //     }
 
-        SampleController.Instance.Log("GetLoggedInUserCallback: success with message: " + msg + " type: " + msg.Type);
+    //     SampleController.Instance.Log("GetLoggedInUserCallback: success with message: " + msg + " type: " + msg.Type);
 
-        var isLoggedInUserMessage = msg.Type == Message.MessageType.User_GetLoggedInUser;
+    //     var isLoggedInUserMessage = msg.Type == Message.MessageType.User_GetLoggedInUser;
 
-        if (!isLoggedInUserMessage)
-        {
-            return;
-        }
+    //     if (!isLoggedInUserMessage)
+    //     {
+    //         return;
+    //     }
 
-        _oculusUsername = msg.GetUser().OculusID;
-        _oculusUserId = msg.GetUser().ID;
+    //     _oculusUsername = msg.GetUser().OculusID;
+    //     _oculusUserId = msg.GetUser().ID;
 
-        SampleController.Instance.Log("GetLoggedInUserCallback: oculus user name: " + _oculusUsername + " oculus id: " + _oculusUserId);
+    //     SampleController.Instance.Log("GetLoggedInUserCallback: oculus user name: " + _oculusUsername + " oculus id: " + _oculusUserId);
 
-        if (_oculusUserId == 0)
-            SampleController.Instance.Log("You are not authenticated to use this app. Shared Spatial Anchors will not work.");
+    //     if (_oculusUserId == 0)
+    //         SampleController.Instance.Log("You are not authenticated to use this app. Shared Spatial Anchors will not work.");
 
-        PhotonPun.PhotonNetwork.LocalPlayer.NickName = _oculusUsername;
-    }
+    //     PhotonPun.PhotonNetwork.LocalPlayer.NickName = _oculusUsername;
+    // }
 
     private void OnApplicationPause(bool pause)
     {
