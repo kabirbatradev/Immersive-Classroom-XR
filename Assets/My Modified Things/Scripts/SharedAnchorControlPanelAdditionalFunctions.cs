@@ -27,14 +27,16 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     [SerializeField]
     private Transform spawnPoint;
 
+    [SerializeField]
+    private GameObject mainObjectContainerPrefab;
+
+
 
     [SerializeField]
     private GameObject[] adminButtons;
 
     [SerializeField]
     private GameObject[] studentButtons;
-
-
 
 
     private bool alignTableMode = false;
@@ -504,6 +506,31 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         for (int i = 1; i <= maxGroupNumber; i++) {
             List<Vector3> headPositions = headPositionsPerGroup[i];
             SampleController.Instance.Log("Group " + i + " has " + headPositions.Count + " head transforms"); 
+
+            // if list is empty, then skip
+            if (headPositions.Count == 0) {
+                SampleController.Instance.Log("Skipping group " + i); 
+                continue;
+            }
+
+            // get the average of all transforms of this group
+
+            Vector3 averageVector = Vector3.zero;
+            foreach(Vector3 position in headPositions) {
+                averageVector += position;
+            }
+            averageVector /= headPositions.Count;
+
+            SampleController.Instance.Log("average position spawn point is " + averageVector); 
+            
+
+            // now, instantiate the Main Object container at this position and for this group
+
+            // instantiate
+            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, averageVector, mainObjectContainerPrefab.transform.rotation);
+            // set group number
+            SetPhotonObjectGroupNumber(mainObjectContainerInstance, i);
+
         }
 
 

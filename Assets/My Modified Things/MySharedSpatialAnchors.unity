@@ -9169,6 +9169,7 @@ MonoBehaviour:
   studentButtons:
   - {fileID: 99205691}
   - {fileID: 392236200}
+  mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
