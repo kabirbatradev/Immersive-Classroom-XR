@@ -95,14 +95,16 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         int currentUserGroupNumber = GetCurrentGroupNumber();
 
 
-        // need to include inactive (params are type, includeInactive)
-        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsOfType(typeof(ObjectData), true);
+        // need to include inactive 
+        // eventually want to replace with with Tags instead because we can get rid of "object data"
+        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (ObjectData objectData in allNetworkObjectDatas) {
             GameObject obj = objectData.gameObject;
 
-            string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-            int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+            // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
+            // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+            int objectGroupNumber = GetPhotonObjectGroupNumber(obj);
 
             // if group 0 or the group numbers match, then set the object to active
             if (currentUserGroupNumber == 0 || objectGroupNumber == currentUserGroupNumber) {
@@ -124,10 +126,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 SampleController.Instance.Log("object view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
 
 
-                string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-                int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+                // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
+                // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
 
-                SampleController.Instance.Log("object group number: " + objectGroupNumber);
+                SampleController.Instance.Log("object group number: " + GetPhotonObjectGroupNumber(obj));
                 SampleController.Instance.Log("");
             }
         }
@@ -163,10 +165,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // we will actually store the group number in the room custom properties
         // use the view id of the sphere
 
-        string key = "groupNum" + sphereObject.GetComponent<PhotonPun.PhotonView>().ViewID;
-        int value = currentUserGroupNumber;
-        var newValue = new ExitGames.Client.Photon.Hashtable { { key, value } };
-        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newValue);
+        SetPhotonObjectGroupNumber(sphereObject, currentUserGroupNumber);
+
+        // string key = "groupNum" + sphereObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        // int value = currentUserGroupNumber;
+        // var newValue = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newValue);
 
         // the custom properties table is not set in time
         // SampleController.Instance.Log("group number of this sphere is: " + PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key]);
@@ -174,6 +178,27 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         mostRecentSphere = sphereObject;
     }
+
+
+    private void SetPhotonObjectGroupNumber(GameObject photonObject, int groupNumber) {
+
+        string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        int value = groupNumber;
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+    }
+
+    private int GetPhotonObjectGroupNumber(GameObject photonObject) {
+
+        string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+
+        return objectGroupNumber;
+    }
+
+
+
 
     public void OnSpawnJengaButtonPressed()
     {
@@ -253,6 +278,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
 
         return currentUserGroupNumber;
+
+    }
+
+    private int GetPlayerGroupNumber(PhotonRealtime.Player player) {
+
+        ExitGames.Client.Photon.Hashtable PlayerProperties = player.CustomProperties;
+
+        bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
+        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+
+        return groupNumber;
 
     }
 
@@ -400,29 +436,79 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private void CreateMainObjectContainerPerGroup() {
 
-        SampleController.Instance.Log("TODO");
 
-        // // value collection (basically list) of PhotonRealtime.Player objects
-        // // values because players are like a dictionary (we dont want the keys)
-        // var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+        // value collection (basically list) of PhotonRealtime.Player objects
+        // values because players are like a dictionary (we dont want the keys)
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
-        // int groupNumber = 1;
-        // int counter = 0;
-        // foreach (PhotonRealtime.Player player in players) {
-            
-        //     // if the player is the current player, then skip
-        //     if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-        //         SampleController.Instance.Log("(skipping current player)");
-        //         continue;
-        //     }
+        // get max group number
+        int maxGroupNumber = 0; 
 
-        //     player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
-        //     SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
-        //     counter++;
-        //     if (counter % 2 == 0) {
-        //         groupNumber++;
-        //     }
-        // }
+        foreach (PhotonRealtime.Player player in players) {
+            int groupNumber = GetPlayerGroupNumber(player);
+            if (maxGroupNumber < groupNumber) maxGroupNumber = groupNumber;
+        }
+
+        SampleController.Instance.Log("max group number is " + maxGroupNumber);
+
+        // create headPositionsPerGroup array: stores list of player positions for each group
+        // array of list ints
+        List<Vector3>[] headPositionsPerGroup = new List<Vector3>[maxGroupNumber+1];
+            // +1 because we should be able to access the array at the max group number index
+        
+        // initialize all of the lists to empty lists
+        for (int i = 1; i <= maxGroupNumber; i++) {
+            headPositionsPerGroup[i] = new List<Vector3>();
+        }
+
+        // get every MyPhotonUserHeadTracker 
+        var allHeadTrackerObjects = FindObjectsByType<PhotonUserHeadTrackerCommunication>(FindObjectsSortMode.None);
+
+        // populate the headPositionsPerGroup array
+        foreach (PhotonUserHeadTrackerCommunication headTrackerScript in allHeadTrackerObjects) {
+            // get the head tracker object
+            GameObject headTrackerObject = headTrackerScript.gameObject;
+
+            // get photon view
+            var photonView = headTrackerObject.GetComponent<PhotonPun.PhotonView>();
+
+            // get player owner 
+            PhotonRealtime.Player player = photonView.Owner;
+
+            // get player's group number
+            int groupNumber = GetPlayerGroupNumber(player);
+            // skip if group number is 0
+            if (groupNumber == 0) {
+                continue;
+            }
+
+            // get the vector 3 associated with this player's head
+            Vector3 position;
+            // if local head:
+            if (photonView.IsMine) {
+                position = UserHeadPositionTrackerManager.Instance.localHeadTransform.position;
+            }
+            else {
+                // not local head
+                position = headTrackerObject.transform.position;
+            }
+
+            // append to array
+            headPositionsPerGroup[groupNumber].Add(position);
+        }
+
+        // now we have all of the vector3 in a list for each group (done)
+
+        // for each group, get the average position of the group members
+        // and instantiate a Main Object Container at that position
+        for (int i = 1; i <= maxGroupNumber; i++) {
+            List<Vector3> headPositions = headPositionsPerGroup[i];
+            SampleController.Instance.Log("Group " + i + " has " + headPositions.Count + " head transforms"); 
+        }
+
+
+
+
 
     }
 
