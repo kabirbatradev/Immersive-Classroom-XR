@@ -141,6 +141,30 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         */
 
 
+
+        // if there is an active "MainObjectContainer" in the scene
+        // then change check the room custom properties to see which model should be active, and deactive the rest
+
+        // not recommended to use Find every frame (instead, we should cache the object)
+        // or use FindWithTag(tag) --> returns 1 active game object or null if dne
+        // tag is "MainObjectContainer"
+        GameObject mainObjectContainer = FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null) {
+            if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+                string currentActiveObject = GetRoomCustomProperty("mainObjectCurrentModelName");
+                
+                // for every potential model (child of container), disable unless name = currentActiveObject
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    // if (potentialModel.name == currentActiveObject)
+                    gameObject.SetActive(potentialModel.name == currentActiveObject);
+                }
+            }
+
+        }
+
+
+
     }
 
 
@@ -207,6 +231,22 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
 
         return objectGroupNumber;
+    }
+
+
+    // room has custom property?
+    private bool RoomHasCustomProperty(string key) {
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    }
+
+    // get room custom property
+    private object GetRoomCustomProperty(string key) {
+
+        // string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+
+        // return objectGroupNumber;
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
     }
 
 
