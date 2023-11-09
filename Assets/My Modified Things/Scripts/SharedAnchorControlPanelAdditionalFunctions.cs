@@ -46,6 +46,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     public void Update() {
 
+        /*
         if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
@@ -70,8 +71,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 }
             }
         }
+        */
 
 
+        /*
         // if the B button is pressed, then enable or disable the most recent spawned sphere
         bool BButton = OVRInput.GetDown(OVRInput.RawButton.B);
         if (BButton) {
@@ -84,29 +87,29 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             data.groupNumber = data.groupNumber == 0 ? 1 : 0;
             SampleController.Instance.Log("set group number to " + data.groupNumber);
         }
+        */
 
 
         // Object Group Filtering:
 
-        // every frame, scan through all objects that have "object data" component
+        // every frame, scan through all objects that have a photon id (photon view)
         // and enable or disable them based on if their group number matches the current 
         // user's group number
 
-        // int currentUserGroupNumber = 0;
-        // int currentUserGroupNumber = gameObject.GetComponent<StudentData>().groupNumber;
-        int currentUserGroupNumber = GetCurrentGroupNumber();
-
+        int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
 
         // need to include inactive 
-        // eventually want to replace with with Tags instead because we can get rid of "object data"
-        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        // ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        PhotonPun.PhotonView[] allPhotonViews = (PhotonPun.PhotonView[]) FindObjectsByType<PhotonPun.PhotonView>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-        foreach (ObjectData objectData in allNetworkObjectDatas) {
-            GameObject obj = objectData.gameObject;
+        foreach (PhotonPun.PhotonView photonView in allPhotonViews) {
+            GameObject obj = photonView.gameObject;
 
-            // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-            // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
-            int objectGroupNumber = GetPhotonObjectGroupNumber(obj);
+
+            // use photonView viewID as key to room custom properties and get group number
+            // if no group number, then skip (some objects dont have group numbers)
+            if (!PhotonObjectHasGroupNumber(obj)) continue;
+            int objectGroupNumber = GetPhotonObjectGroupNumber(obj); // error happening here?
 
             // if group 0 or the group numbers match, then set the object to active
             if (currentUserGroupNumber == 0 || objectGroupNumber == currentUserGroupNumber) {
@@ -118,7 +121,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
         }
 
-
+        /*
         // if you press X, then print all spawned object's data
         bool XPressed = OVRInput.GetDown(OVRInput.RawButton.X);
         if (XPressed) {
@@ -135,6 +138,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 SampleController.Instance.Log("");
             }
         }
+        */
 
 
     }
@@ -189,6 +193,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
         PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
 
+    }
+
+    private bool PhotonObjectHasGroupNumber(GameObject photonObject) {
+
+        string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
     }
 
     private int GetPhotonObjectGroupNumber(GameObject photonObject) {
