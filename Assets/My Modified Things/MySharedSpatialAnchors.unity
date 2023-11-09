@@ -2342,7 +2342,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Everyone Group 1
+  m_text: Everyone Else Group 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6446991ef31ced4190c53c206cf4b3e, type: 2}
   m_sharedMaterial: {fileID: -9221056233183343877, guid: a6446991ef31ced4190c53c206cf4b3e, type: 2}
@@ -2533,7 +2533,7 @@ GameObject:
   - component: {fileID: 1012869679}
   - component: {fileID: 1012869678}
   m_Layer: 0
-  m_Name: 'Menu Button - Everyone Group 0 '
+  m_Name: 'Menu Button - Everyone Else Group 0 '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3749,7 +3749,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Everyone Group 0 '
+  m_text: 'Everyone Else Group 0 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6446991ef31ced4190c53c206cf4b3e, type: 2}
   m_sharedMaterial: {fileID: -9221056233183343877, guid: a6446991ef31ced4190c53c206cf4b3e, type: 2}
@@ -7701,7 +7701,7 @@ GameObject:
   - component: {fileID: 2138925935}
   - component: {fileID: 2138925934}
   m_Layer: 0
-  m_Name: Menu Button - Everyone Group 1
+  m_Name: Menu Button - Everyone Else Group 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9155,6 +9155,7 @@ MonoBehaviour:
   jengaPrefab: {fileID: 4257439788469908370, guid: e5481e89efcab0641ba811e7914bb017, type: 3}
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
   spawnPoint: {fileID: 1774543904}
+  mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
   adminButtons:
   - {fileID: 392236200}
   - {fileID: 99205691}
@@ -9169,7 +9170,6 @@ MonoBehaviour:
   studentButtons:
   - {fileID: 99205691}
   - {fileID: 392236200}
-  mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
