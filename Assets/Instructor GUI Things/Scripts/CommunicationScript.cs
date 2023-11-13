@@ -37,10 +37,10 @@ public class CommunicationScript : MonoBehaviour
             SetVariableOnServer("IsShooting", IsShooting);
         }
 
-        SetVariableOnServer("CamPos", CamPos);
-        SetVariableOnServer("ObjRot", ObjRot);
-        SetVariableOnServer("ObjPos", ObjPos);
-        SetVariableOnServer("ObjScale", ObjScale);
+        SetVariableOnServer("CameraPosition", CamPos);
+        SetVariableOnServer("ObjectRotation", ObjRot);
+        SetVariableOnServer("ObjectPosition", ObjPos);
+        SetVariableOnServer("ObjectScale", ObjScale);
     }
 
     private void SetVariableOnServer(string key, object value)
