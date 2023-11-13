@@ -9,6 +9,8 @@ public class CommunicationScript : MonoBehaviour
     private Vector3 HitPos;
     public GameObject CurObj;
     private Quaternion ObjRot;
+    private Vector3 ObjPos;
+    private Vector3 ObjScale;
     private bool isShooting = false;
 
     void Update()
@@ -19,6 +21,8 @@ public class CommunicationScript : MonoBehaviour
         RaycastHit hit;
 
         ObjRot = CurObj.transform.rotation;
+        ObjPos = CurObj.transform.position;
+        ObjScale = CurObj.transform.localScale;
 
         if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0))
         {
@@ -30,6 +34,8 @@ public class CommunicationScript : MonoBehaviour
 
         SetVariableOnServer("CamPos", CamPos);
         SetVariableOnServer("ObjRot", ObjRot);
+        SetVariableOnServer("ObjPos", ObjPos);
+        SetVariableOnServer("ObjScale", ObjScale);
     }
 
     private void SetVariableOnServer(string key, object value)
