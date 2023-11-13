@@ -34,7 +34,7 @@ public class CommunicationScript : MonoBehaviour
         else
         {
             isShooting = false;
-            SetVariableOnServer("IsShooting", isShooting);
+            SetVariableOnServer("IsShooting", IsShooting);
         }
 
         SetVariableOnServer("CamPos", CamPos);
