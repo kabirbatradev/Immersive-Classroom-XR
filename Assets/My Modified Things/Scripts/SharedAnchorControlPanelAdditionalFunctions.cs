@@ -46,6 +46,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     public void Update() {
 
+
+        if (PhotonPun.PhotonNetwork.CurrentRoom == null) {
+            return;
+        }
+
         /*
         if (alignTableMode) {
 
@@ -89,13 +94,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         */
 
-
+        
         // Object Group Filtering:
 
         // every frame, scan through all objects that have a photon id (photon view)
         // and enable or disable them based on if their group number matches the current 
         // user's group number
 
+        
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
 
         // need to include inactive 
@@ -104,12 +110,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         foreach (PhotonPun.PhotonView photonView in allPhotonViews) {
             GameObject obj = photonView.gameObject;
+            if (obj == null) {
+                // SampleController.Instance.Log("photonView was attached to null object");
+                Debug.Log("photonView was attached to null object");
+                continue;
+            }
 
 
             // use photonView viewID as key to room custom properties and get group number
             // if no group number, then skip (some objects dont have group numbers)
-            if (!PhotonObjectHasGroupNumber(obj)) continue;
-            int objectGroupNumber = GetPhotonObjectGroupNumber(obj); // error happening here?
+            if (!PhotonObjectHasGroupNumber(obj)) continue; // error happening here? object reference not set to instance of object 
+            // seems to give error when we arent in a room yet
+            int objectGroupNumber = GetPhotonObjectGroupNumber(obj); 
 
             // if group 0 or the group numbers match, then set the object to active
             if (currentUserGroupNumber == 0 || objectGroupNumber == currentUserGroupNumber) {
@@ -148,16 +160,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // not recommended to use Find every frame (instead, we should cache the object)
         // or use FindWithTag(tag) --> returns 1 active game object or null if dne
         // tag is "MainObjectContainer"
-        GameObject mainObjectContainer = FindWithTag("MainObjectContainer");
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
         if (mainObjectContainer != null) {
             if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObject = GetRoomCustomProperty("mainObjectCurrentModelName");
+                string currentActiveObject = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
                 
                 // for every potential model (child of container), disable unless name = currentActiveObject
                 foreach (Transform child in mainObjectContainer.transform) {
                     GameObject potentialModel = child.gameObject;
                     // if (potentialModel.name == currentActiveObject)
-                    gameObject.SetActive(potentialModel.name == currentActiveObject);
+                    potentialModel.SetActive(potentialModel.name == currentActiveObject);
+                    // Debug.Log(potentialModel.name);
                 }
             }
 
@@ -247,6 +260,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // return objectGroupNumber;
         return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
+
+
+    private void SetRoomCustomProperty(string key, object value) {
+
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
     }
 
 
@@ -583,10 +604,32 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
+    }
 
 
 
+    public void OnSetMainObjectModel1() {
+        SampleController.Instance.Log("Setting main object to model 1");
+        SetMainObjectModel1();
+    }
+
+    private void SetMainObjectModel1() {
+
+        SetRoomCustomProperty("mainObjectCurrentModelName", "Model1");
 
     }
+
+    public void OnSetMainObjectModel2() {
+        SampleController.Instance.Log("Setting main object to model 2");
+        SetMainObjectModel2();
+    }
+
+    private void SetMainObjectModel2() {
+
+        SetRoomCustomProperty("mainObjectCurrentModelName", "Model2");
+
+    }
+
+
 
 }
