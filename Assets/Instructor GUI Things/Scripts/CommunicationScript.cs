@@ -28,7 +28,7 @@ public class CommunicationScript : MonoBehaviour
         {
             HitPos = hit.point;
             IsShooting = true;
-            SetVariableOnServer("HitPos", HitPos);
+            SetVariableOnServer("HitPosition", HitPos);
             SetVariableOnServer("IsShooting", IsShooting);
         }
         else
