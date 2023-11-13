@@ -46,6 +46,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     public void Update() {
 
+
+        if (PhotonPun.PhotonNetwork.CurrentRoom == null) {
+            return;
+        }
+
+        /*
         if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
@@ -70,8 +76,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 }
             }
         }
+        */
 
 
+        /*
         // if the B button is pressed, then enable or disable the most recent spawned sphere
         bool BButton = OVRInput.GetDown(OVRInput.RawButton.B);
         if (BButton) {
@@ -84,29 +92,36 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             data.groupNumber = data.groupNumber == 0 ? 1 : 0;
             SampleController.Instance.Log("set group number to " + data.groupNumber);
         }
+        */
 
-
+        
         // Object Group Filtering:
 
-        // every frame, scan through all objects that have "object data" component
+        // every frame, scan through all objects that have a photon id (photon view)
         // and enable or disable them based on if their group number matches the current 
         // user's group number
 
-        // int currentUserGroupNumber = 0;
-        // int currentUserGroupNumber = gameObject.GetComponent<StudentData>().groupNumber;
-        int currentUserGroupNumber = GetCurrentGroupNumber();
-
+        
+        int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
 
         // need to include inactive 
-        // eventually want to replace with with Tags instead because we can get rid of "object data"
-        ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        // ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        PhotonPun.PhotonView[] allPhotonViews = (PhotonPun.PhotonView[]) FindObjectsByType<PhotonPun.PhotonView>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-        foreach (ObjectData objectData in allNetworkObjectDatas) {
-            GameObject obj = objectData.gameObject;
+        foreach (PhotonPun.PhotonView photonView in allPhotonViews) {
+            GameObject obj = photonView.gameObject;
+            if (obj == null) {
+                // SampleController.Instance.Log("photonView was attached to null object");
+                Debug.Log("photonView was attached to null object");
+                continue;
+            }
 
-            // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-            // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
-            int objectGroupNumber = GetPhotonObjectGroupNumber(obj);
+
+            // use photonView viewID as key to room custom properties and get group number
+            // if no group number, then skip (some objects dont have group numbers)
+            if (!PhotonObjectHasGroupNumber(obj)) continue; // error happening here? object reference not set to instance of object 
+            // seems to give error when we arent in a room yet
+            int objectGroupNumber = GetPhotonObjectGroupNumber(obj); 
 
             // if group 0 or the group numbers match, then set the object to active
             if (currentUserGroupNumber == 0 || objectGroupNumber == currentUserGroupNumber) {
@@ -118,7 +133,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
         }
 
-
+        /*
         // if you press X, then print all spawned object's data
         bool XPressed = OVRInput.GetDown(OVRInput.RawButton.X);
         if (XPressed) {
@@ -135,6 +150,32 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 SampleController.Instance.Log("");
             }
         }
+        */
+
+
+
+        // if there is an active "MainObjectContainer" in the scene
+        // then change check the room custom properties to see which model should be active, and deactive the rest
+
+        // not recommended to use Find every frame (instead, we should cache the object)
+        // or use FindWithTag(tag) --> returns 1 active game object or null if dne
+        // tag is "MainObjectContainer"
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null) {
+            if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+                string currentActiveObject = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+                
+                // for every potential model (child of container), disable unless name = currentActiveObject
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    // if (potentialModel.name == currentActiveObject)
+                    potentialModel.SetActive(potentialModel.name == currentActiveObject);
+                    // Debug.Log(potentialModel.name);
+                }
+            }
+
+        }
+
 
 
     }
@@ -191,12 +232,42 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     }
 
+    private bool PhotonObjectHasGroupNumber(GameObject photonObject) {
+
+        string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    }
+
     private int GetPhotonObjectGroupNumber(GameObject photonObject) {
 
         string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
         int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
 
         return objectGroupNumber;
+    }
+
+
+    // room has custom property?
+    private bool RoomHasCustomProperty(string key) {
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    }
+
+    // get room custom property
+    private object GetRoomCustomProperty(string key) {
+
+        // string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
+        // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+
+        // return objectGroupNumber;
+        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
+
+
+    private void SetRoomCustomProperty(string key, object value) {
+
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
     }
 
 
@@ -533,10 +604,32 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
+    }
 
 
 
+    public void OnSetMainObjectModel1() {
+        SampleController.Instance.Log("Setting main object to model 1");
+        SetMainObjectModel1();
+    }
+
+    private void SetMainObjectModel1() {
+
+        SetRoomCustomProperty("mainObjectCurrentModelName", "Model1");
 
     }
+
+    public void OnSetMainObjectModel2() {
+        SampleController.Instance.Log("Setting main object to model 2");
+        SetMainObjectModel2();
+    }
+
+    private void SetMainObjectModel2() {
+
+        SetRoomCustomProperty("mainObjectCurrentModelName", "Model2");
+
+    }
+
+
 
 }

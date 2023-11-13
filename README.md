@@ -6,11 +6,13 @@ Features:
 - Mixed reality passthrough (you can see the real world)
 - Shared coordinate space (users see virtual objects in the same physical space)
 - Custom interactable virtual objects
-- Manual group partitioning: students and objects can be assigned to separate groups (a student in group 1 cannot see or interact with objects in group 2)
+- Student and object group partitioning: a student in group 1 cannot see or interact with objects in group 2
+- Group assigning: admin can put individual students into different groups
+- Basic automatic group partitioning algorithms: students can be assigned to their own individual group, random pairs, or the whole class is in one group
+- Admin/Cameraman mode: cameraman can see all objects regardless of group number
 
 In Progress:
-- Automatic partitioning algorithm: put students into groups of varying sizes automatically
-- Admin/Cameraman mode: admin can see all group's objects
+- Advanced automatic group partitioning algorithm: put students into groups of a specified size automatically
 - 2D classroom visualization: view the classroom from a bird's eye view on a computer screen
 - Switch between breakout groups and large lecture: In breakout groups mode, every group has their own virtual interactable objects. In large lecture mode, one large uninteractable object is present at the front of the class.
 
