@@ -7,6 +7,9 @@ public class CommunicationScript : MonoBehaviour
     public Camera mainCamera;
     private Vector3 CamPos;
     private Vector3 HitPos;
+    public GameObject CurObj;
+    private Quaternion ObjRot;
+    private bool isShooting = false;
 
     void Update()
     {
@@ -15,13 +18,18 @@ public class CommunicationScript : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+        ObjRot = CurObj.transform.rotation;
+
         if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0))
         {
             HitPos = hit.point;
+            isShooting = true;
             SetVariableOnServer("HitPos", HitPos);
+            SetVariableOnServer("isShooting", isShooting);
         }
 
         SetVariableOnServer("CamPos", CamPos);
+        SetVariableOnServer("ObjRot", ObjRot);
     }
 
     private void SetVariableOnServer(string key, object value)

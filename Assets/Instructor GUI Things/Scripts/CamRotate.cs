@@ -30,11 +30,11 @@ public class CamRotate : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-            float horizontalInput = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
-            float verticalInput = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+            float horizontalRotation = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime * -1;
+            float verticalRotation = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
 
-            currentRotation.x -= verticalInput;
-            currentRotation.y += horizontalInput;
+            currentTarget.Rotate(Vector3.up, horizontalRotation, Space.World);
+            currentTarget.Rotate(Vector3.right, verticalRotation, Space.Self);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && targetObjects.Count >= 1)
