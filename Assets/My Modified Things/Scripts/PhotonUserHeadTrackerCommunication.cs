@@ -9,6 +9,8 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
 
     private PhotonView photonView;
 
+    public GameObject head;
+
     // get the photon view of the gameobject
     private void Start() {
         photonView = GetComponent<PhotonView>();
@@ -16,10 +18,25 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
         // use this to not render the cube if it is of the self
 
         if (photonView.IsMine) {
-            foreach (Transform child in transform) {
-                child.gameObject.SetActive(false);
-            }
+            // foreach (Transform child in transform) {
+            //     child.gameObject.SetActive(false);
+            // }
+            head.SetActive(false);
         }
+    }
+
+    private void Update() {
+
+        if (photonView.IsMine) {
+
+            Transform localHead = UserHeadPositionTrackerManager.Instance.localHeadTransform;
+
+            gameObject.transform.position = localHead.position;
+            gameObject.transform.eulerAngles = localHead.eulerAngles;
+
+        }
+
+
     }
 
     // this function is called every time this object tries to update itself
@@ -38,6 +55,7 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
 
             stream.SendNext(localHead.position);
             stream.SendNext(localHead.eulerAngles);
+
         }
 
         // if reading, this object must have been instantiated elsewhere (it is someone elses head)
