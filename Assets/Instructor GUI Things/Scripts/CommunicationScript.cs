@@ -27,13 +27,13 @@ public class CommunicationScript : MonoBehaviour
         if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0))
         {
             HitPos = hit.point;
-            isShooting = true;
+            IsShooting = true;
             SetVariableOnServer("HitPos", HitPos);
-            SetVariableOnServer("IsShooting", isShooting);
+            SetVariableOnServer("IsShooting", IsShooting);
         }
         else
         {
-            isShooting = false;
+            IsShooting = false;
             SetVariableOnServer("IsShooting", IsShooting);
         }
 
