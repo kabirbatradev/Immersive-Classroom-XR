@@ -11,7 +11,7 @@ public class CommunicationScript : MonoBehaviour
     private Quaternion ObjRot;
     private Vector3 ObjPos;
     private Vector3 ObjScale;
-    private bool isShooting = false;
+    private bool IsShooting = false;
 
     void Update()
     {
@@ -29,7 +29,7 @@ public class CommunicationScript : MonoBehaviour
             HitPos = hit.point;
             isShooting = true;
             SetVariableOnServer("HitPos", HitPos);
-            SetVariableOnServer("isShooting", isShooting);
+            SetVariableOnServer("IsShooting", isShooting);
         }
 
         SetVariableOnServer("CamPos", CamPos);
