@@ -1,40 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-using PhotonPun = Photon.Pun;
-using PhotonRealtime = Photon.Realtime;
+using Photon.Pun;
+using ExitGames.Client.Photon;
 
 public class CommunicationScript : MonoBehaviour
 {
-    // // Start is called before the first frame update
-    // void Start()
-    // {
-        
-    // }
+    public Camera mainCamera;
+    private Vector3 CamPos;
+    private Vector3 HitPos;
 
-    private int num = 0;
-
-    // Update is called once per frame
     void Update()
-    {   
+    {
+        CamPos = mainCamera.transform.position;
 
-        // ignore the fact that this keeps giving errors until we have actually connected to the room
-        SetVariableOnServer("testNumber", num);
-        num++;
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0))
+        {
+            HitPos = hit.point;
+            SetVariableOnServer("HitPos", HitPos);
+        }
+
+        SetVariableOnServer("CamPos", CamPos);
     }
 
-
-    private void SetVariableOnServer(string key, object value) {
-        var newTableEntry = new ExitGames.Client.Photon.Hashtable { { key, value } };
-        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newTableEntry);
+    private void SetVariableOnServer(string key, object value)
+    {
+        Hashtable newTableEntry = new Hashtable { { key, value } };
+        PhotonNetwork.CurrentRoom.SetCustomProperties(newTableEntry);
     }
 
-    private object GetVariableOnServer(string key) {
-        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+    private object GetVariableOnServer(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties[key];
     }
 
-    private bool VariableExistsOnServer(string key) {
-        return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    private bool VariableExistsOnServer(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
     }
-} 
+}
