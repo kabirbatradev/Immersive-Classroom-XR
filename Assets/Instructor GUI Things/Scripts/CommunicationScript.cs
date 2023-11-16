@@ -63,7 +63,7 @@ public class CommunicationScript : MonoBehaviour
 
     private void SetVariableOnServer(string key, object value)
     {
-        Hashtable newTableEntry = new Hashtable { { key, value } };
+        ExitGames.Client.Photon.Hashtable newTableEntry = new ExitGames.Client.Photon.Hashtable { { key, value } };
         PhotonNetwork.CurrentRoom.SetCustomProperties(newTableEntry);
     }
 }
