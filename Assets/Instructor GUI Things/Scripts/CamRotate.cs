@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class CamRotate : MonoBehaviour
 {
-    public List<Transform> targetObjects;
     private Transform currentTarget;
     public float rotationSpeed = 300f;
     public float zoomSpeed = 10f;
@@ -14,16 +15,22 @@ public class CamRotate : MonoBehaviour
 
     void Start()
     {
-        if (targetObjects.Count > 0)
-        {
-            currentTarget = targetObjects[0];
-        }
-        distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
         currentRotation = transform.eulerAngles;
     }
 
     void Update()
     {
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
+        {
+            string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+            Transform foundTarget = FindTargetByName(currentActiveObjectName);
+            if (foundTarget != null)
+            {
+                currentTarget = foundTarget;
+            }
+        }
+
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         distanceFromTarget -= scrollInput * zoomSpeed;
         distanceFromTarget = Mathf.Clamp(distanceFromTarget, minZoomDistance, maxZoomDistance);
@@ -37,23 +44,37 @@ public class CamRotate : MonoBehaviour
             currentTarget.Rotate(Vector3.right, verticalRotation, Space.Self);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && targetObjects.Count >= 1)
-        {
-            currentTarget = targetObjects[0];
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && targetObjects.Count >= 2)
-        {
-            currentTarget = targetObjects[1];
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3) && targetObjects.Count >= 3)
-        {
-            currentTarget = targetObjects[2];
-        }
-
         Vector3 direction = new Vector3(0, 0, -distanceFromTarget);
         Quaternion rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, 0);
         transform.position = currentTarget.position + rotation * direction;
 
         transform.LookAt(currentTarget);
+    }
+
+    private Transform FindTargetByName(string targetName)
+    {
+        // find it in the main object container
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null)
+        {
+            foreach (Transform child in mainObjectContainer.transform)
+            {
+                if (child.name == targetName)
+                {
+                    return child;
+                }
+            }
+        }
+        return null;
+    }
+
+    private object GetRoomCustomProperty(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
+
+    private bool RoomHasCustomProperty(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
     }
 }

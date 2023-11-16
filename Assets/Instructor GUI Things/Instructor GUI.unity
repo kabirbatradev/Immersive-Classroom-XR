@@ -1135,6 +1135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   CurObj: {fileID: 0}
+  updateFrequency: 1
 --- !u!4 &330317575
 Transform:
   m_ObjectHideFlags: 0
@@ -1521,6 +1522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9676437e768eba4c8a257e7f3cc8e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateFrequency: 1
 --- !u!4 &433029920
 Transform:
   m_ObjectHideFlags: 0
