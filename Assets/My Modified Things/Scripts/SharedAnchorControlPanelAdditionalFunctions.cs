@@ -609,7 +609,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     public void OnSetMainObjectModel1() {
-        SampleController.Instance.Log("Setting main object to model 1");
+        SampleController.Instance.Log("Setting main object to model x");
         SetMainObjectModel1();
     }
 

@@ -49,7 +49,7 @@ public class Laser : MonoBehaviour
         lineRenderer.SetPosition(0, mainCamera.transform.position);
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, laserRange) && hit.transform.gameObject != laserIndicator)
+        if (Physics.Raycast(ray, out hit, laserRange) && hit.collider.gameObject != laserIndicator)
         {
             lineRenderer.SetPosition(1, hit.point);
             lineRenderer.enabled = true;
