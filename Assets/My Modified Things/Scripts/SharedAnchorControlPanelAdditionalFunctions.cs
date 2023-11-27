@@ -44,6 +44,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private GameObject mostRecentSphere;
 
+
+
+
     public void Update() {
 
 
@@ -161,24 +164,58 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // or use FindWithTag(tag) --> returns 1 active game object or null if dne
         // tag is "MainObjectContainer"
         GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        GameObject currentActiveGameObject = null;
         if (mainObjectContainer != null) {
             if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObject = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
                 
                 // for every potential model (child of container), disable unless name = currentActiveObject
                 foreach (Transform child in mainObjectContainer.transform) {
                     GameObject potentialModel = child.gameObject;
                     // if (potentialModel.name == currentActiveObject)
-                    potentialModel.SetActive(potentialModel.name == currentActiveObject);
+                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
                     // Debug.Log(potentialModel.name);
+                    if (potentialModel.name == currentActiveObjectName) {
+                        currentActiveGameObject = potentialModel;
+                    }
                 }
             }
 
         }
 
 
+        // if main object exists, check if the professor wants to 
+        // rotate it
+        // scale it
+        // draw a laser
+
+        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null) {
+            bool isShootingExists = RoomHasCustomProperty("IsShooting");
+
+            if (isShootingExists != isShootingExisted) {
+                isShootingExisted = isShootingExists;
+                SampleController.Instance.Log("isShootingExists is now: " + isShootingExists);
+
+                if (isShootingExists) {
+                    bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                    SampleController.Instance.Log("isShooting is: " + isShooting);
+                }
+            }
+            
+            
+            // get rotation from server side and rotate the main object
+            // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
+            Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
+            // SampleController.Instance.Log("rotation is: " + objectRotation);
+
+            currentActiveGameObject.transform.rotation = objectRotation;
+
+        }
 
     }
+
+    private bool isShootingExisted = false;
 
 
 
