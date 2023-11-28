@@ -16,6 +16,7 @@ public class CamRotate : MonoBehaviour
     void Start()
     {
         currentRotation = transform.eulerAngles;
+        currentTarget = null;
     }
 
     void Update()
@@ -35,7 +36,7 @@ public class CamRotate : MonoBehaviour
         distanceFromTarget -= scrollInput * zoomSpeed;
         distanceFromTarget = Mathf.Clamp(distanceFromTarget, minZoomDistance, maxZoomDistance);
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && currentTarget != null)
         {
             float horizontalRotation = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime * -1;
             float verticalRotation = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
@@ -46,9 +47,12 @@ public class CamRotate : MonoBehaviour
 
         Vector3 direction = new Vector3(0, 0, -distanceFromTarget);
         Quaternion rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, 0);
-        transform.position = currentTarget.position + rotation * direction;
 
-        transform.LookAt(currentTarget);
+        if (currentTarget != null) {
+            transform.position = currentTarget.position + rotation * direction;
+
+            transform.LookAt(currentTarget);
+        }
     }
 
     private Transform FindTargetByName(string targetName)
