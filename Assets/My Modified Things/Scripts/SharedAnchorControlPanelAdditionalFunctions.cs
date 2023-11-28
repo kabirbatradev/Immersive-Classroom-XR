@@ -47,6 +47,26 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+
+    private LineRenderer lineRenderer;
+    private float lineSize = 0.02f;
+    public Material laserMaterial;
+
+
+    public void Start() {
+        // initialize laser renderer
+
+        if (lineRenderer == null) {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.material = laserMaterial;
+            lineRenderer.startWidth = lineSize;
+            lineRenderer.endWidth = lineSize;
+        }
+
+        lineRenderer.enabled = false;
+    }
+
+
     public void Update() {
 
 
@@ -193,29 +213,58 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         if (mainObjectContainer != null) {
             bool isShootingExists = RoomHasCustomProperty("IsShooting");
 
-            if (isShootingExists != isShootingExisted) {
-                isShootingExisted = isShootingExists;
-                SampleController.Instance.Log("isShootingExists is now: " + isShootingExists);
+            // if (isShootingExists != isShootingExisted) {
+            //     isShootingExisted = isShootingExists;
+            //     SampleController.Instance.Log("isShootingExists is now: " + isShootingExists);
 
-                if (isShootingExists) {
-                    bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
-                    SampleController.Instance.Log("isShooting is: " + isShooting);
-                }
-            }
+            //     if (isShootingExists) {
+            //         bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+            //         SampleController.Instance.Log("isShooting is: " + isShooting);
+            //     }
+            // }
+
+            
             
             
             // get rotation from server side and rotate the main object
             // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
             Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
             // SampleController.Instance.Log("rotation is: " + objectRotation);
-
             currentActiveGameObject.transform.rotation = objectRotation;
+
+
+
+            // if the professor is shooting a laser, then we should see it
+            if (isShootingExists) {
+                bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                // SampleController.Instance.Log("isShooting is: " + isShooting);
+                if (isShooting) {
+                    // get camera position and hit position
+                    Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
+                    Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+
+                    // lineRenderer is the line renderer
+                    // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
+                    // enable or disable the line renderer
+
+                    lineRenderer.enabled = true;
+                    lineRenderer.SetPosition(0, cameraPosition);
+                    lineRenderer.SetPosition(1, hitPosition);
+
+                }
+                else {
+                    lineRenderer.enabled = false;
+                }
+            }
 
         }
 
     }
 
-    private bool isShootingExisted = false;
+    // testing purposes
+    // private bool isShootingExisted = false;
+
+    
 
 
 
