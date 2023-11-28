@@ -5,13 +5,30 @@ using Photon.Realtime;
 
 public class CamRotate : MonoBehaviour
 {
-    private Transform currentTarget;
+
+    public Transform currentTarget;
     public float rotationSpeed = 300f;
     public float zoomSpeed = 10f;
     public float minZoomDistance = 1f;
     public float maxZoomDistance = 100f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
+
+
+
+    public static CamRotate Instance;
+    private void Awake() {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
 
     void Start()
     {

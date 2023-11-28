@@ -15,6 +15,10 @@ public class CommunicationScript : MonoBehaviour
 
     void Update()
     {
+        if (CamRotate.Instance.currentTarget == null) return;
+        CurObj = CamRotate.Instance.currentTarget.gameObject;
+
+
         CamPos = mainCamera.transform.position;
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
