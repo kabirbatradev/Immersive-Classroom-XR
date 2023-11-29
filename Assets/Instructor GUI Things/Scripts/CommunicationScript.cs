@@ -24,6 +24,13 @@ public class CommunicationScript : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null && VariableExistsOnServer("mainObjectCurrentModelName"))
+        {
+            string currentActiveObjectName = (string)GetVariableOnServer("mainObjectCurrentModelName");
+            CurObj = FindTargetByName(currentActiveObjectName);
+        }
+
         ObjRot = CurObj.transform.rotation;
         ObjPos = CurObj.transform.position;
         ObjScale = CurObj.transform.localScale;
@@ -61,5 +68,22 @@ public class CommunicationScript : MonoBehaviour
     private bool VariableExistsOnServer(string key)
     {
         return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    }
+
+    private GameObject FindTargetByName(string targetName)
+    {
+        // find it in the main object container
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null)
+        {
+            foreach (Transform child in mainObjectContainer.transform)
+            {
+                if (child.gameObject.name == targetName)
+                {
+                    return child.gameObject;
+                }
+            }
+        }
+        return null;
     }
 }
