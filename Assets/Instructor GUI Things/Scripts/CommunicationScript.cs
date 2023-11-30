@@ -13,8 +13,10 @@ public class CommunicationScript : MonoBehaviour
     private Vector3 ObjScale;
     private bool IsShooting = false;
 
-    void Update()
+    void FixedUpdate()
     {
+        // current target or current object is the main object holder 
+        // if it doesnt exist, then there is no data to send about where the laser is etc
         if (CamRotate.Instance.currentTarget == null) return;
         CurObj = CamRotate.Instance.currentTarget.gameObject;
 
@@ -24,12 +26,14 @@ public class CommunicationScript : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        if (mainObjectContainer != null && VariableExistsOnServer("mainObjectCurrentModelName"))
-        {
-            string currentActiveObjectName = (string)GetVariableOnServer("mainObjectCurrentModelName");
-            CurObj = FindTargetByName(currentActiveObjectName);
-        }
+        // CamRotate does this for us already, and its saved in "currentTarget"
+
+        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if (mainObjectContainer != null && VariableExistsOnServer("mainObjectCurrentModelName"))
+        // {
+        //     string currentActiveObjectName = (string)GetVariableOnServer("mainObjectCurrentModelName");
+        //     CurObj = FindTargetByName(currentActiveObjectName);
+        // }
 
         ObjRot = CurObj.transform.rotation;
         ObjPos = CurObj.transform.position;
@@ -39,7 +43,7 @@ public class CommunicationScript : MonoBehaviour
         {
             HitPos = hit.point;
             IsShooting = true;
-            SetVariableOnServer("HitPosition", HitPos);
+            SetVariableOnServer("HitPosition", HitPos - CurObj.transform.position);
             SetVariableOnServer("IsShooting", IsShooting);
         }
         else
@@ -47,6 +51,7 @@ public class CommunicationScript : MonoBehaviour
             IsShooting = false;
             SetVariableOnServer("IsShooting", IsShooting);
         }
+        Debug.Log(IsShooting);
 
         SetVariableOnServer("CameraPosition", CamPos);
         SetVariableOnServer("ObjectRotation", ObjRot);
