@@ -39,8 +39,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject[] studentButtons;
 
 
-    private bool alignTableMode = false;
-    private int countAButton = 0;
+    // private bool alignTableMode = false;
+    // private int countAButton = 0;
 
     private GameObject mostRecentSphere;
 
@@ -225,39 +225,54 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             
             
-            
-            // get rotation from server side and rotate the main object
-            // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
-            Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
-            // SampleController.Instance.Log("rotation is: " + objectRotation);
-            currentActiveGameObject.transform.rotation = objectRotation;
+            bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
+            if (objectRotationExists) {
+                // get rotation from server side and rotate the main object
+                // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
+                Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
+                // SampleController.Instance.Log("rotation is: " + objectRotation);
+                currentActiveGameObject.transform.rotation = objectRotation;
 
 
+                // if the professor is shooting a laser, then we should see it
+                if (isShootingExists) {
+                    bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                    // SampleController.Instance.Log("isShooting is: " + isShooting);
+                    if (isShooting) {
+                        // get camera position and hit position
+                        Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
+                        Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
 
-            // if the professor is shooting a laser, then we should see it
-            if (isShootingExists) {
-                bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
-                // SampleController.Instance.Log("isShooting is: " + isShooting);
-                if (isShooting) {
-                    // get camera position and hit position
-                    Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
-                    Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+                        // lineRenderer is the line renderer
+                        // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
+                        // enable or disable the line renderer
 
-                    // lineRenderer is the line renderer
-                    // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
-                    // enable or disable the line renderer
+                        // draw the line with respect to the main object
+                            // rotation and position
+                        lineRenderer.enabled = true;
+                        lineRenderer.SetPosition(0, cameraPosition + currentActiveGameObject.transform.position);
+                        lineRenderer.SetPosition(1, hitPosition + currentActiveGameObject.transform.position);
 
-                    lineRenderer.enabled = true;
-                    lineRenderer.SetPosition(0, cameraPosition);
-                    lineRenderer.SetPosition(1, hitPosition);
-
-                }
-                else {
-                    lineRenderer.enabled = false;
+                    }
+                    else {
+                        lineRenderer.enabled = false;
+                    }
                 }
             }
 
+            // // test if line renderer can render with respect to the main object (works)
+            // lineRenderer.enabled = true;
+            // lineRenderer.SetPosition(0, new Vector3(0, 0, 0) + currentActiveGameObject.transform.position);
+            // lineRenderer.SetPosition(1, new Vector3(1, 0, 0) + currentActiveGameObject.transform.position);
+
         }
+
+        
+        // // test if line renderer is working (works)
+        // lineRenderer.enabled = true;
+        // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
+        // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
 
     }
 
@@ -405,7 +420,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-        alignTableMode = true;
+        // alignTableMode = true;
         // SampleController.Instance.Log(alignTableMode.ToString());
         
     }
