@@ -39,7 +39,7 @@ public class CommunicationScript : MonoBehaviour
         ObjPos = CurObj.transform.position;
         ObjScale = CurObj.transform.localScale;
 
-        if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0))
+        if (Physics.Raycast(ray, out hit) && Input.GetMouseButton(0))
         {
             HitPos = hit.point;
             IsShooting = true;
@@ -51,7 +51,8 @@ public class CommunicationScript : MonoBehaviour
             IsShooting = false;
             SetVariableOnServer("IsShooting", IsShooting);
         }
-        Debug.Log(IsShooting);
+        // Debug.Log(IsShooting);
+        // Debug.Log("mouse button down? " + Input.GetMouseButton(0));
 
         SetVariableOnServer("CameraPosition", CamPos);
         SetVariableOnServer("ObjectRotation", ObjRot);
