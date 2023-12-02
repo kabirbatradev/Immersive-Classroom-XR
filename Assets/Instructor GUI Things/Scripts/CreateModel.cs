@@ -24,6 +24,8 @@ public class CreateModel : MonoBehaviour
 
         // create model code here
         Debug.Log("Create model button pressed");
+        // call the function from instructor cloud functions 
+        InstructorCloudFunctions.Instance.CreateMainObjectContainerPerGroup();
 
         // The following code changes the placeholder text
         modelIndex = 1;
