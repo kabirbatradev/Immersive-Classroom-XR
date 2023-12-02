@@ -8,12 +8,12 @@ public class UserHeadSphereController : MonoBehaviour
 {
 
 
-    private Renderer renderer;
+    private Renderer headRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        headRenderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class UserHeadSphereController : MonoBehaviour
             // Debug.Log("group number not set");
         }
 
-        renderer.material.color = Color.HSVToRGB(1.0f * groupNumber / 10.0f, 1.0f, 1.0f);
+        headRenderer.material.color = Color.HSVToRGB(1.0f * groupNumber / 10.0f, 1.0f, 1.0f);
         // renderer.material.color = Color.HSVToRGB(0.5f, 1.0f, 1.0f); // this does work
 
 

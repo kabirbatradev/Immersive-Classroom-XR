@@ -39,10 +39,33 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject[] studentButtons;
 
 
-    private bool alignTableMode = false;
-    private int countAButton = 0;
+    // private bool alignTableMode = false;
+    // private int countAButton = 0;
 
     private GameObject mostRecentSphere;
+
+
+
+
+
+    private LineRenderer lineRenderer;
+    private float lineSize = 0.02f;
+    public Material laserMaterial;
+
+
+    public void Start() {
+        // initialize laser renderer
+
+        if (lineRenderer == null) {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.material = laserMaterial;
+            lineRenderer.startWidth = lineSize;
+            lineRenderer.endWidth = lineSize;
+        }
+
+        lineRenderer.enabled = false;
+    }
+
 
     public void Update() {
 
@@ -161,24 +184,102 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // or use FindWithTag(tag) --> returns 1 active game object or null if dne
         // tag is "MainObjectContainer"
         GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        GameObject currentActiveGameObject = null;
         if (mainObjectContainer != null) {
             if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObject = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
                 
                 // for every potential model (child of container), disable unless name = currentActiveObject
                 foreach (Transform child in mainObjectContainer.transform) {
                     GameObject potentialModel = child.gameObject;
                     // if (potentialModel.name == currentActiveObject)
-                    potentialModel.SetActive(potentialModel.name == currentActiveObject);
+                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
                     // Debug.Log(potentialModel.name);
+                    if (potentialModel.name == currentActiveObjectName) {
+                        currentActiveGameObject = potentialModel;
+                    }
                 }
             }
 
         }
 
 
+        // if main object exists, check if the professor wants to 
+        // rotate it
+        // scale it
+        // draw a laser
+
+        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        if (mainObjectContainer != null) {
+            bool isShootingExists = RoomHasCustomProperty("IsShooting");
+
+            // if (isShootingExists != isShootingExisted) {
+            //     isShootingExisted = isShootingExists;
+            //     SampleController.Instance.Log("isShootingExists is now: " + isShootingExists);
+
+            //     if (isShootingExists) {
+            //         bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+            //         SampleController.Instance.Log("isShooting is: " + isShooting);
+            //     }
+            // }
+
+            
+            
+            bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
+            if (objectRotationExists) {
+                // get rotation from server side and rotate the main object
+                // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
+                Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
+                // SampleController.Instance.Log("rotation is: " + objectRotation);
+                currentActiveGameObject.transform.rotation = objectRotation;
+
+
+                // if the professor is shooting a laser, then we should see it
+                if (isShootingExists) {
+                    bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                    // SampleController.Instance.Log("isShooting is: " + isShooting);
+                    if (isShooting) {
+                        // get camera position and hit position
+                        Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
+                        Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+
+                        // lineRenderer is the line renderer
+                        // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
+                        // enable or disable the line renderer
+
+                        // draw the line with respect to the main object
+                            // rotation and position
+                        lineRenderer.enabled = true;
+                        lineRenderer.SetPosition(0, cameraPosition + currentActiveGameObject.transform.position);
+                        lineRenderer.SetPosition(1, hitPosition + currentActiveGameObject.transform.position);
+
+                    }
+                    else {
+                        lineRenderer.enabled = false;
+                    }
+                }
+            }
+
+            // // test if line renderer can render with respect to the main object (works)
+            // lineRenderer.enabled = true;
+            // lineRenderer.SetPosition(0, new Vector3(0, 0, 0) + currentActiveGameObject.transform.position);
+            // lineRenderer.SetPosition(1, new Vector3(1, 0, 0) + currentActiveGameObject.transform.position);
+
+        }
+
+        
+        // // test if line renderer is working (works)
+        // lineRenderer.enabled = true;
+        // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
+        // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
 
     }
+
+    // testing purposes
+    // private bool isShootingExisted = false;
+
+    
 
 
 
@@ -319,7 +420,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-        alignTableMode = true;
+        // alignTableMode = true;
         // SampleController.Instance.Log(alignTableMode.ToString());
         
     }
