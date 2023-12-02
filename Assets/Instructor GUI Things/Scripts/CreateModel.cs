@@ -9,9 +9,9 @@ public class CreateModel : MonoBehaviour
     public GameObject createModelBtn;
     public GameObject otherModelBtns;
     public GameObject modelPanel;
-    public int numModel;
+    public int totalNumberOfModels;
 
-    static private int count = -1;
+    static private int modelIndex = -1;
 
     // call back func for creating model
     public void createModel()
@@ -22,11 +22,11 @@ public class CreateModel : MonoBehaviour
         // Show the other btns
         otherModelBtns.SetActive(true);
 
-        //TODO: create model code here
-
+        // create model code here
+        Debug.Log("Create model button pressed");
 
         // The following code changes the placeholder text
-        count = 0;
+        modelIndex = 1;
         changePlaceHolderText();
         
     }
@@ -37,12 +37,12 @@ public class CreateModel : MonoBehaviour
         //TODO: Implement change model code here
 
         // The following code changes the placeholder text
-        if (count < numModel)
+        if (modelIndex < totalNumberOfModels)
         {
-            count++;
+            modelIndex++;
         } else
         {
-            count = 0;
+            modelIndex = 1;
         }
 
         changePlaceHolderText();
@@ -61,7 +61,7 @@ public class CreateModel : MonoBehaviour
         createModelBtn.SetActive(true);
 
         // The following code changes the placeholder text
-        count = -1;
+        modelIndex = -1;
         changePlaceHolderText() ;
     }
 
@@ -70,18 +70,18 @@ public class CreateModel : MonoBehaviour
     {
         GameObject panelText = modelPanel.transform.GetChild(0).gameObject;
         TextMeshProUGUI text = panelText.GetComponent<TextMeshProUGUI>();
-        if (count == -1)
+        if (modelIndex == -1)
         {
             text.text = "No Model";
             return;
         }
-        text.text = "Model: " + count;
+        text.text = "Model: " + modelIndex;
     }
 
     // used to get the current model number
     public static int getCurrentModelNum()
     {
-        return count;
+        return modelIndex;
     }
 
 
