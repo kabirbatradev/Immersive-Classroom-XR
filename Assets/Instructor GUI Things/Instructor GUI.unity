@@ -1515,7 +1515,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &311955281
 Transform:
   m_ObjectHideFlags: 0
@@ -3526,7 +3526,7 @@ MonoBehaviour:
   createModelBtn: {fileID: 731338357}
   otherModelBtns: {fileID: 183889721}
   modelPanel: {fileID: 1533390214}
-  numModel: 0
+  totalNumberOfModels: 2
 --- !u!114 &754218352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4394,9 +4394,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentTarget: {fileID: 0}
   rotationSpeed: 300
-  zoomSpeed: 10
+  zoomSpeed: 0.5
   minZoomDistance: 1
-  maxZoomDistance: 100
+  maxZoomDistance: 5
 --- !u!114 &958794943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11112,6 +11112,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921124059}
   m_CullTransparentMesh: 1
+--- !u!1 &1960678414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1960678416}
+  - component: {fileID: 1960678415}
+  m_Layer: 0
+  m_Name: InstructorCloudFunctions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1960678415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960678414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa6a1733f2997b4cbf1c371ac2e2da1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
+--- !u!4 &1960678416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960678414}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 742.90875, y: 316.95038, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1963412559
 GameObject:
   m_ObjectHideFlags: 0
@@ -13694,6 +13739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22af1030db5b3a045b670093c76cb358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInstructorGUIToggle: 1
   spherePrefab: {fileID: 3221958905156704162, guid: 2a65cc0290668c54fbfaacc19b3d9718, type: 3}
   jengaPrefab: {fileID: 4257439788469908370, guid: e5481e89efcab0641ba811e7914bb017, type: 3}
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
@@ -13713,6 +13759,7 @@ MonoBehaviour:
   studentButtons:
   - {fileID: 99205691}
   - {fileID: 392236200}
+  laserMaterial: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13727,3 +13774,4 @@ SceneRoots:
   - {fileID: 433029920}
   - {fileID: 287548665}
   - {fileID: 1831216694}
+  - {fileID: 1960678416}

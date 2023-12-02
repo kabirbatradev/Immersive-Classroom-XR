@@ -8,9 +8,9 @@ public class CamRotate : MonoBehaviour
 
     public Transform currentTarget;
     public float rotationSpeed = 300f;
-    public float zoomSpeed = 10f;
+    public float zoomSpeed = 0.5f;
     public float minZoomDistance = 1f;
-    public float maxZoomDistance = 100f;
+    public float maxZoomDistance = 5f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
 
@@ -47,7 +47,14 @@ public class CamRotate : MonoBehaviour
             {
                 currentTarget = foundTarget;
             }
+            // Debug.Log("main object found :D");
         }
+        else {
+            // Debug.Log("main object not found");
+            return;
+        }
+
+        
 
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         distanceFromTarget -= scrollInput * zoomSpeed;
