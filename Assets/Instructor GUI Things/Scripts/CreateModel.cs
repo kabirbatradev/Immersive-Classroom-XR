@@ -54,7 +54,10 @@ public class CreateModel : MonoBehaviour
     // call back func for killing model
     public void killModel()
     {
-        // TODO: destroy model code here
+        // destroy model code here
+        Debug.Log("kill model button pressed");
+        // call the function from instructor cloud functions 
+        InstructorCloudFunctions.Instance.DeleteAllMainObjects();
 
         // hide other btns
         otherModelBtns.SetActive(false);

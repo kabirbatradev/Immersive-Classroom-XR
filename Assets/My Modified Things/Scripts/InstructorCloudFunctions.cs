@@ -58,6 +58,11 @@ public class InstructorCloudFunctions : MonoBehaviour
     
     public void CreateMainObjectContainerPerGroup() {
 
+        
+        // before creating new main objects, delete any preexisting objects
+        DeleteAllMainObjects();
+
+
         // get all players:
         // value collection (basically list) of PhotonRealtime.Player objects
         // values because players are like a dictionary (we dont want the keys)
@@ -141,14 +146,21 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         }
 
-        
+
 
     }
 
 
 
 
-
+    public void DeleteAllMainObjects() {
+        // get all main objects
+        GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
+        int count = mainObjects.Length;
+        foreach (var mainObject in mainObjects)
+            PhotonPun.PhotonNetwork.Destroy(mainObject);
+        Debug.Log("removed " + count + " main objects");
+    }
 
 
 
