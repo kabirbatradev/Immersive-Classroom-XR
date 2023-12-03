@@ -58,6 +58,11 @@ public class InstructorCloudFunctions : MonoBehaviour
     
     public void CreateMainObjectContainerPerGroup() {
 
+
+        // before creating new main objects, delete any preexisting objects
+        DeleteAllMainObjects();
+
+
         // get all players:
         // value collection (basically list) of PhotonRealtime.Player objects
         // values because players are like a dictionary (we dont want the keys)
@@ -132,6 +137,14 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
             averageVector /= headPositions.Count;
 
+
+
+
+            // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
+            averageVector += new Vector3(0, 0, 1);
+
+
+
             // now, instantiate the Main Object container at this position and for this group
 
             // instantiate
@@ -141,7 +154,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         }
 
-        
+
 
     }
 

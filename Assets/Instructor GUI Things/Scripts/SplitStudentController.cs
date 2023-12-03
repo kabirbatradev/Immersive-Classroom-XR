@@ -23,7 +23,9 @@ public class SplitStudentController : MonoBehaviour
     // call back func for splitting student into individual groups
     public void splitIndividual()
     {
-        // TODO: code here to tell the server splitting into groups of 1 student
+        // code here to tell the server splitting into groups of 1 student
+        Debug.Log("split individual button pressed");
+        InstructorCloudFunctions.Instance.SetStudentsIntoIndividualGroups();
 
         // go back to first level
         goBack();
@@ -35,7 +37,9 @@ public class SplitStudentController : MonoBehaviour
 
     public void splitPair()
     {
-        // TODO: code here to tell the server splitting into groups of 2 students
+        // code here to tell the server splitting into groups of 2 students
+        Debug.Log("split into pairs button pressed");
+        InstructorCloudFunctions.Instance.SetStudentsIntoGroupsOfTwo();
 
         // go back to first level
         goBack();
@@ -47,7 +51,9 @@ public class SplitStudentController : MonoBehaviour
 
     public void splitAll()
     {
-        // TODO: code here to tell the server to have a group of all students
+        // code here to tell the server to have a group of all students
+        Debug.Log("all students 1 group button pressed");
+        InstructorCloudFunctions.Instance.SetAllStudentsGroupOne();
 
         goBack();
         changePlaceHolderText(0);
