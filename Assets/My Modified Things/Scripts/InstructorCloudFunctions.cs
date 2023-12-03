@@ -203,4 +203,98 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
+
+    public void SetStudentsIntoIndividualGroups() {
+
+        // value collection (basically list) of PhotonRealtime.Player objects
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        int groupNumber = 1;
+        foreach (PhotonRealtime.Player player in players) {
+            
+            // if the player is the current player, then skip
+            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (GetPlayerGroupNumber(player) == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            Debug.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
+            groupNumber++;
+        }
+
+    }
+
+
+
+
+
+    public void SetStudentsIntoGroupsOfTwo() {
+
+        // value collection (basically list) of PhotonRealtime.Player objects
+        // values because players are like a dictionary (we dont want the keys)
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        int groupNumber = 1;
+        int counter = 0;
+        foreach (PhotonRealtime.Player player in players) {
+            
+            // if the player is the current player, then skip
+            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (GetPlayerGroupNumber(player) == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
+            counter++;
+            if (counter % 2 == 0) {
+                groupNumber++;
+            }
+        }
+
+    }
+
+
+
+
+
+    public void SetAllStudentsGroupOne() {
+
+        // value collection (basically list) of PhotonRealtime.Player objects
+        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+
+        foreach (PhotonRealtime.Player player in players) {
+            
+            // if the player is the current player, then skip
+            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (GetPlayerGroupNumber(player) == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
+            SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
+        }
+
+    }
+
+
+
+
+
 }
