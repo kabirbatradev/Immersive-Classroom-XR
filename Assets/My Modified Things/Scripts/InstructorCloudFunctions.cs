@@ -58,7 +58,7 @@ public class InstructorCloudFunctions : MonoBehaviour
     
     public void CreateMainObjectContainerPerGroup() {
 
-        
+
         // before creating new main objects, delete any preexisting objects
         DeleteAllMainObjects();
 
@@ -136,6 +136,14 @@ public class InstructorCloudFunctions : MonoBehaviour
                 averageVector += position;
             }
             averageVector /= headPositions.Count;
+
+
+
+
+            // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
+            averageVector += new Vector3(0, 0, 1);
+
+
 
             // now, instantiate the Main Object container at this position and for this group
 
