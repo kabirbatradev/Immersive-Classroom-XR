@@ -172,6 +172,20 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
+    private bool MainObjectsExist() {
+        GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
+        return mainObjects.Length > 0;
+    }
+
+
+    private void RecreateMainObjectsIfTheyExist() {
+        if (MainObjectsExist()) {
+            CreateMainObjectContainerPerGroup();
+        }
+    }
+
+
+
 
 
 
@@ -228,6 +242,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             groupNumber++;
         }
 
+        RecreateMainObjectsIfTheyExist();
+
     }
 
 
@@ -263,6 +279,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
         }
 
+        RecreateMainObjectsIfTheyExist();
+
     }
 
 
@@ -290,6 +308,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
             SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
         }
+
+        RecreateMainObjectsIfTheyExist();
 
     }
 
