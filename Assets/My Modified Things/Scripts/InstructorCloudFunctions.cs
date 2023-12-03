@@ -179,6 +179,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
     private void RecreateMainObjectsIfTheyExist() {
+
         if (MainObjectsExist()) {
             CreateMainObjectContainerPerGroup();
         }
@@ -238,6 +239,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
 
             player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
+            player.CustomProperties["groupNumber"] = groupNumber;
             Debug.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
             groupNumber++;
         }
@@ -272,6 +275,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
 
             player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+            // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
+            player.CustomProperties["groupNumber"] = groupNumber;
             SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
             counter++;
             if (counter % 2 == 0) {
@@ -306,6 +311,8 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
 
             player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
+            // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
+            player.CustomProperties["groupNumber"] = 1;
             SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
         }
 
