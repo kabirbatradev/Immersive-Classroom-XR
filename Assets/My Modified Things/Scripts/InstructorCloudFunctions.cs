@@ -58,11 +58,6 @@ public class InstructorCloudFunctions : MonoBehaviour
     
     public void CreateMainObjectContainerPerGroup() {
 
-
-        // before creating new main objects, delete any preexisting objects
-        DeleteAllMainObjects();
-
-
         // get all players:
         // value collection (basically list) of PhotonRealtime.Player objects
         // values because players are like a dictionary (we dont want the keys)
@@ -137,14 +132,6 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
             averageVector /= headPositions.Count;
 
-
-
-
-            // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
-            averageVector += new Vector3(0, 0, 1);
-
-
-
             // now, instantiate the Main Object container at this position and for this group
 
             // instantiate
@@ -154,35 +141,14 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         }
 
-
+        
 
     }
 
 
 
 
-    public void DeleteAllMainObjects() {
-        // get all main objects
-        GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
-        int count = mainObjects.Length;
-        foreach (var mainObject in mainObjects)
-            PhotonPun.PhotonNetwork.Destroy(mainObject);
-        Debug.Log("removed " + count + " main objects");
-    }
 
-
-
-    private bool MainObjectsExist() {
-        GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
-        return mainObjects.Length > 0;
-    }
-
-
-    private void RecreateMainObjectsIfTheyExist() {
-        if (MainObjectsExist()) {
-            CreateMainObjectContainerPerGroup();
-        }
-    }
 
 
 
@@ -211,106 +177,6 @@ public class InstructorCloudFunctions : MonoBehaviour
         int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
 
         return objectGroupNumber;
-    }
-
-
-
-
-
-
-    public void SetStudentsIntoIndividualGroups() {
-
-        // value collection (basically list) of PhotonRealtime.Player objects
-        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
-
-        int groupNumber = 1;
-        foreach (PhotonRealtime.Player player in players) {
-            
-            // if the player is the current player, then skip
-            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
-            // skip players of group number 0 (admins)
-            if (GetPlayerGroupNumber(player) == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
-                continue;
-            }
-
-            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
-            Debug.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
-            groupNumber++;
-        }
-
-        RecreateMainObjectsIfTheyExist();
-
-    }
-
-
-
-
-
-    public void SetStudentsIntoGroupsOfTwo() {
-
-        // value collection (basically list) of PhotonRealtime.Player objects
-        // values because players are like a dictionary (we dont want the keys)
-        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
-
-        int groupNumber = 1;
-        int counter = 0;
-        foreach (PhotonRealtime.Player player in players) {
-            
-            // if the player is the current player, then skip
-            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
-            // skip players of group number 0 (admins)
-            if (GetPlayerGroupNumber(player) == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
-                continue;
-            }
-
-            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
-            SampleController.Instance.Log("Set player group of nickname " + player.NickName + " to group " + groupNumber);
-            counter++;
-            if (counter % 2 == 0) {
-                groupNumber++;
-            }
-        }
-
-        RecreateMainObjectsIfTheyExist();
-
-    }
-
-
-
-
-
-    public void SetAllStudentsGroupOne() {
-
-        // value collection (basically list) of PhotonRealtime.Player objects
-        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
-
-        foreach (PhotonRealtime.Player player in players) {
-            
-            // if the player is the current player, then skip
-            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
-            // skip players of group number 0 (admins)
-            if (GetPlayerGroupNumber(player) == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
-                continue;
-            }
-
-            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
-            SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
-        }
-
-        RecreateMainObjectsIfTheyExist();
-
     }
 
 
