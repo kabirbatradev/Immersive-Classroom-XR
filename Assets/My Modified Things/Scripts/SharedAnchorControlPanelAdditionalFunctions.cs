@@ -185,6 +185,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+        /*
         // if there is an active "MainObjectContainer" in the scene
         // then change check the room custom properties to see which model should be active, and deactive the rest
 
@@ -209,6 +210,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 }
             }
 
+        }
+        */
+
+        // simply get the current active game object so it can be rotated by the instructor
+        GameObject currentActiveGameObject = null;
+        
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if the main object exists
+        if (mainObjectContainer != null) {
+            // iterate through all children
+            foreach (Transform child in mainObjectContainer.transform) {
+                // find the child that is active
+                GameObject potentialModel = child.gameObject;
+                if (potentialModel.activeSelf) {
+                    currentActiveGameObject = potentialModel;
+                    break;
+                }
+            }
         }
 
 
