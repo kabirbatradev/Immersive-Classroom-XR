@@ -355,6 +355,16 @@ public class InstructorCloudFunctions : MonoBehaviour
         SetRoomCustomProperty("mainObjectCurrentModelName", "Model" + modelNumber);
     }
 
+    public int getTotalNumberOfModels() {
+        if (RoomHasCustomProperty("totalNumberOfModels")) {
+            return (int)GetRoomCustomProperty("totalNumberOfModels");
+        }
+        else {
+            return 2; // assume there are at least 2 models
+        }
+        
+    }
+
 
 
 

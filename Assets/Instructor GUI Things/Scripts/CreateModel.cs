@@ -45,6 +45,8 @@ public class CreateModel : MonoBehaviour
         //     modelIndex = 1;
         // }
 
+        totalNumberOfModels = InstructorCloudFunctions.Instance.getTotalNumberOfModels();
+
         modelIndex++;
         if (modelIndex > totalNumberOfModels) {
             modelIndex = 1;
