@@ -13,6 +13,8 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
+    private static int defaultGroupNumber = 1;
+
 
     [SerializeField]
     private bool isInstructorGUIToggle;
@@ -185,6 +187,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+        /*
         // if there is an active "MainObjectContainer" in the scene
         // then change check the room custom properties to see which model should be active, and deactive the rest
 
@@ -209,6 +212,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 }
             }
 
+        }
+        */
+
+        // simply get the current active game object so it can be rotated by the instructor
+        GameObject currentActiveGameObject = null;
+        
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if the main object exists
+        if (mainObjectContainer != null) {
+            // iterate through all children
+            foreach (Transform child in mainObjectContainer.transform) {
+                // find the child that is active
+                GameObject potentialModel = child.gameObject;
+                if (potentialModel.activeSelf) {
+                    currentActiveGameObject = potentialModel;
+                    break;
+                }
+            }
         }
 
 
@@ -458,7 +479,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return currentUserGroupNumber;
 
@@ -469,7 +490,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PlayerProperties = player.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return groupNumber;
 
