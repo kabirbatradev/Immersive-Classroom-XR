@@ -8945,7 +8945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244174007119, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 23
+      value: 215
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244175157427, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_Name
@@ -10157,6 +10157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22af1030db5b3a045b670093c76cb358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInstructorGUIToggle: 0
   spherePrefab: {fileID: 3221958905156704162, guid: 2a65cc0290668c54fbfaacc19b3d9718, type: 3}
   jengaPrefab: {fileID: 4257439788469908370, guid: e5481e89efcab0641ba811e7914bb017, type: 3}
   tablePrefab: {fileID: 3221958905156704162, guid: 01ba7fc5ed4450c4c91331d51e4becf3, type: 3}
