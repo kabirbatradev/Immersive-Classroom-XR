@@ -13,6 +13,14 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
+
+    [SerializeField]
+    private bool isInstructorGUIToggle;
+
+
+
+
+
     [SerializeField]
     private GameObject spherePrefab;
 
@@ -209,8 +217,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // scale it
         // draw a laser
 
-        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        if (mainObjectContainer != null) {
+        // ONLY DRAW THE LASER AND UPDATE ROTATION IF THIS IS A HEADSET (NOT INSTRUCTOR GUI)
+        if (mainObjectContainer != null && !isInstructorGUIToggle) {
             bool isShootingExists = RoomHasCustomProperty("IsShooting");
 
             // if (isShootingExists != isShootingExisted) {
@@ -232,6 +240,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
                 // SampleController.Instance.Log("rotation is: " + objectRotation);
                 currentActiveGameObject.transform.rotation = objectRotation;
+                // Debug.Log("AJDFGKJHLASDFL;KJASD;FJKLHBASDGFKJASBDF;KH");
 
 
                 // if the professor is shooting a laser, then we should see it
@@ -710,7 +719,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     public void OnSetMainObjectModel1() {
-        SampleController.Instance.Log("Setting main object to model 1");
+        SampleController.Instance.Log("Setting main object to model x");
         SetMainObjectModel1();
     }
 
