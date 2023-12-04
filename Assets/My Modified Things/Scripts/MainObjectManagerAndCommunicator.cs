@@ -10,7 +10,9 @@ public class MainObjectManagerAndCommunicator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        // on start, send to the cloud the number of models there are under a main object
+        // child count contains the number of children on this current transform (this = instance of main object)
+        SetRoomCustomProperty("totalNumberOfModels", transform.childCount);
     }
 
     void FixedUpdate() {
@@ -18,19 +20,29 @@ public class MainObjectManagerAndCommunicator : MonoBehaviour
 
         // read from the server which model should be active
 
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        if (mainObjectContainer != null) {
-            if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if (mainObjectContainer != null) {
+        //     if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+        //         string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
                 
-                // for every potential model (child of container), disable unless name = currentActiveObject
-                foreach (Transform child in mainObjectContainer.transform) {
-                    GameObject potentialModel = child.gameObject;
-                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
-                }
-            }
+        //         // for every potential model (child of container), disable unless name = currentActiveObject
+        //         foreach (Transform child in mainObjectContainer.transform) {
+        //             GameObject potentialModel = child.gameObject;
+        //             potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
+        //         }
+        //     }
+        // }
 
+        if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+            string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+            
+            // for every potential model (child of container), disable unless name = currentActiveObject
+            foreach (Transform child in transform) {
+                GameObject potentialModel = child.gameObject;
+                potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
+            }
         }
+
     }
 
 
