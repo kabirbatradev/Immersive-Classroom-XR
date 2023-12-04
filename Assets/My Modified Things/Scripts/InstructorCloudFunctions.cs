@@ -343,7 +343,11 @@ public class InstructorCloudFunctions : MonoBehaviour
     public void SetRoomCustomProperty(string key, object value) {
 
         var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // update on server
         PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+        // update locally because server will update local cached hashmap with delay
+        PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key] = value;
 
     }
 
