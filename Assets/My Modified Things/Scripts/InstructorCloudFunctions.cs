@@ -324,12 +324,6 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-
-
-
-
-
-
     // room has custom property?
     public bool RoomHasCustomProperty(string key) {
         return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
@@ -351,6 +345,14 @@ public class InstructorCloudFunctions : MonoBehaviour
         var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
         PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
 
+    }
+
+
+
+
+    public void SetActiveModelNumber(int modelNumber) {
+        // SetRoomCustomProperty("mainObjectCurrentModelName", "Model1");
+        SetRoomCustomProperty("mainObjectCurrentModelName", "Model" + modelNumber);
     }
 
 
