@@ -36,16 +36,26 @@ public class CreateModel : MonoBehaviour
     // call back func for changing model
     public void changeModel()
     {
-        //TODO: Implement change model code here
 
-        // The following code changes the placeholder text
-        if (modelIndex < totalNumberOfModels)
-        {
-            modelIndex++;
-        } else
-        {
+        // if (modelIndex < totalNumberOfModels)
+        // {
+        //     modelIndex++;
+        // } else
+        // {
+        //     modelIndex = 1;
+        // }
+
+        modelIndex++;
+        if (modelIndex > totalNumberOfModels) {
             modelIndex = 1;
         }
+
+
+        // Implement change model code here
+        Debug.Log("Change model button pressed");
+        // call the function from instructor cloud functions 
+        InstructorCloudFunctions.Instance.SetActiveModelNumber(modelIndex);
+        
 
         changePlaceHolderText();
     }
