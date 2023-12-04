@@ -166,7 +166,16 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
     public override void OnJoinedLobby() {
 
         // pretend that the create room button was pressed: 
-        OnCreateRoomButtonPressed();
+        // OnCreateRoomButtonPressed();
+
+        // working around:
+        // join any room that exists
+
+        Debug.Log("waiting for room to exist");
+
+        // I will join the room on room list update?
+        // writing the rest of the code in OnRoomListUpdate
+
 
     }
 
@@ -281,6 +290,26 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
         {
             controlPanel.SetRoomList(roomList);
         }
+
+
+
+
+        // when the room list updates, then 
+        // 1) make sure you are not already connected to a room
+        // 2) join the first room
+
+        // forget about checking if you are alrady in a room for now
+
+        string roomToJoin = roomList[0].Name;
+
+        // get string roomToJoin and then run this code:
+        var roomOptions = new PhotonRealtime.RoomOptions { IsVisible = true, MaxPlayers = 50, EmptyRoomTtl = 0, PlayerTtl = 300000 };
+        PhotonPun.PhotonNetwork.JoinOrCreateRoom(roomToJoin, roomOptions, PhotonRealtime.TypedLobby.Default);
+
+
+        Debug.Log("found and joining room called " + roomList[0].Name);
+
+
     }
 
     #endregion
