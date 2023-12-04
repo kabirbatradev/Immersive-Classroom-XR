@@ -8,6 +8,8 @@ using PhotonRealtime = Photon.Realtime;
 public class InstructorCloudFunctions : MonoBehaviour
 {
 
+    public static int defaultGroupNumber = 1;
+
     public static InstructorCloudFunctions Instance;
 
     private void Awake() {
@@ -34,7 +36,7 @@ public class InstructorCloudFunctions : MonoBehaviour
     public int GetPlayerGroupNumber(PhotonRealtime.Player player) {
 
         bool groupNumberExists = player.CustomProperties.ContainsKey("groupNumber");
-        int groupNumber = groupNumberExists ? (int)player.CustomProperties["groupNumber"] : 0;
+        int groupNumber = groupNumberExists ? (int)player.CustomProperties["groupNumber"] : defaultGroupNumber;
 
         return groupNumber;
 

@@ -13,6 +13,8 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
+    private static int defaultGroupNumber = 1;
+
 
     [SerializeField]
     private bool isInstructorGUIToggle;
@@ -477,7 +479,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return currentUserGroupNumber;
 
@@ -488,7 +490,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PlayerProperties = player.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return groupNumber;
 
