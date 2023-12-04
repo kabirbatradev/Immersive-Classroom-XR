@@ -74,7 +74,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
         lineRenderer.enabled = false;
-    }
+
+
+        if (isInstructorGUIToggle) {
+            defaultGroupNumber = 0;
+        }
+    } 
 
 
     public void Update() {
@@ -136,6 +141,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
+        if (isInstructorGUIToggle) currentUserGroupNumber = 0;
 
         // need to include inactive 
         // ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
