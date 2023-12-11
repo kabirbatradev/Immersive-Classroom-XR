@@ -69,11 +69,11 @@ public class CamRotate : MonoBehaviour
         }
 
         // main object scaling with + and -
-        if (Input.GetKey(KeyCode.Plus))
+        if (Input.GetKey(KeyCode.Plus) || Input.GetKey(KeyCode.Equals))
         {
             currentTarget.localScale += new Vector3(scaleFactor, scaleFactor, scaleFactor);
         }
-        if (Input.GetKey(KeyCode.Equals) || Input.GetKey(KeyCode.Minus))
+        if (Input.GetKey(KeyCode.Minus))
         {
             currentTarget.localScale -= new Vector3(scaleFactor, scaleFactor, scaleFactor);
         }
