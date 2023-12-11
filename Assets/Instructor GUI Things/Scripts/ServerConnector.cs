@@ -292,6 +292,13 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
         }
 
 
+        Debug.Log("Room list was updated! Room list is of length " + roomList.Count);
+
+        if (roomList.Count == 0) {
+            Debug.Log("Since count is 0, doing nothing");
+            return;
+        }
+
 
 
         // when the room list updates, then 
