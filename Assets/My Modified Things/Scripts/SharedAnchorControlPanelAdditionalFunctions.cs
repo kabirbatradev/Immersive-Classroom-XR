@@ -13,7 +13,7 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
-    private static int defaultGroupNumber = 1;
+    public static int defaultGroupNumber = 1;
 
 
     [SerializeField]
