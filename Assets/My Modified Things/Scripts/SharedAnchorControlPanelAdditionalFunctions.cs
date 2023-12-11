@@ -76,6 +76,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             lineRenderer.material = laserMaterial;
             lineRenderer.startWidth = lineSize;
             lineRenderer.endWidth = lineSize;
+
+
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
         }
 
         lineRenderer.enabled = false;
