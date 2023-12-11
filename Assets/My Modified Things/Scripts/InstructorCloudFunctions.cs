@@ -167,8 +167,15 @@ public class InstructorCloudFunctions : MonoBehaviour
         // get all main objects
         GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
         int count = mainObjects.Length;
-        foreach (var mainObject in mainObjects)
+        foreach (var mainObject in mainObjects) {
+
+            // will fail to destroy object if not the owner of the object
+
+            // therefore, transfer ownership to local player (the instructor), and then destroy
+            PhotonPun.PhotonView photonView = mainObject.GetComponent<PhotonPun.PhotonView>();
+            photonView.TransferOwnership(Photon.Pun.PhotonNetwork.LocalPlayer); 
             PhotonPun.PhotonNetwork.Destroy(mainObject);
+        }
         Debug.Log("removed " + count + " main objects");
     }
 
