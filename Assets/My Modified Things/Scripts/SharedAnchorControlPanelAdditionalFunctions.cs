@@ -291,12 +291,22 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             
             bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
             if (objectRotationExists) {
+
+
+
                 // get rotation from server side and rotate the main object
                 // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
                 Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
                 // SampleController.Instance.Log("rotation is: " + objectRotation);
                 currentActiveGameObject.transform.rotation = objectRotation;
-                // Debug.Log("AJDFGKJHLASDFL;KJASD;FJKLHBASDGFKJASBDF;KH");
+
+
+
+
+                // if rotation exists, then scaling probably also exists
+                Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
+                currentActiveGameObject.transform.localScale = objectScale;
+
 
 
                 // if the professor is shooting a laser, then we should see it
