@@ -13,7 +13,7 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
-    private static int defaultGroupNumber = 1;
+    public static int defaultGroupNumber = 1;
 
 
     [SerializeField]
@@ -61,6 +61,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private LineRenderer lineRenderer;
     private float lineSize = 0.02f;
     public Material laserMaterial;
+
+
+
+    [SerializeField]
+    private GameObject groupNumberTextObject;
 
 
     public void Start() {
@@ -132,6 +137,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         */
 
+
+
+
+
+
+
         
         // Object Group Filtering:
 
@@ -171,6 +182,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 obj.SetActive(false);
             }
         }
+
+
+
+
+
+
+
+
+
 
         /*
         // if you press X, then print all spawned object's data
@@ -221,6 +241,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         */
 
+
+
+
+
+
+
+
+
+
         // simply get the current active game object so it can be rotated by the instructor
         GameObject currentActiveGameObject = null;
         
@@ -262,12 +291,22 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             
             bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
             if (objectRotationExists) {
+
+
+
                 // get rotation from server side and rotate the main object
                 // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
                 Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
                 // SampleController.Instance.Log("rotation is: " + objectRotation);
                 currentActiveGameObject.transform.rotation = objectRotation;
-                // Debug.Log("AJDFGKJHLASDFL;KJASD;FJKLHBASDGFKJASBDF;KH");
+
+
+
+
+                // if rotation exists, then scaling probably also exists
+                Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
+                currentActiveGameObject.transform.localScale = objectScale;
+
 
 
                 // if the professor is shooting a laser, then we should see it
@@ -308,6 +347,26 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // lineRenderer.enabled = true;
         // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
         // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
+
+
+
+
+
+
+
+        // update the group number text at the top of the control panel (for devices)
+
+        // if device (not instructor)
+        if (!isInstructorGUIToggle) {
+
+            // get the text component from groupNumberTextObject
+            TextMeshProUGUI textbox = groupNumberTextObject.GetComponent<TextMeshProUGUI>();
+
+            // write the current group number using currentUserGroupNumber
+            textbox.text = "Group Number: " + currentUserGroupNumber;
+            
+        }
 
 
     }
@@ -475,10 +534,25 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
 
+        // also set locally for faster updates
+        LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+
 
     }
 
 
+
+    public void OnIncrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() + 1;
+        SampleController.Instance.Log("incrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
+
+    public void OnDecrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() - 1;
+        SampleController.Instance.Log("decrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
 
     private int GetCurrentGroupNumber() {
 
