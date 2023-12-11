@@ -38,7 +38,7 @@ public class UserHeadSphereController : MonoBehaviour
             // Debug.Log("group number not set");
         }
 
-        int hue = (groupNumber % 6) / 6.0f; // max group number is 6; if more than 6, then the color cycles back
+        float hue = (groupNumber % 6) / 6.0f; // max group number is 6; if more than 6, then the color cycles back
         // i chose 6 because the spacing between colors is really nice!
 
         headRenderer.material.color = Color.HSVToRGB(hue, 1.0f, 1.0f);
