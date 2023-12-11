@@ -63,6 +63,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     public Material laserMaterial;
 
 
+
+    [SerializeField]
+    private GameObject groupNumberTextObject;
+
+
     public void Start() {
         // initialize laser renderer
 
@@ -132,6 +137,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         */
 
+
+
+
+
+
+
         
         // Object Group Filtering:
 
@@ -171,6 +182,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 obj.SetActive(false);
             }
         }
+
+
+
+
+
+
+
+
+
 
         /*
         // if you press X, then print all spawned object's data
@@ -220,6 +240,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
         */
+
+
+
+
+
+
+
+
+
 
         // simply get the current active game object so it can be rotated by the instructor
         GameObject currentActiveGameObject = null;
@@ -308,6 +337,26 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // lineRenderer.enabled = true;
         // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
         // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
+
+
+
+
+
+
+
+        // update the group number text at the top of the control panel (for devices)
+
+        // if device (not instructor)
+        if (!isInstructorGUIToggle) {
+
+            // get the text component from groupNumberTextObject
+            TextMeshProUGUI textbox = groupNumberTextObject.GetComponent<TextMeshProUGUI>();
+
+            // write the current group number using currentUserGroupNumber
+            textbox.text = "Group Number: " + currentUserGroupNumber;
+            
+        }
 
 
     }
