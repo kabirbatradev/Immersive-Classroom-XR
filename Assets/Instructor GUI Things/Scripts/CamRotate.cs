@@ -13,11 +13,11 @@ public class CamRotate : MonoBehaviour
     public float maxZoomDistance = 5f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
-
-
+    private float scaleFactor = 0.01f;
 
     public static CamRotate Instance;
-    private void Awake() {
+    private void Awake()
+    {
 
         if (Instance == null)
         {
@@ -47,14 +47,13 @@ public class CamRotate : MonoBehaviour
             {
                 currentTarget = foundTarget;
             }
-            // Debug.Log("main object found :D");
         }
-        else {
-            // Debug.Log("main object not found");
+        else
+        {
             return;
         }
 
-        
+
 
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         distanceFromTarget -= scrollInput * zoomSpeed;
@@ -69,10 +68,28 @@ public class CamRotate : MonoBehaviour
             currentTarget.Rotate(Vector3.right, verticalRotation, Space.Self);
         }
 
+        // main object scaling with + and -
+        if (Input.GetKey(KeyCode.Plus))
+        {
+            currentTarget.localScale += new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        }
+        if (Input.GetKey(KeyCode.Equals) || Input.GetKey(KeyCode.Minus))
+        {
+            currentTarget.localScale -= new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        }
+
+        // reset main object rotation and scale with R
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            currentTarget.rotation = Quaternion.identity;
+            currentTarget.localScale = new Vector3(1, 1, 1);
+        }
+
         Vector3 direction = new Vector3(0, 0, -distanceFromTarget);
         Quaternion rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, 0);
 
-        if (currentTarget != null) {
+        if (currentTarget != null)
+        {
             transform.position = currentTarget.position + rotation * direction;
 
             transform.LookAt(currentTarget);
