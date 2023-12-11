@@ -524,10 +524,25 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
 
+        // also set locally for faster updates
+        LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+
 
     }
 
 
+
+    public void OnIncrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() + 1;
+        SampleController.Instance.Log("incrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
+
+    public void OnDecrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() - 1;
+        SampleController.Instance.Log("decrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
 
     private int GetCurrentGroupNumber() {
 
