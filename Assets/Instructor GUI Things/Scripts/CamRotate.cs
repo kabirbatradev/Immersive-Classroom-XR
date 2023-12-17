@@ -13,12 +13,10 @@ public class CamRotate : MonoBehaviour
     public float maxZoomDistance = 5f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
-    private float scaleFactor = 0.01f;
 
     public static CamRotate Instance;
     private void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
@@ -34,6 +32,7 @@ public class CamRotate : MonoBehaviour
     {
         currentRotation = transform.eulerAngles;
         currentTarget = null;
+        distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
     }
 
     void Update()
@@ -53,45 +52,16 @@ public class CamRotate : MonoBehaviour
             return;
         }
 
-
-
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        distanceFromTarget -= scrollInput * zoomSpeed;
-        distanceFromTarget = Mathf.Clamp(distanceFromTarget, minZoomDistance, maxZoomDistance);
-
-        if (Input.GetMouseButton(1) && currentTarget != null)
+        if (currentTarget != null && Input.GetMouseButton(1))
         {
-            float horizontalRotation = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime * -1;
-            float verticalRotation = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = -Input.GetAxis("Mouse Y");
 
-            currentTarget.Rotate(Vector3.up, horizontalRotation, Space.World);
-            currentTarget.Rotate(Vector3.right, verticalRotation, Space.Self);
-        }
-
-        // main object scaling with + and -
-        if (Input.GetKey(KeyCode.Plus) || Input.GetKey(KeyCode.Equals))
-        {
-            currentTarget.localScale += new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        }
-        if (Input.GetKey(KeyCode.Minus))
-        {
-            currentTarget.localScale -= new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        }
-
-        // reset main object rotation and scale with R
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            currentTarget.rotation = Quaternion.identity;
-            currentTarget.localScale = new Vector3(1, 1, 1);
-        }
-
-        Vector3 direction = new Vector3(0, 0, -distanceFromTarget);
-        Quaternion rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, 0);
-
-        if (currentTarget != null)
-        {
-            transform.position = currentTarget.position + rotation * direction;
-
+            currentRotation.y += mouseX * rotationSpeed * Time.deltaTime;
+            currentRotation.x += mouseY * rotationSpeed * Time.deltaTime;
+            currentRotation.x = Mathf.Clamp(currentRotation.x, -90f, 90f); // Limit vertical rotation
+            Vector3 nextPosition = currentTarget.position - Quaternion.Euler(currentRotation) * Vector3.forward * distanceFromTarget;
+            transform.position = nextPosition;
             transform.LookAt(currentTarget);
         }
     }
