@@ -15,7 +15,7 @@ public class CommunicationScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        // current target or current object is the main object holder 
+        // current target or current object is the main object holder
         // if it doesnt exist, then there is no data to send about where the laser is etc
         if (CamRotate.Instance.currentTarget == null) return;
         CurObj = CamRotate.Instance.currentTarget.gameObject;
@@ -27,14 +27,6 @@ public class CommunicationScript : MonoBehaviour
         RaycastHit hit;
 
         // CamRotate does this for us already, and its saved in "currentTarget"
-
-        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        // if (mainObjectContainer != null && VariableExistsOnServer("mainObjectCurrentModelName"))
-        // {
-        //     string currentActiveObjectName = (string)GetVariableOnServer("mainObjectCurrentModelName");
-        //     CurObj = FindTargetByName(currentActiveObjectName);
-        // }
-
         ObjRot = CurObj.transform.rotation;
         ObjPos = CurObj.transform.position;
         ObjScale = CurObj.transform.localScale;
@@ -51,8 +43,6 @@ public class CommunicationScript : MonoBehaviour
             IsShooting = false;
             SetVariableOnServer("IsShooting", IsShooting);
         }
-        // Debug.Log(IsShooting);
-        // Debug.Log("mouse button down? " + Input.GetMouseButton(0));
 
         SetVariableOnServer("CameraPosition", CamPos);
         SetVariableOnServer("ObjectRotation", ObjRot);
