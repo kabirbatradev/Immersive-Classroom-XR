@@ -13,7 +13,8 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
-    public static int defaultGroupNumber = 1;
+    public const int defaultGroupNumber = 1;
+    // const implies static too
 
 
     [SerializeField]
@@ -85,9 +86,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         lineRenderer.enabled = false;
 
 
-        if (isInstructorGUIToggle) {
-            defaultGroupNumber = 0;
-        }
+        // if (isInstructorGUIToggle) {
+        //     defaultGroupNumber = 0;
+        // }
     } 
 
 
@@ -156,7 +157,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
-        if (isInstructorGUIToggle) currentUserGroupNumber = 0;
+        if (isInstructorGUIToggle) currentUserGroupNumber = 0; // this hardcode is also in the GetCurrentGroupNumber function
+        // instructor group number = 0 allows for instructor to view every instance of objects
 
         // need to include inactive 
         // ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -559,6 +561,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     }
 
     private int GetCurrentGroupNumber() {
+        if(isInstructorGUIToggle) return 0;
 
         ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 
