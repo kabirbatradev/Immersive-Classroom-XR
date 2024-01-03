@@ -358,13 +358,111 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         */
 
-        GameObject laserGameObject = Instantiate(laserGameObjectPrefab);
-        LineRenderer lineRenderer = laserGameObject.GetComponent<LineRenderer>();
-        // test if line renderer is working (works)
-        lineRenderer.enabled = true;
-        lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
-        lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
 
+        // GameObject laserGameObject = Instantiate(laserGameObjectPrefab);
+        // LineRenderer lineRenderer = laserGameObject.GetComponent<LineRenderer>();
+        // // test if line renderer is working (works)
+        // lineRenderer.enabled = true;
+        // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
+        // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
+
+
+
+
+        // iterate through all main object instances, only show the correct subobject, 
+        // draw the instructor laser pointer, and update rotation and scaling of the object
+
+        // get all objects
+        GameObject[] mainObjectContainers = GameObject.FindGameObjectsWithTag("MainObjectContainer");
+
+        // get the name of the currently active model from the server
+        string currentActiveObjectName = null;
+        if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+            currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+        }
+
+        // iterate through all objects
+        int mainObjectIndex = -1;
+        foreach (GameObject mainObjectContainer in mainObjectContainers) {
+            mainObjectIndex++; // to be used with the list of line renderers
+            if (mainObjectContainer == null) continue;
+
+            // save the active model in this variable
+            GameObject currentActiveModel = null;
+
+            // if there is a server variable determining which model should be active, then only enable that model
+            if (currentActiveObjectName != null) {
+                // for every potential model (child of container), disable unless name = currentActiveObject
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
+                    if (potentialModel.name == currentActiveObjectName) {
+                        currentActiveModel = potentialModel;
+                    }
+                }
+            }
+            // if there isnt a server variable, then iterate through and pick out the active model
+            else {
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    if (potentialModel.activeSelf) {
+                        currentActiveModel = potentialModel;
+                        break;
+                    }
+                }
+            }
+
+            // given this active model, lets draw the laser, rotate the object, and scale the object
+            // this should only be done on the device side (not the instructor side)
+            if (!isInstructorGUIToggle) {
+                bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
+                if (objectRotationExists) {
+
+                    // get rotation from server side and rotate the main object
+                    Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
+                    currentActiveModel.transform.rotation = objectRotation;
+
+                    // if rotation exists, then scaling also exists (they are set at the same time)
+                    Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
+                    currentActiveModel.transform.localScale = objectScale;
+
+                    // create a new laser instance if it doesnt already exist
+                    if (mainObjectIndex >= laserGameObjects.Count) {
+                        laserGameObjects.Add(Instantiate(laserGameObjectPrefab));
+                    }
+                    // get the corresponding laser object to this main object at this main object index
+                    GameObject laserInstance = laserGameObjects[mainObjectIndex];
+
+                    // get the laser prefab's line renderer to be used to draw the laser if the professor is shooting a laser
+                    LineRenderer lineRenderer = laserInstance.GetComponent<LineRenderer>();
+
+                    // if the professor is shooting a laser, then we should see it
+                    bool isShootingExists = RoomHasCustomProperty("IsShooting");
+                    if (isShootingExists) {
+                        bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                        if (isShooting) {
+                            // get camera position and hit position
+                            Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
+                            Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+
+                            // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
+                            // enable or disable the line renderer
+
+                            // draw the line with respect to the main object
+                            lineRenderer.enabled = true;
+                            lineRenderer.SetPosition(0, cameraPosition + currentActiveModel.transform.position);
+                            lineRenderer.SetPosition(1, hitPosition + currentActiveModel.transform.position);
+
+                        }
+                        else {
+                            lineRenderer.enabled = false;
+                        }
+                    }
+                }
+            }
+
+        }
 
 
 
