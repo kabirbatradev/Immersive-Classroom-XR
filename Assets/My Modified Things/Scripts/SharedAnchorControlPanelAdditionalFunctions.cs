@@ -59,31 +59,38 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-    private LineRenderer lineRenderer;
-    private float lineSize = 0.02f;
-    public Material laserMaterial;
+    // private LineRenderer lineRenderer;
+    // private float lineSize = 0.02f;
+    // public Material laserMaterial;
+
+    private List<GameObject> laserGameObjects;
+
+    [SerializeField] 
+    private GameObject laserGameObjectPrefab;
 
 
 
     [SerializeField]
     private GameObject groupNumberTextObject;
 
+    
+
 
     public void Start() {
         // initialize laser renderer
 
-        if (lineRenderer == null) {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.material = laserMaterial;
-            lineRenderer.startWidth = lineSize;
-            lineRenderer.endWidth = lineSize;
+        // if (lineRenderer == null) {
+        //     lineRenderer = gameObject.AddComponent<LineRenderer>();
+        //     lineRenderer.material = laserMaterial;
+        //     lineRenderer.startWidth = lineSize;
+        //     lineRenderer.endWidth = lineSize;
 
 
-            lineRenderer.startColor = Color.red;
-            lineRenderer.endColor = Color.red;
-        }
+        //     lineRenderer.startColor = Color.red;
+        //     lineRenderer.endColor = Color.red;
+        // }
 
-        lineRenderer.enabled = false;
+        // lineRenderer.enabled = false;
 
 
         // if (isInstructorGUIToggle) {
@@ -253,6 +260,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+        /*
 
 
 
@@ -348,11 +356,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
-        
-        // // test if line renderer is working (works)
-        // lineRenderer.enabled = true;
-        // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
-        // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+        */
+
+        GameObject laserGameObject = Instantiate(laserGameObjectPrefab);
+        LineRenderer lineRenderer = laserGameObject.GetComponent<LineRenderer>();
+        // test if line renderer is working (works)
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
+        lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
 
 
 

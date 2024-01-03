@@ -11297,7 +11297,7 @@ MonoBehaviour:
   - {fileID: 355208889}
   studentButtons:
   - {fileID: 392236200}
-  laserMaterial: {fileID: 2100000, guid: 3a634da1bf5ff5b46a46c00e137ca0b2, type: 2}
+  laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 7f0e1fcda541e234e957c73b2f46eee1, type: 3}
   groupNumberTextObject: {fileID: 935712103}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
