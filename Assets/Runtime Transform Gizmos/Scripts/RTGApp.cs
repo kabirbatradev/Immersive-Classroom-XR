@@ -106,7 +106,7 @@ namespace RTG
         {
             // Note: Don't change the order :)
             RTInputDevice.Get.Update_SystemCall();
-            RTFocusCamera.Get.Update_SystemCall();
+            // RTFocusCamera.Get.Update_SystemCall();
             RTScene.Get.Update_SystemCall();
             RTSceneGrid.Get.Update_SystemCall();
             RTGizmosEngine.Get.Update_SystemCall();
@@ -152,7 +152,7 @@ namespace RTG
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [MenuItem("Tools/Runtime Transform Gizmos/Initialize")]
         public static void Initialize()
         {
@@ -208,6 +208,6 @@ namespace RTG
                 typeof(RTInputDevice), typeof(RTUndoRedo), typeof(RTGizmosEngine),
             };
         }
-        #endif
+#endif
     }
 }

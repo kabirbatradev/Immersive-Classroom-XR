@@ -9,10 +9,11 @@ public class CamRotate : MonoBehaviour
     public Transform currentTarget;
     public float rotationSpeed = 300f;
     public float zoomSpeed = 0.5f;
-    public float minZoomDistance = 1f;
+    public float minZoomDistance = 0.2f;
     public float maxZoomDistance = 5f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
+    private bool lockOn = false;
 
     public static CamRotate Instance;
     private void Awake()
@@ -52,17 +53,27 @@ public class CamRotate : MonoBehaviour
             return;
         }
 
-        if (currentTarget != null && Input.GetMouseButton(1))
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = -Input.GetAxis("Mouse Y");
+            lockOn = !lockOn;
+        }
 
-            currentRotation.y += mouseX * rotationSpeed * Time.deltaTime;
-            currentRotation.x += mouseY * rotationSpeed * Time.deltaTime;
-            currentRotation.x = Mathf.Clamp(currentRotation.x, -90f, 90f); // Limit vertical rotation
-            Vector3 nextPosition = currentTarget.position - Quaternion.Euler(currentRotation) * Vector3.forward * distanceFromTarget;
-            transform.position = nextPosition;
-            transform.LookAt(currentTarget);
+        if (currentTarget != null && lockOn)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                currentRotation.x += Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+                currentRotation.y -= Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+                currentRotation.y = Mathf.Clamp(currentRotation.y, -90f, 90f);
+            }
+
+            distanceFromTarget -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            distanceFromTarget = Mathf.Clamp(distanceFromTarget, minZoomDistance, maxZoomDistance);
+
+            Vector3 negDistance = new Vector3(0.0f, 0.0f, -distanceFromTarget);
+            Quaternion rotation = Quaternion.Euler(currentRotation.y, currentRotation.x, 0);
+            transform.position = currentTarget.position + rotation * negDistance;
+            transform.LookAt(currentTarget.position);
         }
     }
 
