@@ -13,7 +13,7 @@ public class CamRotate : MonoBehaviour
     public float maxZoomDistance = 5f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
-    private bool lockOn = false;
+    private bool lockOn = true;
 
     public static CamRotate Instance;
     private void Awake()

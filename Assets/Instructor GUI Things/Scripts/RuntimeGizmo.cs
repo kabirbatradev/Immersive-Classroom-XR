@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace RTG
 {
@@ -27,7 +29,13 @@ namespace RTG
             // Check if the targetObject has been assigned or if it needs to be found
             if (targetObject == null)
             {
-                targetObject = GameObject.FindWithTag("MainObjectContainer");
+                GameObject targetObjectParent = GameObject.FindWithTag("MainObjectContainer");
+                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+                GameObject foundTarget = GameObject.Find(currentActiveObjectName);
+                if (foundTarget != null)
+                {
+                    targetObject = foundTarget;
+                }
             }
 
             // Update the gizmo only if it is active and the target object is found
@@ -40,6 +48,16 @@ namespace RTG
             {
                 objectTransformGizmo.Gizmo.SetEnabled(false);
             }
+        }
+
+        private object GetRoomCustomProperty(string key)
+        {
+            return PhotonNetwork.CurrentRoom.CustomProperties[key];
+        }
+
+        private bool RoomHasCustomProperty(string key)
+        {
+            return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
         }
     }
 }
