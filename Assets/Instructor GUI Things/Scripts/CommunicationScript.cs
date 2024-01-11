@@ -5,7 +5,8 @@ using ExitGames.Client.Photon;
 public class CommunicationScript : MonoBehaviour
 {
     public Camera mainCamera;
-    private Vector3 CamPos;
+    public GameObject laserStartPoint;
+    private Vector3 StartPos;
     private Vector3 HitPos;
     public GameObject CurObj;
     private Quaternion ObjRot;
@@ -21,7 +22,7 @@ public class CommunicationScript : MonoBehaviour
         CurObj = CamRotate.Instance.currentTarget.gameObject;
 
 
-        CamPos = mainCamera.transform.position;
+        StartPos = laserStartPoint.transform.position;
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -44,7 +45,7 @@ public class CommunicationScript : MonoBehaviour
             SetVariableOnServer("IsShooting", IsShooting);
         }
 
-        SetVariableOnServer("CameraPosition", CamPos);
+        SetVariableOnServer("CameraPosition", StartPos);
         SetVariableOnServer("ObjectRotation", ObjRot);
         SetVariableOnServer("ObjectPosition", ObjPos);
         SetVariableOnServer("ObjectScale", ObjScale);

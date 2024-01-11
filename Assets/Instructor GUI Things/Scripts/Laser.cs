@@ -7,8 +7,8 @@ public class Laser : MonoBehaviour
     public float lineSize = 0.02f;
     private bool isShooting = false;
     public Camera mainCamera;
+    public GameObject laserStartPoint;
     public Material laserMaterial;
-    public GameObject laserIndicator;
 
     void Start()
     {
@@ -18,6 +18,8 @@ public class Laser : MonoBehaviour
             lineRenderer.material = laserMaterial;
             lineRenderer.startWidth = lineSize;
             lineRenderer.endWidth = lineSize;
+            // set to layer "mainObject"
+            lineRenderer.gameObject.layer = 7;
         }
 
         lineRenderer.enabled = false;
@@ -33,7 +35,6 @@ public class Laser : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isShooting = false;
-            laserIndicator.SetActive(false);
             lineRenderer.enabled = false;
         }
 
@@ -46,20 +47,18 @@ public class Laser : MonoBehaviour
     void UpdateLaser()
     {
         RaycastHit hit;
-        lineRenderer.SetPosition(0, mainCamera.transform.position);
+        // Set the start position to be the position of the laserStartPoint
+        lineRenderer.SetPosition(0, laserStartPoint.transform.position);
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, laserRange) && hit.collider.gameObject != laserIndicator)
+        if (Physics.Raycast(ray, out hit, laserRange))
         {
             lineRenderer.SetPosition(1, hit.point);
             lineRenderer.enabled = true;
-            laserIndicator.SetActive(true);
-            laserIndicator.transform.position = hit.point;
         }
         else
         {
             lineRenderer.enabled = false;
-            laserIndicator.SetActive(false);
         }
     }
 }

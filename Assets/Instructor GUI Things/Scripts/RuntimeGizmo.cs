@@ -9,12 +9,16 @@ namespace RTG
     public class RuntimeGizmo : MonoBehaviour
     {
         private ObjectTransformGizmo objectTransformGizmo;
+        private ObjectTransformGizmo laserTransformGizmo;
         private GameObject targetObject;
         private bool isGizmoActive = false;
+        private bool forceCenter = true;
+        public GameObject laserStartPoint;
 
         private void Start()
         {
             objectTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
+            laserTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
         }
 
         private void Update()
@@ -23,7 +27,6 @@ namespace RTG
             if (Input.GetKeyDown(KeyCode.T))
             {
                 isGizmoActive = !isGizmoActive;
-                Debug.Log("Gizmo active: " + isGizmoActive);
             }
 
             // Check if the targetObject has been assigned or if it needs to be found
@@ -43,10 +46,18 @@ namespace RTG
             {
                 objectTransformGizmo.Gizmo.SetEnabled(true);
                 objectTransformGizmo.SetTargetObject(targetObject);
+                laserTransformGizmo.Gizmo.SetEnabled(true);
+                laserTransformGizmo.SetTargetObject(laserStartPoint);
             }
             else
             {
                 objectTransformGizmo.Gizmo.SetEnabled(false);
+                laserTransformGizmo.Gizmo.SetEnabled(false);
+            }
+
+            if (targetObject != null && forceCenter)
+            {
+                targetObject.transform.position = new Vector3(0, 0, 0);
             }
         }
 
