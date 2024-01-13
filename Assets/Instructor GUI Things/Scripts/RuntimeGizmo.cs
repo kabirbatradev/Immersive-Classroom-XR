@@ -29,17 +29,7 @@ namespace RTG
                 isGizmoActive = !isGizmoActive;
             }
 
-            // Check if the targetObject has been assigned or if it needs to be found
-            if (targetObject == null)
-            {
-                GameObject targetObjectParent = GameObject.FindWithTag("MainObjectContainer");
-                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-                GameObject foundTarget = GameObject.Find(currentActiveObjectName);
-                if (foundTarget != null)
-                {
-                    targetObject = foundTarget;
-                }
-            }
+            targetObject = CamRotate.Instance.currentTarget.gameObject;
 
             // Update the gizmo only if it is active and the target object is found
             if (isGizmoActive && targetObject != null)
