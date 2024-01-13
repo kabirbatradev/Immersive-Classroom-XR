@@ -8,17 +8,19 @@ namespace RTG
 {
     public class RuntimeGizmo : MonoBehaviour
     {
-        private ObjectTransformGizmo objectTransformGizmo;
-        private ObjectTransformGizmo laserTransformGizmo;
+        private ObjectTransformGizmo objectRotateGizmo;
+        private ObjectTransformGizmo objectScaleGizmo;
+        private ObjectTransformGizmo laserMoveGizmo;
         private GameObject targetObject;
-        private bool isGizmoActive = false;
+        private static bool isGizmoActive = false;
         private bool forceCenter = true;
         public GameObject laserStartPoint;
 
         private void Start()
         {
-            objectTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
-            laserTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
+            objectRotateGizmo = RTGizmosEngine.Get.CreateObjectRotationGizmo();
+            objectScaleGizmo = RTGizmosEngine.Get.CreateObjectScaleGizmo();
+            laserMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
         }
 
         private void Update()
@@ -34,15 +36,20 @@ namespace RTG
             // Update the gizmo only if it is active and the target object is found
             if (isGizmoActive && targetObject != null)
             {
-                objectTransformGizmo.Gizmo.SetEnabled(true);
-                objectTransformGizmo.SetTargetObject(targetObject);
-                laserTransformGizmo.Gizmo.SetEnabled(true);
-                laserTransformGizmo.SetTargetObject(laserStartPoint);
+                // Object
+                objectRotateGizmo.Gizmo.SetEnabled(true);
+                objectRotateGizmo.SetTargetObject(targetObject);
+                objectScaleGizmo.Gizmo.SetEnabled(true);
+                objectScaleGizmo.SetTargetObject(targetObject);
+                // Laser
+                laserMoveGizmo.Gizmo.SetEnabled(true);
+                laserMoveGizmo.SetTargetObject(laserStartPoint);
             }
             else
             {
-                objectTransformGizmo.Gizmo.SetEnabled(false);
-                laserTransformGizmo.Gizmo.SetEnabled(false);
+                objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectScaleGizmo.Gizmo.SetEnabled(false);
+                laserMoveGizmo.Gizmo.SetEnabled(false);
             }
 
             if (targetObject != null && forceCenter)
@@ -59,6 +66,13 @@ namespace RTG
         private bool RoomHasCustomProperty(string key)
         {
             return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+        }
+
+        public static void ToggleGizmo(bool status)
+        {
+            {
+                isGizmoActive = status;
+            }
         }
     }
 }

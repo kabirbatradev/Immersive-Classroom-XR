@@ -9,6 +9,7 @@ public class Laser : MonoBehaviour
     public Camera mainCamera;
     public GameObject laserStartPoint;
     public Material laserMaterial;
+    private static bool laserOn = true;
 
     void Start()
     {
@@ -38,7 +39,7 @@ public class Laser : MonoBehaviour
             lineRenderer.enabled = false;
         }
 
-        if (isShooting)
+        if (isShooting && laserOn)
         {
             UpdateLaser();
         }
@@ -59,6 +60,13 @@ public class Laser : MonoBehaviour
         else
         {
             lineRenderer.enabled = false;
+        }
+    }
+
+    public static void ToggleLaser(bool status)
+    {
+        {
+            laserOn = status;
         }
     }
 }
