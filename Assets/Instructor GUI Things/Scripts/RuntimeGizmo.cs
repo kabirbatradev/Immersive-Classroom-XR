@@ -14,6 +14,9 @@ namespace RTG
         private GameObject targetObject;
         private static bool isGizmoActive = false;
         private bool forceCenter = true;
+        // 0 -> Rotate
+        // 1 -> Scale
+        private int gizmoOption = 0;
         public GameObject laserStartPoint;
 
         private void Start()
@@ -30,17 +33,37 @@ namespace RTG
             {
                 isGizmoActive = !isGizmoActive;
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                gizmoOption = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                gizmoOption = 1;
+            }
 
+            if (CamRotate.Instance.currentTarget.gameObject == null)
+            {
+                return;
+            }
             targetObject = CamRotate.Instance.currentTarget.gameObject;
 
             // Update the gizmo only if it is active and the target object is found
             if (isGizmoActive && targetObject != null)
             {
                 // Object
-                objectRotateGizmo.Gizmo.SetEnabled(true);
-                objectRotateGizmo.SetTargetObject(targetObject);
-                objectScaleGizmo.Gizmo.SetEnabled(true);
-                objectScaleGizmo.SetTargetObject(targetObject);
+                if (gizmoOption == 0)
+                {
+                    objectRotateGizmo.Gizmo.SetEnabled(true);
+                    objectScaleGizmo.Gizmo.SetEnabled(false);
+                    objectRotateGizmo.SetTargetObject(targetObject);
+                }
+                else if (gizmoOption == 1)
+                {
+                    objectScaleGizmo.Gizmo.SetEnabled(true);
+                    objectRotateGizmo.Gizmo.SetEnabled(false);
+                    objectScaleGizmo.SetTargetObject(targetObject);
+                }
                 // Laser
                 laserMoveGizmo.Gizmo.SetEnabled(true);
                 laserMoveGizmo.SetTargetObject(laserStartPoint);

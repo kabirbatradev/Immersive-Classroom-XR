@@ -28,6 +28,11 @@ public class Laser : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            laserOn = !laserOn;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             isShooting = true;
