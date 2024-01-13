@@ -70,8 +70,6 @@ public class Laser : MonoBehaviour
 
     public static void ToggleLaser(bool status)
     {
-        {
-            laserOn = status;
-        }
+        laserOn = status;
     }
 }

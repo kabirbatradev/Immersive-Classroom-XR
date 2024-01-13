@@ -4,8 +4,10 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-namespace RTG
-{
+using RTG;
+
+// namespace RTG
+// {
     public class RuntimeGizmo : MonoBehaviour
     {
         private ObjectTransformGizmo objectRotateGizmo;
@@ -93,9 +95,7 @@ namespace RTG
 
         public static void ToggleGizmo(bool status)
         {
-            {
-                isGizmoActive = status;
-            }
+            isGizmoActive = status;
         }
     }
-}
+// }
