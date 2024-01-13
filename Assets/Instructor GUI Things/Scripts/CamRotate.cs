@@ -53,10 +53,10 @@ public class CamRotate : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            lockOn = !lockOn;
-        }
+        // if (Input.GetKeyDown(KeyCode.L))
+        // {
+        //     lockOn = !lockOn;
+        // }
 
         if (currentTarget != null && lockOn)
         {

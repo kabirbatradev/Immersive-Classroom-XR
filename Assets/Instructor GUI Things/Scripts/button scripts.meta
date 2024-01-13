@@ -1,7 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Instructor GUI Things/Scripts/button scripts.meta
 guid: 8224971f7185fa64aa8e33f6a03985ed
 folderAsset: yes
 DefaultImporter:
+========
+guid: 7f0e1fcda541e234e957c73b2f46eee1
+PrefabImporter:
+>>>>>>>> instructor-gui:Assets/My Modified Things/LaserGameObject.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

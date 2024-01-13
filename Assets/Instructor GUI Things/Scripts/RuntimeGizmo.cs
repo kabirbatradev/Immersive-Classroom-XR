@@ -8,17 +8,22 @@ namespace RTG
 {
     public class RuntimeGizmo : MonoBehaviour
     {
-        private ObjectTransformGizmo objectTransformGizmo;
-        private ObjectTransformGizmo laserTransformGizmo;
+        private ObjectTransformGizmo objectRotateGizmo;
+        private ObjectTransformGizmo objectScaleGizmo;
+        private ObjectTransformGizmo laserMoveGizmo;
         private GameObject targetObject;
-        private bool isGizmoActive = false;
+        private static bool isGizmoActive = false;
         private bool forceCenter = true;
+        // 0 -> Rotate
+        // 1 -> Scale
+        private int gizmoOption = 0;
         public GameObject laserStartPoint;
 
         private void Start()
         {
-            objectTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
-            laserTransformGizmo = RTGizmosEngine.Get.CreateObjectUniversalGizmo();
+            objectRotateGizmo = RTGizmosEngine.Get.CreateObjectRotationGizmo();
+            objectScaleGizmo = RTGizmosEngine.Get.CreateObjectScaleGizmo();
+            laserMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
         }
 
         private void Update()
@@ -28,31 +33,46 @@ namespace RTG
             {
                 isGizmoActive = !isGizmoActive;
             }
-
-            // Check if the targetObject has been assigned or if it needs to be found
-            if (targetObject == null)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                GameObject targetObjectParent = GameObject.FindWithTag("MainObjectContainer");
-                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-                GameObject foundTarget = GameObject.Find(currentActiveObjectName);
-                if (foundTarget != null)
-                {
-                    targetObject = foundTarget;
-                }
+                gizmoOption = 0;
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                gizmoOption = 1;
+            }
+
+            if (CamRotate.Instance.currentTarget.gameObject == null)
+            {
+                return;
+            }
+            targetObject = CamRotate.Instance.currentTarget.gameObject;
 
             // Update the gizmo only if it is active and the target object is found
             if (isGizmoActive && targetObject != null)
             {
-                objectTransformGizmo.Gizmo.SetEnabled(true);
-                objectTransformGizmo.SetTargetObject(targetObject);
-                laserTransformGizmo.Gizmo.SetEnabled(true);
-                laserTransformGizmo.SetTargetObject(laserStartPoint);
+                // Object
+                if (gizmoOption == 0)
+                {
+                    objectRotateGizmo.Gizmo.SetEnabled(true);
+                    objectScaleGizmo.Gizmo.SetEnabled(false);
+                    objectRotateGizmo.SetTargetObject(targetObject);
+                }
+                else if (gizmoOption == 1)
+                {
+                    objectScaleGizmo.Gizmo.SetEnabled(true);
+                    objectRotateGizmo.Gizmo.SetEnabled(false);
+                    objectScaleGizmo.SetTargetObject(targetObject);
+                }
+                // Laser
+                laserMoveGizmo.Gizmo.SetEnabled(true);
+                laserMoveGizmo.SetTargetObject(laserStartPoint);
             }
             else
             {
-                objectTransformGizmo.Gizmo.SetEnabled(false);
-                laserTransformGizmo.Gizmo.SetEnabled(false);
+                objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectScaleGizmo.Gizmo.SetEnabled(false);
+                laserMoveGizmo.Gizmo.SetEnabled(false);
             }
 
             if (targetObject != null && forceCenter)
@@ -69,6 +89,13 @@ namespace RTG
         private bool RoomHasCustomProperty(string key)
         {
             return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+        }
+
+        public static void ToggleGizmo(bool status)
+        {
+            {
+                isGizmoActive = status;
+            }
         }
     }
 }
