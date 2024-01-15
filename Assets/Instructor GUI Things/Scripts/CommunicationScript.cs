@@ -13,6 +13,7 @@ public class CommunicationScript : MonoBehaviour
     private Vector3 ObjPos;
     private Vector3 ObjScale;
     private bool IsShooting = false;
+    private static bool serverLaser = true;
 
     void FixedUpdate()
     {
@@ -32,7 +33,7 @@ public class CommunicationScript : MonoBehaviour
         ObjPos = CurObj.transform.position;
         ObjScale = CurObj.transform.localScale;
 
-        if (Physics.Raycast(ray, out hit) && Input.GetMouseButton(0))
+        if (Physics.Raycast(ray, out hit) && Input.GetMouseButton(0) && serverLaser)
         {
             HitPos = hit.point;
             IsShooting = true;
@@ -82,5 +83,10 @@ public class CommunicationScript : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public static void ToggleServerLaser(bool status)
+    {
+        serverLaser = status;
     }
 }
