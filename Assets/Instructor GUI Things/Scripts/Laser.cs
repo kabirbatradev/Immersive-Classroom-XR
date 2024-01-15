@@ -9,6 +9,7 @@ public class Laser : MonoBehaviour
     public Camera mainCamera;
     public GameObject laserStartPoint;
     public Material laserMaterial;
+    public bool laserFromCamera = true;
     private static bool laserOn = true;
 
     void Start()
@@ -32,6 +33,10 @@ public class Laser : MonoBehaviour
         {
             laserOn = !laserOn;
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            laserFromCamera = !laserFromCamera;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -44,6 +49,16 @@ public class Laser : MonoBehaviour
             lineRenderer.enabled = false;
         }
 
+        // check if laserStartPoint should be disabled
+        if (laserFromCamera == false)
+        {
+            laserStartPoint.SetActive(true);
+        }
+        else
+        {
+            laserStartPoint.SetActive(false);
+        }
+
         if (isShooting && laserOn)
         {
             UpdateLaser();
@@ -54,7 +69,14 @@ public class Laser : MonoBehaviour
     {
         RaycastHit hit;
         // Set the start position to be the position of the laserStartPoint
-        lineRenderer.SetPosition(0, laserStartPoint.transform.position);
+        if (laserFromCamera == false)
+        {
+            lineRenderer.SetPosition(0, laserStartPoint.transform.position);
+        }
+        else
+        {
+            lineRenderer.SetPosition(0, mainCamera.transform.position);
+        }
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, laserRange))

@@ -6,6 +6,7 @@ public class CommunicationScript : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject laserStartPoint;
+    public bool laserFromCamera = true;
     private Vector3 StartPos;
     private Vector3 HitPos;
     public GameObject CurObj;
@@ -22,8 +23,19 @@ public class CommunicationScript : MonoBehaviour
         if (CamRotate.Instance.currentTarget == null) return;
         CurObj = CamRotate.Instance.currentTarget.gameObject;
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            laserFromCamera = !laserFromCamera;
+        }
 
-        StartPos = laserStartPoint.transform.position;
+        if (laserFromCamera == false)
+        {
+            StartPos = laserStartPoint.transform.position;
+        }
+        else
+        {
+            StartPos = mainCamera.transform.position;
+        }
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
