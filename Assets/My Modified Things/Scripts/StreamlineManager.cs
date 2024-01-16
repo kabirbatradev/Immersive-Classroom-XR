@@ -5,7 +5,7 @@ using UnityEngine;
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
 
-public class ServerConnectionAdditionalCallbacks : PhotonPun.MonoBehaviourPunCallbacks
+public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
 {
 
     // anything I want to have run automatically when joined room
