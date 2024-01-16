@@ -11046,6 +11046,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SharedAnchorControlPanel, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 8607079646309663261, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8607079646963991753, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -11124,51 +11128,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 82.41143
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 82.95929
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648133582744, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -22.5
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 25.75357
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 28.876785
       objectReference: {fileID: 0}
     - target: {fileID: 8607079648281712495, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -22.5
       objectReference: {fileID: 0}
     - target: {fileID: 8715124635800221128, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
       propertyPath: m_AnchorMax.y
