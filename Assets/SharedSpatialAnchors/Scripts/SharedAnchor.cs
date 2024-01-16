@@ -208,7 +208,9 @@ public class SharedAnchor : MonoBehaviour
                 ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
                 foreach (string strUsername in userIds)
                 {
-                    spaceUserList.Add(new OVRSpaceUser(ulong.Parse(strUsername)));
+                    ulong parsedId = ulong.Parse(strUsername);
+                    if (parsedId == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
+                    spaceUserList.Add(new OVRSpaceUser(parsedId));
                 }
 
                 OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { spatialAnchor }, spaceUserList, OnShareComplete);
@@ -239,7 +241,9 @@ public class SharedAnchor : MonoBehaviour
         ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
         foreach (string strUsername in PhotonAnchorManager.GetUsers())
         {
-            spaceUserList.Add(new OVRSpaceUser(ulong.Parse(strUsername)));
+            ulong parsedId = ulong.Parse(strUsername);
+            if (parsedId == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
+            spaceUserList.Add(new OVRSpaceUser(parsedId));
         }
         OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { _spatialAnchor }, spaceUserList, OnShareComplete);
     }
