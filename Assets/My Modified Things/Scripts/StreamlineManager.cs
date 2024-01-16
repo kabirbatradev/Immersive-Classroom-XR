@@ -8,6 +8,21 @@ using PhotonRealtime = Photon.Realtime;
 public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
 {
 
+    public static StreamlineManager Instance;
+
+
+    private void Awake() {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     // anything I want to have run automatically when joined room
     public override void OnJoinedRoom() {
         // test: 
