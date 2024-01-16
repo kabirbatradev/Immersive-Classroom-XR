@@ -6446,7 +6446,7 @@ GameObject:
   - component: {fileID: 1380951787}
   - component: {fileID: 1380951786}
   m_Layer: 0
-  m_Name: ServerConnectionAdditionalCallbacks
+  m_Name: StreamlineManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

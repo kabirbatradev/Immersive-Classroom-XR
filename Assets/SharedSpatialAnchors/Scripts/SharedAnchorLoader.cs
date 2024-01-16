@@ -261,6 +261,10 @@ public class SharedAnchorLoader : MonoBehaviour
         {
             //Disable the share icon since this anchor has been shared with me
             sharedAnchor.DisableShareIcon();
+
+            if (StreamlineManager.Instance != null) {
+                StreamlineManager.Instance.NewAnchorWasCreated(sharedAnchor);
+            }
         }
 
         var cachedAnchor = spatialAnchor.GetComponent<CachedSharedAnchor>();
