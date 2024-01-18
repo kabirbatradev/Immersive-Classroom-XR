@@ -48,7 +48,7 @@ public class GUIManager : MonoBehaviour
 
 
     public void ResetControlPanel() {
-        OnStudentMode(); // reset main panel to student view so that the next room we join, we are in student mode by default
+        // OnStudentMode(); // reset main panel to student view so that the next room we join, we are in student mode by default
         DisplayLobbyPanel();
         consolePanel.SetActive(true);
     }
