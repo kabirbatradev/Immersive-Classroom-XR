@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using PhotonPun = Photon.Pun;
+using PhotonRealtime = Photon.Realtime;
+
 public class GUIManager : MonoBehaviour
 {
 
@@ -58,6 +61,7 @@ public class GUIManager : MonoBehaviour
 
         // disable the Console object
         consolePanel.SetActive(false);
+        SetGroupNumber(1);
     }
 
     public void OnAdminMode() {
@@ -68,6 +72,7 @@ public class GUIManager : MonoBehaviour
 
         // enable the console object
         consolePanel.SetActive(true);
+        SetGroupNumber(1);
     }
 
     public void OnCameraMode() {
@@ -78,6 +83,7 @@ public class GUIManager : MonoBehaviour
 
         // disable the console object
         consolePanel.SetActive(false);
+        SetGroupNumber(0);
     }
 
     private void SetStudentButtonsActive(bool active) {
@@ -110,8 +116,16 @@ public class GUIManager : MonoBehaviour
         menuPanel.SetActive(false);
     }
 
+    
 
 
+
+    private void SetGroupNumber(int groupNumber) {
+        PhotonRealtime.Player LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
+        LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+        // also set locally for faster updates
+        LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+    }
 
 
 }
