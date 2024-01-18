@@ -46,6 +46,8 @@ public class GUIManager : MonoBehaviour
 
     public void OnExitRoomButtonPressed() {
         SampleController.Instance.Log("OnExitRoomButtonPressed");
+        StreamlineManager.Instance.SetAutoJoinRoom(false);
+        PhotonPun.PhotonNetwork.LeaveRoom(); 
         ResetControlPanel();
     }
 
