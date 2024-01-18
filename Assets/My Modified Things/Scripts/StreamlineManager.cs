@@ -7,9 +7,10 @@ using PhotonRealtime = Photon.Realtime;
 
 public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
 {
+    
 
+    // we need the instance so that we can call NewAnchorWasCreated from another script easily
     public static StreamlineManager Instance;
-
 
     private void Awake() {
 
@@ -28,6 +29,9 @@ public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
         // test: 
         // var newProperty = new ExitGames.Client.Photon.Hashtable { { "mainObjectCurrentModelName", "Model2" } };
         // PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newProperty);
+
+        // set the default UI to student mode when a room is joined
+        GUIManager.Instance.OnStudentMode();
     }
 
 
@@ -79,4 +83,9 @@ public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
     public void AutoAlignAnchor(SharedAnchor anchor) {
         anchor.OnAlignButtonPressed();
     }
+
+
+
+
+    
 }
