@@ -19,6 +19,9 @@ public class GUIManager : MonoBehaviour
     private GameObject consolePanel;
 
     [SerializeField]
+    private GameObject roomInfoPanel;
+
+    [SerializeField]
     private GameObject[] adminButtons;
 
     [SerializeField]
@@ -49,9 +52,11 @@ public class GUIManager : MonoBehaviour
 
     public void ResetControlPanel() {
         // OnStudentMode(); // reset main panel to student view so that the next room we join, we are in student mode by default
-        DisplayLobbyPanel();
+        lobbyPanel.SetActive(true);
+        menuPanel.SetActive(false);
         consolePanel.SetActive(true);
     }
+
 
     public void OnStudentMode() {
         // display only the student buttons
@@ -61,7 +66,13 @@ public class GUIManager : MonoBehaviour
 
         // disable the Console object
         consolePanel.SetActive(false);
-        SetGroupNumber(1);
+
+        int currentGroupNumber = GetCurrentGroupNumber();
+        if (currentGroupNumber <= 0) SetGroupNumber(1);
+
+        
+
+        roomInfoPanel.SetActive(false);
     }
 
     public void OnAdminMode() {
@@ -72,7 +83,9 @@ public class GUIManager : MonoBehaviour
 
         // enable the console object
         consolePanel.SetActive(true);
-        SetGroupNumber(1);
+        // SetGroupNumber(1);
+
+        roomInfoPanel.SetActive(true);
     }
 
     public void OnCameraMode() {
@@ -84,6 +97,8 @@ public class GUIManager : MonoBehaviour
         // disable the console object
         consolePanel.SetActive(false);
         SetGroupNumber(0);
+
+        roomInfoPanel.SetActive(false);
     }
 
     private void SetStudentButtonsActive(bool active) {
@@ -104,17 +119,7 @@ public class GUIManager : MonoBehaviour
 
 
 
-    public void DisplayMenuPanel()
-    {
-        menuPanel.SetActive(true);
-        lobbyPanel.SetActive(false);
-    }
-
-    public void DisplayLobbyPanel()
-    {
-        lobbyPanel.SetActive(true);
-        menuPanel.SetActive(false);
-    }
+    
 
     
 
@@ -125,6 +130,13 @@ public class GUIManager : MonoBehaviour
         LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
         // also set locally for faster updates
         LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+    }
+
+    private int GetCurrentGroupNumber() {
+        ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
+        bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
+        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 1;
+        return currentUserGroupNumber;
     }
 
 
