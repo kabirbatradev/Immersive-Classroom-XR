@@ -5586,6 +5586,7 @@ MonoBehaviour:
   mainCamera: {fileID: 958794940}
   laserStartPoint: {fileID: 1261141254}
   laserMaterial: {fileID: 2100000, guid: 2903d14fccbb2714db6aace8717a898d, type: 2}
+  laserFromCamera: 1
 --- !u!1 &1002051157
 GameObject:
   m_ObjectHideFlags: 0
@@ -16295,6 +16296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 958794940}
   laserStartPoint: {fileID: 1261141254}
+  laserFromCamera: 1
   CurObj: {fileID: 0}
 --- !u!114 &1853474387
 MonoBehaviour:
