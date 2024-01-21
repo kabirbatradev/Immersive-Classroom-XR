@@ -13,6 +13,17 @@ using PhotonRealtime = Photon.Realtime;
 public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 {
 
+    public const int defaultGroupNumber = 1;
+    // const implies static too
+
+
+    [SerializeField]
+    private bool isInstructorGUIToggle;
+
+
+
+
+
     [SerializeField]
     private GameObject spherePrefab;
 
@@ -32,11 +43,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-    [SerializeField]
-    private GameObject[] adminButtons;
+    // [SerializeField]
+    // private GameObject[] adminButtons;
 
-    [SerializeField]
-    private GameObject[] studentButtons;
+    // [SerializeField]
+    // private GameObject[] studentButtons;
 
 
     // private bool alignTableMode = false;
@@ -48,23 +59,45 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-    private LineRenderer lineRenderer;
-    private float lineSize = 0.02f;
-    public Material laserMaterial;
+    // private LineRenderer lineRenderer;
+    // private float lineSize = 0.02f;
+    // public Material laserMaterial;
+
+    private List<GameObject> laserGameObjects;
+
+    [SerializeField] 
+    private GameObject laserGameObjectPrefab;
+
+
+
+    [SerializeField]
+    private GameObject groupNumberTextObject;
+
+    
 
 
     public void Start() {
+        laserGameObjects = new List<GameObject>();
         // initialize laser renderer
 
-        if (lineRenderer == null) {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.material = laserMaterial;
-            lineRenderer.startWidth = lineSize;
-            lineRenderer.endWidth = lineSize;
-        }
+        // if (lineRenderer == null) {
+        //     lineRenderer = gameObject.AddComponent<LineRenderer>();
+        //     lineRenderer.material = laserMaterial;
+        //     lineRenderer.startWidth = lineSize;
+        //     lineRenderer.endWidth = lineSize;
 
-        lineRenderer.enabled = false;
-    }
+
+        //     lineRenderer.startColor = Color.red;
+        //     lineRenderer.endColor = Color.red;
+        // }
+
+        // lineRenderer.enabled = false;
+
+
+        // if (isInstructorGUIToggle) {
+        //     defaultGroupNumber = 0;
+        // }
+    } 
 
 
     public void Update() {
@@ -117,6 +150,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
         */
 
+
+
+
+
+
+
         
         // Object Group Filtering:
 
@@ -126,6 +165,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
+        if (isInstructorGUIToggle) currentUserGroupNumber = 0; // this hardcode is also in the GetCurrentGroupNumber function
+        // instructor group number = 0 allows for instructor to view every instance of objects
 
         // need to include inactive 
         // ObjectData[] allNetworkObjectDatas = (ObjectData[]) FindObjectsByType<ObjectData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -135,7 +176,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             GameObject obj = photonView.gameObject;
             if (obj == null) {
                 // SampleController.Instance.Log("photonView was attached to null object");
-                Debug.Log("photonView was attached to null object");
+                // Debug.Log("photonView was attached to null object");
                 continue;
             }
 
@@ -155,6 +196,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 obj.SetActive(false);
             }
         }
+
+
+
+
+
+
+
+
+
 
         /*
         // if you press X, then print all spawned object's data
@@ -177,6 +227,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+        /*
         // if there is an active "MainObjectContainer" in the scene
         // then change check the room custom properties to see which model should be active, and deactive the rest
 
@@ -202,6 +253,34 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
 
         }
+        */
+
+
+
+
+
+
+
+        /*
+
+
+
+        // simply get the current active game object so it can be rotated by the instructor
+        GameObject currentActiveGameObject = null;
+        
+        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if the main object exists
+        if (mainObjectContainer != null) {
+            // iterate through all children
+            foreach (Transform child in mainObjectContainer.transform) {
+                // find the child that is active
+                GameObject potentialModel = child.gameObject;
+                if (potentialModel.activeSelf) {
+                    currentActiveGameObject = potentialModel;
+                    break;
+                }
+            }
+        }
 
 
         // if main object exists, check if the professor wants to 
@@ -209,8 +288,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // scale it
         // draw a laser
 
-        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        if (mainObjectContainer != null) {
+        // ONLY DRAW THE LASER AND UPDATE ROTATION IF THIS IS A HEADSET (NOT INSTRUCTOR GUI)
+        if (mainObjectContainer != null && !isInstructorGUIToggle) {
             bool isShootingExists = RoomHasCustomProperty("IsShooting");
 
             // if (isShootingExists != isShootingExisted) {
@@ -227,11 +306,22 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             
             bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
             if (objectRotationExists) {
+
+
+
                 // get rotation from server side and rotate the main object
                 // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
                 Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
                 // SampleController.Instance.Log("rotation is: " + objectRotation);
                 currentActiveGameObject.transform.rotation = objectRotation;
+
+
+
+
+                // if rotation exists, then scaling probably also exists
+                Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
+                currentActiveGameObject.transform.localScale = objectScale;
+
 
 
                 // if the professor is shooting a laser, then we should see it
@@ -267,11 +357,136 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
-        
+        */
+
+
+        // GameObject laserGameObject = Instantiate(laserGameObjectPrefab);
+        // LineRenderer lineRenderer = laserGameObject.GetComponent<LineRenderer>();
         // // test if line renderer is working (works)
         // lineRenderer.enabled = true;
         // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
         // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
+
+
+
+
+
+        // iterate through all main object instances, only show the correct subobject, 
+        // draw the instructor laser pointer, and update rotation and scaling of the object
+
+        // get all objects
+        GameObject[] mainObjectContainers = GameObject.FindGameObjectsWithTag("MainObjectContainer");
+
+        // get the name of the currently active model from the server
+        string currentActiveObjectName = null;
+        if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
+            currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+        }
+
+        // iterate through all objects
+        int mainObjectIndex = -1;
+        foreach (GameObject mainObjectContainer in mainObjectContainers) {
+            mainObjectIndex++; // to be used with the list of line renderers
+            if (mainObjectContainer == null) continue;
+
+            // save the active model in this variable
+            GameObject currentActiveModel = null;
+
+            // if there is a server variable determining which model should be active, then only enable that model
+            if (currentActiveObjectName != null) {
+                // for every potential model (child of container), disable unless name = currentActiveObject
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
+                    if (potentialModel.name == currentActiveObjectName) {
+                        currentActiveModel = potentialModel;
+                    }
+                }
+            }
+            // if there isnt a server variable, then iterate through and pick out the active model
+            else {
+                foreach (Transform child in mainObjectContainer.transform) {
+                    GameObject potentialModel = child.gameObject;
+                    if (potentialModel.activeSelf) {
+                        currentActiveModel = potentialModel;
+                        break;
+                    }
+                }
+            }
+
+            // given this active model, lets draw the laser, rotate the object, and scale the object
+            // this should only be done on the device side (not the instructor side)
+            if (!isInstructorGUIToggle) {
+                bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
+                if (objectRotationExists) {
+
+                    // get rotation from server side and rotate the main object
+                    Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
+                    currentActiveModel.transform.rotation = objectRotation;
+
+                    // if rotation exists, then scaling also exists (they are set at the same time)
+                    Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
+                    currentActiveModel.transform.localScale = objectScale;
+
+                    // create a new laser instance if it doesnt already exist
+                    if (mainObjectIndex >= laserGameObjects.Count) {
+                        laserGameObjects.Add(Instantiate(laserGameObjectPrefab));
+                    }
+                    // get the corresponding laser object to this main object at this main object index
+                    GameObject laserInstance = laserGameObjects[mainObjectIndex];
+
+                    // get the laser prefab's line renderer to be used to draw the laser if the professor is shooting a laser
+                    LineRenderer lineRenderer = laserInstance.GetComponent<LineRenderer>();
+
+                    // if the professor is shooting a laser, then we should see it
+                    bool isShootingExists = RoomHasCustomProperty("IsShooting");
+                    // Debug.Log("is shooting exists? " + isShootingExists);
+                    if (isShootingExists) {
+                        bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                        // Debug.Log("is shooting equals: " + isShooting);
+                        if (isShooting) {
+                            // get camera position and hit position
+                            Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
+                            Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+                            // Debug.Log("camera position " + cameraPosition);
+                            // Debug.Log("hit position " + hitPosition);
+
+                            // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
+                            // enable or disable the line renderer
+
+                            // draw the line with respect to the main object
+                            lineRenderer.enabled = true;
+                            lineRenderer.SetPosition(0, cameraPosition + currentActiveModel.transform.position);
+                            lineRenderer.SetPosition(1, hitPosition + currentActiveModel.transform.position);
+
+                        }
+                        else {
+                            lineRenderer.enabled = false;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+        // update the group number text at the top of the control panel (for devices)
+
+        // if device (not instructor)
+        if (!isInstructorGUIToggle) {
+
+            // get the text component from groupNumberTextObject
+            TextMeshProUGUI textbox = groupNumberTextObject.GetComponent<TextMeshProUGUI>();
+
+            // write the current group number using currentUserGroupNumber
+            textbox.text = "Group Number: " + currentUserGroupNumber;
+            
+        }
 
 
     }
@@ -439,17 +654,33 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
 
+        // also set locally for faster updates
+        LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+
 
     }
 
 
 
+    public void OnIncrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() + 1;
+        SampleController.Instance.Log("incrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
+
+    public void OnDecrementGroupNumber() {
+        int newGroupNumber = GetCurrentGroupNumber() - 1;
+        SampleController.Instance.Log("decrementing group number to " + newGroupNumber);
+        SetGroupNumber(newGroupNumber);
+    }
+
     private int GetCurrentGroupNumber() {
+        if(isInstructorGUIToggle) return 0;
 
         ExitGames.Client.Photon.Hashtable PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int currentUserGroupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return currentUserGroupNumber;
 
@@ -460,7 +691,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         ExitGames.Client.Photon.Hashtable PlayerProperties = player.CustomProperties;
 
         bool groupNumberExists = PlayerProperties.ContainsKey("groupNumber");
-        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : 0;
+        int groupNumber = groupNumberExists ? (int)PlayerProperties["groupNumber"] : defaultGroupNumber;
 
         return groupNumber;
 
@@ -510,15 +741,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private void SetToAdminMode() {
 
+        SampleController.Instance.Log("This buttons code was moved to GUIManager");
+
+
         // for every button in a list of buttons, make them active
 
 
-        foreach (GameObject b in studentButtons) {
-            b.SetActive(false);
-        }
-        foreach (GameObject b in adminButtons) {
-            b.SetActive(true);
-        }
+        // foreach (GameObject b in studentButtons) {
+        //     b.SetActive(false);
+        // }
+        // foreach (GameObject b in adminButtons) {
+        //     b.SetActive(true);
+        // }
         
 
     }
@@ -529,14 +763,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     }
 
     private void SetToStudentMode() {
+        SampleController.Instance.Log("This buttons code was moved to GUIManager");
 
         // for every button in a list of buttons, make them active
-        foreach (GameObject b in adminButtons) {
-            b.SetActive(false);
-        }
-        foreach (GameObject b in studentButtons) {
-            b.SetActive(true);
-        }
+        // foreach (GameObject b in adminButtons) {
+        //     b.SetActive(false);
+        // }
+        // foreach (GameObject b in studentButtons) {
+        //     b.SetActive(true);
+        // }
 
     }
 
@@ -710,7 +945,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     public void OnSetMainObjectModel1() {
-        SampleController.Instance.Log("Setting main object to model 1");
+        SampleController.Instance.Log("Setting main object to model x");
         SetMainObjectModel1();
     }
 
