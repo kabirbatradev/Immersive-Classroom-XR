@@ -33,7 +33,8 @@ public class TheaterMode : MonoBehaviour
         buildRoom();
 
         if (OVRInput.GetDown(OVRInput.RawButton.A))
-        { 
+        {  
+            Debug.Log("A WAS PRESSED, RETRACTING WALLS");
             StartCoroutine(StartCeilingMovement());
         }
         
