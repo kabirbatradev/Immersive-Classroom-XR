@@ -7,10 +7,21 @@ public class RoomscaleObject : MonoBehaviour
     public MeshRenderer passthroughMesh;
     Material defaultMaterial;
     // public Material darkRoomMaterial;
-    public Vector3 dimensions = Vector3.one;
+    // public Vector3 dimensions = Vector3.one;
     public bool passthroughWallActive = true;
 
+    private OVRPassthroughLayer passthroughLayer;
+
+
     private void Start() {
+
+        GameObject ovrCameraRig = GameObject.Find("OVRCameraRig");
+        passthroughLayer = ovrCameraRig.GetComponent<OVRPassthroughLayer>();    
+
+        passthroughLayer.AddSurfaceGeometry(passthroughMesh.gameObject, true);
+        Debug.Log("ROOMSCALE OBJECT");
+
+
         defaultMaterial = passthroughMesh.material;
     }
 
