@@ -6710,6 +6710,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1298837697}
+  - component: {fileID: 1298837698}
   m_Layer: 0
   m_Name: TheaterManager
   m_TagString: Untagged
@@ -6733,6 +6734,23 @@ Transform:
   - {fileID: 1563339207}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1298837698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298837696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b249d003db3ff64fb7d91e738ee1dca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skyboxMats:
+  - {fileID: 2100000, guid: dc246bc93d3c844b198a9d888daf4548, type: 2}
+  - {fileID: 2100000, guid: f3bc3bb148f484d1b951d05c106526c2, type: 2}
+  controllerAnchor: {fileID: 7079690333416302228}
+  lineMaxLength: 50
 --- !u!1 &1312789331
 GameObject:
   m_ObjectHideFlags: 0
@@ -8082,6 +8100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LaserPointer
       objectReference: {fileID: 0}
+    - target: {fileID: 2246291023014509715, guid: 317a9ebb3ee734d8e9abb004f53321ec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4262029944291570153, guid: 317a9ebb3ee734d8e9abb004f53321ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.05290532
@@ -8130,7 +8152,8 @@ PrefabInstance:
       propertyPath: controllerAnchor
       value: 
       objectReference: {fileID: 7079690333416302228}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8556932209718790667, guid: 317a9ebb3ee734d8e9abb004f53321ec, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11756,7 +11779,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244174007119, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 215
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414912244175157426, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
+      propertyPath: overlayType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244175157426, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: compositionDepth
@@ -11764,7 +11791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244175157426, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: projectionSurfaceType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244175157427, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_Name
@@ -11816,11 +11843,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5432093320130169601, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4294967263
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5432093322171405467, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4294967263
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

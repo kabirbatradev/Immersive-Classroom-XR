@@ -15,11 +15,11 @@ public class RoomscaleObject : MonoBehaviour
 
     private void Start() {
 
-        GameObject ovrCameraRig = GameObject.Find("OVRCameraRig");
-        passthroughLayer = ovrCameraRig.GetComponent<OVRPassthroughLayer>();    
+        // GameObject ovrCameraRig = GameObject.Find("OVRCameraRig");
+        // passthroughLayer = ovrCameraRig.GetComponent<OVRPassthroughLayer>();    
 
-        passthroughLayer.AddSurfaceGeometry(passthroughMesh.gameObject, true);
-        Debug.Log("ROOMSCALE OBJECT");
+        // passthroughLayer.AddSurfaceGeometry(passthroughMesh.gameObject, true);
+        // Debug.Log("ROOMSCALE OBJECT");
 
 
         defaultMaterial = passthroughMesh.material;

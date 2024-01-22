@@ -29,6 +29,11 @@ public class TheaterMode : MonoBehaviour
         lineRenderer = gameObject.GetComponent<LineRenderer>();
     }
 
+    private void Start() {
+        OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
+        // to make the shader alpha thing work
+    }
+
     void Update() {
         buildRoom();
 
