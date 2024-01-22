@@ -5,8 +5,12 @@ Shader "Unlit/NewUnlitShader"
         _MainTex ("Texture", 2D) = "white" {}
 
         // extra added from standard passthrough shader thing
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2 //"Back"
         [Enum(Off,0,On,1)] _ZWrite("ZWrite", Float) = 0 //"Off"
         [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 4 //"LessEqual"
+
+        // [Enum(UnityEngine.Rendering.BlendOp)] _BlendOpColor("Blend Color", Float) = 2 //"ReverseSubtract"
+        // [Enum(UnityEngine.Rendering.BlendOp)] _BlendOpAlpha("Blend Alpha", Float) = 3 //"Min"
     }
     SubShader
     {
@@ -21,8 +25,10 @@ Shader "Unlit/NewUnlitShader"
         {
 
             // add these in too
+            Cull[_Cull]
             ZWrite[_ZWrite]
             ZTest[_ZTest]
+            // BlendOp[_BlendOpColor],[_BlendOpAlpha]
 
             CGPROGRAM
             #pragma vertex vert
