@@ -11779,7 +11779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244174007119, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4294967295
+      value: 215
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244175157426, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: overlayType
@@ -11843,11 +11843,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5432093320130169601, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4294967295
+      value: 215
       objectReference: {fileID: 0}
     - target: {fileID: 5432093322171405467, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 4294967295
+      value: 215
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
