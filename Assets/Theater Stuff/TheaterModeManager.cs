@@ -19,6 +19,10 @@ public class TheaterModeManager : MonoBehaviour
     private List<GameObject> ceilingClone = new List<GameObject>();
 
 
+    private List<GameObject> originalWallScenePlanes = new List<GameObject>();
+    private GameObject originalCeilingScenePlane;
+
+
 
     // should be called automatically when the ScenePlane Objects are instantiated (by script AddToTheaterManager)
     public void AddScenePlane(GameObject scenePlaneObject) {
@@ -28,30 +32,41 @@ public class TheaterModeManager : MonoBehaviour
         if (classification == null) {
             // thats weird
             Debug.Log("scene plane object doesnt have a classification yet?");
-        }
-        else if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
-            GameObject sceneMeshObject = scenePlaneObject.transform.GetChild(0).gameObject;
+        }   
+        // if ceiling or walls
+        else if (classification.Contains(OVRSceneManager.Classification.Ceiling) || classification.Contains(OVRSceneManager.Classification.WallFace)) {
+            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; // contains the mesh renderer of the pass
             
-            MeshRenderer renderer = sceneMeshObject.GetComponent<MeshRenderer>();
-            renderer.enabled = false; // do not render the passthrough mesh
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+            // renderer.enabled = false;
 
-            ceilingClone.Add(sceneMeshObject);
+            // GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
 
-                // originalPosition = objectHit.transform.position;
-                // finalPosition = new Vector3(originalPosition.x, originalPosition.y - 0.5f, originalPosition.z);
-                // GameObject clone = Instantiate(objectHit, new Vector3(originalPosition.x, originalPosition.y, originalPosition.z), objectHit.transform.rotation);
-                // clone.transform.localScale += new Vector3(0.01f, 0.01f, 0.01f);
-                // allWalls.Add(clone);
-                // rend.enabled = false;
+            if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
+                GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
+                ceilingClone.Add(clone); // create 4 ceiling clones instead
+
+                originalCeilingScenePlane = scenePlaneObject; // save the original object
+            }
+            else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
+                GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
+                wallClones.Add(clone);
+
+                originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
+            }
+            renderer.enabled = false; // do not renderer the original passthrough meshes so we just see the clones and their movement
+            // when we reset the theater, then we can destroy the clones and enable the renderer on these passthroughMeshObjects
+
+            
 
         }
-        else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
+        // else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
 
-            GameObject sceneMeshObject = scenePlaneObject.transform.GetChild(0).gameObject;
-            MeshRenderer renderer = sceneMeshObject.GetComponent<MeshRenderer>();
-            wallClones.Add(sceneMeshObject);
+        //     GameObject sceneMeshObject = scenePlaneObject.transform.GetChild(0).gameObject;
+        //     MeshRenderer renderer = sceneMeshObject.GetComponent<MeshRenderer>();
+        //     wallClones.Add(sceneMeshObject);
 
-        }
+        // }
     }
 
 
@@ -63,6 +78,8 @@ public class TheaterModeManager : MonoBehaviour
 
     // // Update is called once per frame
     void Update() {
+
+        // A button pressed, debug logs
         if (OVRInput.GetDown(OVRInput.RawButton.A)) {  
             Debug.Log("A button was pressed");
 
@@ -75,5 +92,15 @@ public class TheaterModeManager : MonoBehaviour
                 Debug.Log(clone);
             }
         }
+
+
+        if (OVRInput.GetDown(OVRInput.RawButton.B)) {  
+            foreach (var wall in wallClones) {
+                // wall.transform.Translate(Vector3.up * 1.0f)
+                wall.transform.Translate(Vector3.up * Random.Range(0.0f, 2.0f));
+            }
+        }
+
+
     }
 }
