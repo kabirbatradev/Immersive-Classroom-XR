@@ -97,7 +97,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d47afd9521d94e84e82b56681530b2f6, type: 2}
+  - {fileID: 2100000, guid: c513a0b5c2d6360429a8828bbaf6a6d9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -458,7 +458,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passthroughMesh: {fileID: 502283750161808342}
-  dimensions: {x: 1, y: 1, z: 1}
   passthroughWallActive: 1
 --- !u!114 &8201578218320176529
 MonoBehaviour:

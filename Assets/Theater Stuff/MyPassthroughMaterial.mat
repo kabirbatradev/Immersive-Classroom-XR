@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: my passthrough material
-  m_Shader: {fileID: 4800000, guid: 1d2c6c7d22b598b41867a7937a194614, type: 3}
+  m_Name: MyPassthroughMaterial
+  m_Shader: {fileID: 4800000, guid: e37f2a1128c35ed489f320f0c2fb856c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -71,8 +71,6 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _InvertedAlpha: 1
-    - _LineLength: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

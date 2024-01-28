@@ -1,4 +1,4 @@
-Shader "Unlit/NewUnlitShader"
+Shader "Unlit/MyPassthroughShader"
 {
     Properties
     {
@@ -6,16 +6,17 @@ Shader "Unlit/NewUnlitShader"
 
         // extra added from standard passthrough shader thing
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2 //"Back"
-        [Enum(Off,0,On,1)] _ZWrite("ZWrite", Float) = 0 //"Off"
-        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 4 //"LessEqual"
+        [Enum(Off,0,On,1)] _ZWrite("ZWrite", Float) = 0 //"Off" // do not write z value because it should be infinitely far
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 4 //"LessEqual" // do a z test, although this doesnt matter because the renderer queue value is set to before everything including geometry
 
         // [Enum(UnityEngine.Rendering.BlendOp)] _BlendOpColor("Blend Color", Float) = 2 //"ReverseSubtract"
         // [Enum(UnityEngine.Rendering.BlendOp)] _BlendOpAlpha("Blend Alpha", Float) = 3 //"Min"
     }
     SubShader
     {
-        // Tags { "RenderType"="Opaque" "Queue"="Transparent+2000"}
-        Tags { "RenderType"="Opaque"}
+        Tags { "RenderType"="Opaque" "Queue"="Geometry-2"} // set the render queue to 1998 (before 2000 when the geometry renders)
+        // this allows for the render 
+        // Tags { "RenderType"="Opaque"}
         LOD 100
 
         BlendOp RevSub
