@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 6335670023360625827}
   - component: {fileID: 4518289925129367496}
   - component: {fileID: 9012753275797588451}
+  - component: {fileID: 297876029121116649}
   m_Layer: 8
   m_Name: ScenePlane
   m_TagString: Untagged
@@ -272,6 +273,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ab3ec25e32ce0c4380714d75e39cb05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &297876029121116649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350422998566360405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ed1a8d71eb5b7469a9f78aedd7de71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7284367002185598776

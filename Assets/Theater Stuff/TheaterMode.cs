@@ -32,10 +32,13 @@ public class TheaterMode : MonoBehaviour
     private void Start() {
         OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
         // to make the shader alpha thing work
+
+
+        InitializeTheaterMode();
     }
 
     void Update() {
-        buildRoom();
+        // buildRoom();
 
         if (OVRInput.GetDown(OVRInput.RawButton.A))
         {  
@@ -49,6 +52,7 @@ public class TheaterMode : MonoBehaviour
         }
     }
 
+    // /*
     void buildRoom() 
     {
         Vector3 anchorPosition = controllerAnchor.position;
@@ -81,6 +85,7 @@ public class TheaterMode : MonoBehaviour
             } 
         }
     }
+    // */
 
     void ChangeSkybox(int index) 
     {
@@ -141,4 +146,40 @@ public class TheaterMode : MonoBehaviour
         }
         yield return StartCoroutine(StartWallMovement());
     }
+
+
+    
+
+
+    private void InitializeTheaterMode() {
+        // OVRSemanticClassification classification = objectHit?.GetComponentInParent<OVRSemanticClassification>();
+        OVRSemanticClassification[] scenePlanes = FindObjectsOfType<OVRSemanticClassification>();
+        // OVRSemanticClassification
+        Debug.Log("scene planes:");
+        Debug.Log(scenePlanes);
+
+        Debug.Log("length of the list: " + scenePlanes.Length);
+
+        int i = 1;
+        foreach (var scenePlane in scenePlanes) {
+            Debug.Log("scene plane number " + i); i++;
+            Debug.Log(scenePlane);
+        }
+
+        // this doesnt seem to work, probably because the walls havent been initialized yet
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
+

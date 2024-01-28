@@ -6711,6 +6711,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1298837697}
   - component: {fileID: 1298837698}
+  - component: {fileID: 1298837699}
   m_Layer: 0
   m_Name: TheaterManager
   m_TagString: Untagged
@@ -6741,7 +6742,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298837696}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b249d003db3ff64fb7d91e738ee1dca, type: 3}
   m_Name: 
@@ -6751,6 +6752,18 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f3bc3bb148f484d1b951d05c106526c2, type: 2}
   controllerAnchor: {fileID: 7079690333416302228}
   lineMaxLength: 50
+--- !u!114 &1298837699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298837696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10a785453f2e4dd4f91546524f2f4a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1312789331
 GameObject:
   m_ObjectHideFlags: 0
