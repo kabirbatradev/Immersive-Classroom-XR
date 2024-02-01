@@ -140,7 +140,6 @@ public class TheaterModeManager : MonoBehaviour
             foreach (var clone in wallClones) {
                 Debug.Log(clone.transform.position);
             }
-            InitializeTheaterMode(); 
             TriggerTheaterMode();
         }
 
@@ -161,14 +160,22 @@ public class TheaterModeManager : MonoBehaviour
         
         // set wallTargetPositions
         wallTargetPositions.Clear();
-        foreach (GameObject wall in originalWalls) {
-            Vector3 targetPosition = wall.transform.position + Vector3.down * wallDistanceTravel;
+        // foreach (GameObject wall in originalWalls) {
+        for (int i = 0; i < originalWalls.Count; i++) {
+            GameObject originalWall = originalWalls[i];
+            Vector3 targetPosition = originalWall.transform.position + Vector3.down * wallDistanceTravel;
             wallTargetPositions.Add(targetPosition);
+
+
+            // essentially we are recloning the walls because we want to reset them and also if anchor alignment changed, then we need to reset even the rotation
+            wallClones[i].transform.rotation = originalWall.transform.rotation;
+            wallClones[i].transform.position = originalWall.transform.position;
         }
 
         // perhaps the start positions should be set so that there is no overlap so that the ceiling opens immediately when the button is pressed
         // float ceilingDistanceTravel = ceilingWidth * 0.5f; // it does go a little past but just for a frame or 2... i think it does depend on the alignment of the coordinate system
-        float ceilingDistanceTravel = ceilingWidth * 1f; 
+        // float ceilingDistanceTravel = ceilingWidth * 1f; 
+        float ceilingDistanceTravel = ceilingWidth * 1.2f; // doesnt hurt to overshoot the ceiling distance a little (usually the ceiling direction is wrong, thats a future fix)
         // float ceilingDistanceTravel = 5f; 
 
         // set ceilingTargetPositions
@@ -180,6 +187,9 @@ public class TheaterModeManager : MonoBehaviour
 
             Debug.Log("target ceiling position target: " + targetPosition);
 
+            ceilingClones[i].transform.position = originalCeiling.transform.position;
+            ceilingClones[i].transform.rotation = originalCeiling.transform.rotation;
+
             // make sure all ceiling clones are visible as they are made invisible after running "RemoveCeiling"
             ceilingClones[i].GetComponent<MeshRenderer>().enabled = true;
         }
@@ -188,6 +198,7 @@ public class TheaterModeManager : MonoBehaviour
 
     private void TriggerTheaterMode() {
         Debug.Log("triggering theater mode");
+        InitializeTheaterMode(); 
         StartCoroutine(RemoveCeiling());
     }
 
