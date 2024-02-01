@@ -35,21 +35,22 @@ public class TheaterModeManager : MonoBehaviour
         }   
         // if ceiling or walls
         else if (classification.Contains(OVRSceneManager.Classification.Ceiling) || classification.Contains(OVRSceneManager.Classification.WallFace)) {
-            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; // contains the mesh renderer of the pass
+            // get child object 
+            // contains the mesh renderer of the passthrough
+            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
             
             MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
             // renderer.enabled = false;
 
-            // GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
+            // does Instantiate keep all the properties? need to test --> no, i do need to pass in position and rotation
+            GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
 
             if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
-                GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
                 ceilingClone.Add(clone); // create 4 ceiling clones instead
 
                 originalCeilingScenePlane = scenePlaneObject; // save the original object
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
-                GameObject clone = Instantiate(passthroughMeshObject); // does Instantiate keep all the properties? need to test
                 wallClones.Add(clone);
 
                 originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
@@ -74,6 +75,7 @@ public class TheaterModeManager : MonoBehaviour
     void Start()
     {
         OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
+        // required to see passthrough correctly
     }
 
     // // Update is called once per frame
