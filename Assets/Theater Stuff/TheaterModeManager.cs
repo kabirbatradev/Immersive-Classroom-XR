@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class TheaterModeManager : MonoBehaviour
@@ -12,15 +13,24 @@ public class TheaterModeManager : MonoBehaviour
         else Destroy(this);
     }
     // end singleton setup
+    
 
+    private const float wallDropPercentage = 0.8f;
+    private const float wallMoveDuration = 4f;
 
     
     private List<GameObject> wallClones = new List<GameObject>();
-    private List<GameObject> ceilingClone = new List<GameObject>();
+    private List<GameObject> ceilingClones = new List<GameObject>();
+
+    private List<Vector3> wallTargetPositions = new();
 
 
-    private List<GameObject> originalWallScenePlanes = new List<GameObject>();
-    private GameObject originalCeilingScenePlane;
+    // private List<GameObject> originalWallScenePlanes = new List<GameObject>();
+    // private GameObject originalCeilingScenePlane;
+    private List<GameObject> originalWalls = new List<GameObject>();
+    private GameObject originalCeiling;
+
+    private float wallHeight;
 
 
 
@@ -46,14 +56,23 @@ public class TheaterModeManager : MonoBehaviour
             GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
 
             if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
-                ceilingClone.Add(clone); // create 4 ceiling clones instead
+                // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
+                for (int i = 0; i < 4; i++) {
+                    ceilingClones.Add(clone); 
+                }
 
-                originalCeilingScenePlane = scenePlaneObject; // save the original object
+                // originalCeilingScenePlane = scenePlaneObject; // save the original object
+                originalCeiling = passthroughMeshObject;
+                
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
                 wallClones.Add(clone);
 
-                originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
+                // originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
+                originalWalls.Add(passthroughMeshObject);
+
+                // also update the height of the walls
+                wallHeight = renderer.bounds.size.y;
             }
             renderer.enabled = false; // do not renderer the original passthrough meshes so we just see the clones and their movement
             // when we reset the theater, then we can destroy the clones and enable the renderer on these passthroughMeshObjects
@@ -61,12 +80,11 @@ public class TheaterModeManager : MonoBehaviour
             
 
         }
-        // else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
-
-        //     GameObject sceneMeshObject = scenePlaneObject.transform.GetChild(0).gameObject;
-        //     MeshRenderer renderer = sceneMeshObject.GetComponent<MeshRenderer>();
-        //     wallClones.Add(sceneMeshObject);
-
+        // else if (classification.Contains(OVRSceneManager.Classification.Floor)) {
+        //     GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
+        //     MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+        //     renderer.enabled = false;
+        //     // get rid of the renderer for now
         // }
     }
 
@@ -80,19 +98,39 @@ public class TheaterModeManager : MonoBehaviour
 
     // // Update is called once per frame
     void Update() {
+        
+        // foreach (GameObject wall in wallClones) {
+        //     if (wall != null) {
+                // wall.transform.position += Vector3.down * 0.5f * Time.deltaTime;
+                // wall.transform.Translate(speed * Time.deltaTime * Vector3.down);
+
+                // Move towards is based on speed, not time
+                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
+                // or can use SmoothDamp
+
+                // we should use lerp because it is based on getting the object there on time
+                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
+
+        //     }
+        // }
+
+
+
 
         // A button pressed, debug logs
         if (OVRInput.GetDown(OVRInput.RawButton.A)) {  
             Debug.Log("A button was pressed");
 
-            Debug.Log("number of ceilings: " + ceilingClone.Count);
-            foreach (var clone in ceilingClone) {
+            Debug.Log("number of ceilings: " + ceilingClones.Count);
+            foreach (var clone in ceilingClones) {
                 Debug.Log(clone);
             }
             Debug.Log("number of walls: " + wallClones.Count);
             foreach (var clone in wallClones) {
                 Debug.Log(clone);
             }
+            InitializeTheaterMode(); 
+            TriggerTheaterMode();
         }
 
 
@@ -104,5 +142,58 @@ public class TheaterModeManager : MonoBehaviour
         }
 
 
+    }
+
+
+    private void InitializeTheaterMode() {
+        float wallDistanceTravel = wallHeight * wallDropPercentage;
+        wallTargetPositions.Clear();
+
+        foreach (GameObject wall in originalWalls) {
+            Vector3 targetPosition = wall.transform.position + Vector3.down * wallDistanceTravel;
+            wallTargetPositions.Add(targetPosition);
+        }
+    }
+
+    private void TriggerTheaterMode() {
+        StartCoroutine(LowerWalls());
+    }
+
+    IEnumerator LowerWalls() {
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = wallMoveDuration;
+
+        while (timeElapsed < moveDuration) {
+            // foreach (GameObject wall in wallClones) {
+            for (int i = 0; i < wallClones.Count; i++) {
+                GameObject wall = wallClones[i];
+
+                Vector3 startPosition = originalWalls[i].transform.position;
+                Vector3 targetPosition = wallTargetPositions[i];
+
+                wall.transform.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / moveDuration);
+            }
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+
+
+        // float timeLeft = 4f;
+        // float speed = 0.5f;
+
+        // while (timeLeft >= 0.0f) {
+        //     foreach (GameObject wall in wallClones) {
+        //         if (wall != null) {
+        //             // wall.transform.position += Vector3.down * 0.5f * Time.deltaTime;
+        //             wall.transform.Translate(speed * Time.deltaTime * Vector3.down);
+        //         }
+        //     }
+        //     timeLeft -= Time.deltaTime;
+        //     yield return null;
+        // }
     }
 }
