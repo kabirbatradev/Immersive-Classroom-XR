@@ -17,12 +17,14 @@ public class TheaterModeManager : MonoBehaviour
 
     private const float wallDropPercentage = 0.8f;
     private const float wallMoveDuration = 4f;
+    private const float ceilingMoveDuration = 4f;
 
     
     private List<GameObject> wallClones = new List<GameObject>();
     private List<GameObject> ceilingClones = new List<GameObject>();
 
     private List<Vector3> wallTargetPositions = new();
+    private List<Vector3> ceilingTargetPositions = new();
 
 
     // private List<GameObject> originalWallScenePlanes = new List<GameObject>();
@@ -31,6 +33,7 @@ public class TheaterModeManager : MonoBehaviour
     private GameObject originalCeiling;
 
     private float wallHeight;
+    private float ceilingWidth;
 
 
 
@@ -52,20 +55,28 @@ public class TheaterModeManager : MonoBehaviour
             MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
             // renderer.enabled = false;
 
-            // does Instantiate keep all the properties? need to test --> no, i do need to pass in position and rotation
-            GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
 
             if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
                 // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
                 for (int i = 0; i < 4; i++) {
+                    // new clone every time
+                    GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
                     ceilingClones.Add(clone); 
+                    // clone.GetComponent<MeshRenderer>().enabled = false;
                 }
 
                 // originalCeilingScenePlane = scenePlaneObject; // save the original object
                 originalCeiling = passthroughMeshObject;
+
+                // also update the width of the ceiling (set it to the larger value)
+                ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
+                Debug.Log("CEILING WIDTH: " + ceilingWidth);
+                // the bounding box is axis aligned so, this may not work
+                
                 
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
+                GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
                 wallClones.Add(clone);
 
                 // originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
@@ -127,7 +138,7 @@ public class TheaterModeManager : MonoBehaviour
             }
             Debug.Log("number of walls: " + wallClones.Count);
             foreach (var clone in wallClones) {
-                Debug.Log(clone);
+                Debug.Log(clone.transform.position);
             }
             InitializeTheaterMode(); 
             TriggerTheaterMode();
@@ -147,19 +158,71 @@ public class TheaterModeManager : MonoBehaviour
 
     private void InitializeTheaterMode() {
         float wallDistanceTravel = wallHeight * wallDropPercentage;
+        
+        // set wallTargetPositions
         wallTargetPositions.Clear();
-
         foreach (GameObject wall in originalWalls) {
             Vector3 targetPosition = wall.transform.position + Vector3.down * wallDistanceTravel;
             wallTargetPositions.Add(targetPosition);
         }
+
+        // perhaps the start positions should be set so that there is no overlap so that the ceiling opens immediately when the button is pressed
+        // float ceilingDistanceTravel = ceilingWidth * 0.5f; // it does go a little past but just for a frame or 2... i think it does depend on the alignment of the coordinate system
+        float ceilingDistanceTravel = ceilingWidth * 1f; 
+        // float ceilingDistanceTravel = 5f; 
+
+        // set ceilingTargetPositions
+        ceilingTargetPositions.Clear();
+        Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right};
+        for (int i = 0; i < ceilingClones.Count; i++) {
+            Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingDistanceTravel;
+            ceilingTargetPositions.Add(targetPosition);
+
+            Debug.Log("target ceiling position target: " + targetPosition);
+
+            // make sure all ceiling clones are visible as they are made invisible after running "RemoveCeiling"
+            ceilingClones[i].GetComponent<MeshRenderer>().enabled = true;
+        }
+
     }
 
     private void TriggerTheaterMode() {
-        StartCoroutine(LowerWalls());
+        Debug.Log("triggering theater mode");
+        StartCoroutine(RemoveCeiling());
+    }
+
+    IEnumerator RemoveCeiling() {
+
+        Debug.Log("removing ceiling");
+        Debug.Log("COUNT " + ceilingClones.Count); // is 4
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = ceilingMoveDuration;
+
+        while (timeElapsed < moveDuration) {
+            for (int i = 0; i < ceilingClones.Count; i++) {
+                GameObject ceiling = ceilingClones[i];
+
+                Vector3 startPosition = originalCeiling.transform.position;
+                Vector3 targetPosition = ceilingTargetPositions[i];
+
+                ceiling.transform.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / moveDuration);
+            }
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        for (int i = 0; i < ceilingClones.Count; i++) {
+            ceilingClones[i].GetComponent<MeshRenderer>().enabled = false; // make the ceiling invisible
+        }
+        yield return StartCoroutine(LowerWalls());
+        
     }
 
     IEnumerator LowerWalls() {
+
+        Debug.Log("lowering walls");
 
         // start position of walls are stored in originalWalls list
         float timeElapsed = 0;
