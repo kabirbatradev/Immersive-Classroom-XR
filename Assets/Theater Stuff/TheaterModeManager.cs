@@ -174,8 +174,8 @@ public class TheaterModeManager : MonoBehaviour
 
         // perhaps the start positions should be set so that there is no overlap so that the ceiling opens immediately when the button is pressed
         // float ceilingDistanceTravel = ceilingWidth * 0.5f; // it does go a little past but just for a frame or 2... i think it does depend on the alignment of the coordinate system
-        // float ceilingDistanceTravel = ceilingWidth * 1f; 
-        float ceilingDistanceTravel = ceilingWidth * 1.2f; // doesnt hurt to overshoot the ceiling distance a little (usually the ceiling direction is wrong, thats a future fix)
+        float ceilingDistanceTravel = ceilingWidth * 1f; 
+        // float ceilingDistanceTravel = ceilingWidth * 1.2f; // doesnt hurt to overshoot the ceiling distance a little (usually the ceiling direction is wrong, thats a future fix)
         // float ceilingDistanceTravel = 5f; 
 
         // set ceilingTargetPositions
