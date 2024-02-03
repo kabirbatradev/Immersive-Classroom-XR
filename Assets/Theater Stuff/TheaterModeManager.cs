@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class TheaterModeManager : MonoBehaviour
@@ -77,6 +76,11 @@ public class TheaterModeManager : MonoBehaviour
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
                 GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+                // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
+                // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
+                // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
+                // clone.transform.localScale += new Vector3(0.003f,0.003f,0.003f);
+                clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
                 wallClones.Add(clone);
 
                 // originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
