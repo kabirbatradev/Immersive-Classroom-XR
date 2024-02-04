@@ -19,6 +19,7 @@ public class TheaterModeManager : MonoBehaviour
     // private const float ceilingMoveDuration = 4f;
     private float currentWallLoweredPercentage = 0.5f;
     private float currentCeilingRemovedPercentage = 0.5f;
+    private bool ceilingClonesActive = true;
 
     
     private List<GameObject> wallClones = new List<GameObject>();
@@ -86,6 +87,40 @@ public class TheaterModeManager : MonoBehaviour
             );
         }
 
+        // update ceiling clone positions
+        Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right}; 
+        for (int i = 0; i < wallClones.Count; i++) {
+            GameObject ceiling = ceilingClones[i];
+            // GameObject originalCeiling
+
+            // if ceiling clones should not be visible, then no need to set their position
+            ceiling.SetActive(ceilingClonesActive);
+            if (!ceilingClonesActive) {
+                continue;
+            }
+
+            Vector3 startPosition = originalCeiling.transform.position;
+
+            Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingWidth;
+            // directions are often not in line with the actual ceiling since the room does not have to be axis aligned
+
+            // update the position of the clone
+            // also update the rotation of the clone (for the chance that we changed the anchor alignment)
+            ceiling.transform.SetPositionAndRotation(
+                Vector3.Lerp(startPosition, targetPosition, currentCeilingRemovedPercentage), 
+                originalCeiling.transform.rotation
+            );
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -103,7 +138,7 @@ public class TheaterModeManager : MonoBehaviour
             }
 
             // TriggerTheaterMode();
-            StartCoroutine(TestLowerWallsVariable());
+            StartCoroutine(TestRemoveCeilingVariable());
         }
 
 
@@ -119,6 +154,22 @@ public class TheaterModeManager : MonoBehaviour
         }
 
 
+    }
+
+    IEnumerator TestRemoveCeilingVariable() {
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = 4.0f;
+
+        while (timeElapsed < moveDuration) {
+            currentCeilingRemovedPercentage = timeElapsed / moveDuration;
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        StartCoroutine(TestLowerWallsVariable());
     }
 
     IEnumerator TestLowerWallsVariable() {
