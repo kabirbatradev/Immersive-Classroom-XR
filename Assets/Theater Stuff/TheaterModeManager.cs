@@ -14,9 +14,11 @@ public class TheaterModeManager : MonoBehaviour
     // end singleton setup
     
 
-    private const float wallDropPercentage = 0.8f;
-    private const float wallMoveDuration = 4f;
-    private const float ceilingMoveDuration = 4f;
+    // private const float wallDropPercentage = 0.8f;
+    // private const float wallMoveDuration = 4f;
+    // private const float ceilingMoveDuration = 4f;
+    private float currentWallLoweredPercentage = 0.5f;
+    private float currentCeilingRemovedPercentage = 0.5f;
 
     
     private List<GameObject> wallClones = new List<GameObject>();
@@ -34,6 +36,107 @@ public class TheaterModeManager : MonoBehaviour
     private float wallHeight;
     private float ceilingWidth;
 
+
+
+    void Start()
+    {
+        OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
+        // required to see passthrough correctly
+    }
+
+    // // Update is called once per frame
+    void Update() {
+        
+        // foreach (GameObject wall in wallClones) {
+        //     if (wall != null) {
+                // wall.transform.position += Vector3.down * 0.5f * Time.deltaTime;
+                // wall.transform.Translate(speed * Time.deltaTime * Vector3.down);
+
+                // Move towards is based on speed, not time
+                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
+                // or can use SmoothDamp
+
+                // we should use lerp because it is based on getting the object there on time
+                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
+
+        //     }
+        // }
+
+
+
+        // set the position of each wall and ceiling clone with respect the current position of the original walls and ceiling
+        // use currentWallLoweredPercentage to get how far the walls should be displaced
+        // and currentCeilingRemovedPercentage for ceiling
+        
+
+        // update wall clone positions
+        for (int i = 0; i < wallClones.Count; i++) {
+            GameObject wall = wallClones[i];
+            GameObject originalWall = originalWalls[i];
+
+            Vector3 startPosition = originalWall.transform.position;
+
+            Vector3 targetPosition = originalWall.transform.position + Vector3.down * wallHeight;
+
+            // update the position of the clone
+            // also update the rotation of the clone (for the chance that we changed the anchor alignment)
+            wall.transform.SetPositionAndRotation(
+                Vector3.Lerp(startPosition, targetPosition, currentWallLoweredPercentage), 
+                originalWall.transform.rotation
+            );
+        }
+
+
+
+
+        // A button pressed, debug logs
+        if (OVRInput.GetDown(OVRInput.RawButton.A)) {  
+            Debug.Log("A button was pressed");
+
+            Debug.Log("number of ceilings: " + ceilingClones.Count);
+            foreach (var clone in ceilingClones) {
+                Debug.Log(clone);
+            }
+            Debug.Log("number of walls: " + wallClones.Count);
+            foreach (var clone in wallClones) {
+                Debug.Log(clone.transform.position);
+            }
+
+            // TriggerTheaterMode();
+            StartCoroutine(TestLowerWallsVariable());
+        }
+
+
+        if (OVRInput.GetDown(OVRInput.RawButton.B)) {  
+            foreach (var wall in wallClones) {
+                // wall.transform.Translate(Vector3.up * 1.0f)
+                wall.transform.Translate(Vector3.up * Random.Range(0.0f, 2.0f));
+            }
+        }
+
+        if (OVRInput.GetDown(OVRInput.RawButton.X)) {  
+            // ResetTheaterMode();
+        }
+
+
+    }
+
+    IEnumerator TestLowerWallsVariable() {
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = 4.0f;
+
+        while (timeElapsed < moveDuration) {
+            currentWallLoweredPercentage = timeElapsed / moveDuration;
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+
+    
 
 
     // should be called automatically when the ScenePlane Objects are instantiated (by script AddToTheaterManager)
@@ -105,57 +208,12 @@ public class TheaterModeManager : MonoBehaviour
 
 
 
-    void Start()
-    {
-        OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
-        // required to see passthrough correctly
-    }
-
-    // // Update is called once per frame
-    void Update() {
-        
-        // foreach (GameObject wall in wallClones) {
-        //     if (wall != null) {
-                // wall.transform.position += Vector3.down * 0.5f * Time.deltaTime;
-                // wall.transform.Translate(speed * Time.deltaTime * Vector3.down);
-
-                // Move towards is based on speed, not time
-                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
-                // or can use SmoothDamp
-
-                // we should use lerp because it is based on getting the object there on time
-                // wall.transform.position = Vector3.MoveTowards(wall.transform.position, targetPosition, speed * Time.deltaTime);
-
-        //     }
-        // }
 
 
+    /*
 
-
-        // A button pressed, debug logs
-        if (OVRInput.GetDown(OVRInput.RawButton.A)) {  
-            Debug.Log("A button was pressed");
-
-            Debug.Log("number of ceilings: " + ceilingClones.Count);
-            foreach (var clone in ceilingClones) {
-                Debug.Log(clone);
-            }
-            Debug.Log("number of walls: " + wallClones.Count);
-            foreach (var clone in wallClones) {
-                Debug.Log(clone.transform.position);
-            }
-            TriggerTheaterMode();
-        }
-
-
-        if (OVRInput.GetDown(OVRInput.RawButton.B)) {  
-            foreach (var wall in wallClones) {
-                // wall.transform.Translate(Vector3.up * 1.0f)
-                wall.transform.Translate(Vector3.up * Random.Range(0.0f, 2.0f));
-            }
-        }
-
-
+    private void ResetTheaterMode() {
+        InitializeTheaterMode();
     }
 
 
@@ -170,7 +228,7 @@ public class TheaterModeManager : MonoBehaviour
             Vector3 targetPosition = originalWall.transform.position + Vector3.down * wallDistanceTravel;
             wallTargetPositions.Add(targetPosition);
 
-
+            // reset the wall positions
             // essentially we are recloning the walls because we want to reset them and also if anchor alignment changed, then we need to reset even the rotation
             wallClones[i].transform.rotation = originalWall.transform.rotation;
             wallClones[i].transform.position = originalWall.transform.position;
@@ -189,8 +247,9 @@ public class TheaterModeManager : MonoBehaviour
             Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingDistanceTravel;
             ceilingTargetPositions.Add(targetPosition);
 
-            Debug.Log("target ceiling position target: " + targetPosition);
+            // Debug.Log("target ceiling position target: " + targetPosition);
 
+            // reset the ceiling positions
             ceilingClones[i].transform.position = originalCeiling.transform.position;
             ceilingClones[i].transform.rotation = originalCeiling.transform.rotation;
 
@@ -274,4 +333,6 @@ public class TheaterModeManager : MonoBehaviour
         //     yield return null;
         // }
     }
+
+    */
 }
