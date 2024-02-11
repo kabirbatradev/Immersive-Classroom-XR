@@ -33,6 +33,8 @@ public class TheaterRetract : MonoBehaviour
         {
             wallPercent = 1.0f;
         }
+        ceilingPercent = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
+        wallPercent = StreamTheaterModeData.Instance.wallLoweredPercentage;
         retractWalls();
         retractCeiling();
     }
