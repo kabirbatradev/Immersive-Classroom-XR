@@ -42,8 +42,9 @@ public class CommunicationScript : MonoBehaviour
 
         // CamRotate does this for us already, and its saved in "currentTarget"
         ObjRot = CurObj.transform.rotation;
-        ObjPos = CurObj.transform.position;
         ObjScale = CurObj.transform.localScale;
+
+        CurObj.transform.position = new Vector3(0, 0, 0);
 
         if (Physics.Raycast(ray, out hit) && Input.GetMouseButton(0) && serverLaser)
         {
