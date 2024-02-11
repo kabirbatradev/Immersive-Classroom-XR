@@ -56,6 +56,9 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
         if (latestCoroutine != null)
             StopCoroutine(latestCoroutine);
         
+        // make sure to unpause
+        theaterModePaused = false;
+        
         // reset the values
 
         ceilingVisible = true;
