@@ -47,7 +47,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // continue function
     public void ContinueTheaterMode() {
-        theaterModePaused = true;
+        theaterModePaused = false;
     }
 
     // reset function
