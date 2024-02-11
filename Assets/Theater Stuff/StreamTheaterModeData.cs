@@ -82,6 +82,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             if (theaterModePaused) {
                 // then skip to the next frame instead of continuing the animation
                 yield return null;
+                continue;
             }
 
             ceilingRemovedPercentage = timeElapsed / moveDuration;
@@ -105,6 +106,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             if (theaterModePaused) {
                 // then skip to the next frame instead of continuing the animation
                 yield return null;
+                continue;
             }
 
             wallLoweredPercentage = timeElapsed / moveDuration;
@@ -182,8 +184,13 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     // streaming happens many times per second (very fast)
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
+        Debug.Log("OnPhotonSerializeView");
+
         // if writing, then this object was instantiated locally (it is the local head)
         if (stream.IsWriting) {
+
+            Debug.Log("writing values for wallLoweredPercentage etc");
+
 
             // write the head data of the head transform located in the UserHeadPositionTrackerManager
                 // this script has only 1 instance, and we passed in the "center eye anchor" aka the position of the head
@@ -201,6 +208,8 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         // if reading, this object must have been instantiated elsewhere (it is someone elses head)
         else {
+
+            Debug.Log("reading values for wallLoweredPercentage etc");
 
             // by recieving data on someone elses head, we can move around this current prefab itself
                 // if this prefab has a child object with an actual mesh, then we will see that mesh correspond to the head

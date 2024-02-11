@@ -36,7 +36,8 @@ public class RotColor : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        if (cam == null) return;
         Quaternion rot = cam.transform.rotation;
 
         // R.r = rot.x
