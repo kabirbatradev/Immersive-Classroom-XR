@@ -43,11 +43,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-    [SerializeField]
-    private GameObject[] adminButtons;
+    // [SerializeField]
+    // private GameObject[] adminButtons;
 
-    [SerializeField]
-    private GameObject[] studentButtons;
+    // [SerializeField]
+    // private GameObject[] studentButtons;
 
 
     // private bool alignTableMode = false;
@@ -77,6 +77,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     public void Start() {
+        laserGameObjects = new List<GameObject>();
         // initialize laser renderer
 
         // if (lineRenderer == null) {
@@ -175,7 +176,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             GameObject obj = photonView.gameObject;
             if (obj == null) {
                 // SampleController.Instance.Log("photonView was attached to null object");
-                Debug.Log("photonView was attached to null object");
+                // Debug.Log("photonView was attached to null object");
                 continue;
             }
 
@@ -439,12 +440,16 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
                     // if the professor is shooting a laser, then we should see it
                     bool isShootingExists = RoomHasCustomProperty("IsShooting");
+                    // Debug.Log("is shooting exists? " + isShootingExists);
                     if (isShootingExists) {
                         bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
+                        // Debug.Log("is shooting equals: " + isShooting);
                         if (isShooting) {
                             // get camera position and hit position
                             Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
                             Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
+                            // Debug.Log("camera position " + cameraPosition);
+                            // Debug.Log("hit position " + hitPosition);
 
                             // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
                             // enable or disable the line renderer
@@ -736,15 +741,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     private void SetToAdminMode() {
 
+        SampleController.Instance.Log("This buttons code was moved to GUIManager");
+
+
         // for every button in a list of buttons, make them active
 
 
-        foreach (GameObject b in studentButtons) {
-            b.SetActive(false);
-        }
-        foreach (GameObject b in adminButtons) {
-            b.SetActive(true);
-        }
+        // foreach (GameObject b in studentButtons) {
+        //     b.SetActive(false);
+        // }
+        // foreach (GameObject b in adminButtons) {
+        //     b.SetActive(true);
+        // }
         
 
     }
@@ -755,14 +763,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     }
 
     private void SetToStudentMode() {
+        SampleController.Instance.Log("This buttons code was moved to GUIManager");
 
         // for every button in a list of buttons, make them active
-        foreach (GameObject b in adminButtons) {
-            b.SetActive(false);
-        }
-        foreach (GameObject b in studentButtons) {
-            b.SetActive(true);
-        }
+        // foreach (GameObject b in adminButtons) {
+        //     b.SetActive(false);
+        // }
+        // foreach (GameObject b in studentButtons) {
+        //     b.SetActive(true);
+        // }
 
     }
 
