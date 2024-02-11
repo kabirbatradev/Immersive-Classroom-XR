@@ -17,9 +17,11 @@ public class TheaterModeManager : MonoBehaviour
     // private const float wallDropPercentage = 0.8f;
     // private const float wallMoveDuration = 4f;
     // private const float ceilingMoveDuration = 4f;
-    private float currentWallLoweredPercentage = 0.5f;
-    private float currentCeilingRemovedPercentage = 0.5f;
-    private bool ceilingClonesActive = true;
+
+    // variables should be accessed from StreamTheaterModeData instance
+    // private float currentWallLoweredPercentage = 0.5f;
+    // private float currentCeilingRemovedPercentage = 0.5f;
+    // private bool ceilingClonesActive = true;
 
     
     private List<GameObject> wallClones = new List<GameObject>();
@@ -62,6 +64,28 @@ public class TheaterModeManager : MonoBehaviour
 
         //     }
         // }
+
+
+
+
+        // update values for these from cloud
+        float currentWallLoweredPercentage = 0.0f;
+        float currentCeilingRemovedPercentage = 0.0f;
+        bool ceilingClonesActive = true;
+
+        if (StreamTheaterModeData.Instance == null) {
+            // do nothing, just use default values
+        }
+        else {
+            currentWallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
+            currentCeilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
+            ceilingClonesActive = StreamTheaterModeData.Instance.ceilingVisible;
+        }
+
+
+
+
+
 
 
 
@@ -138,7 +162,7 @@ public class TheaterModeManager : MonoBehaviour
             }
 
             // TriggerTheaterMode();
-            StartCoroutine(TestRemoveCeilingVariable());
+            // StartCoroutine(TestRemoveCeilingVariable());
         }
 
 
@@ -156,35 +180,35 @@ public class TheaterModeManager : MonoBehaviour
 
     }
 
-    IEnumerator TestRemoveCeilingVariable() {
+    // IEnumerator TestRemoveCeilingVariable() {
 
-        // start position of walls are stored in originalWalls list
-        float timeElapsed = 0;
-        float moveDuration = 4.0f;
+    //     // start position of walls are stored in originalWalls list
+    //     float timeElapsed = 0;
+    //     float moveDuration = 4.0f;
 
-        while (timeElapsed < moveDuration) {
-            currentCeilingRemovedPercentage = timeElapsed / moveDuration;
+    //     while (timeElapsed < moveDuration) {
+    //         currentCeilingRemovedPercentage = timeElapsed / moveDuration;
 
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
+    //         timeElapsed += Time.deltaTime;
+    //         yield return null;
+    //     }
 
-        StartCoroutine(TestLowerWallsVariable());
-    }
+    //     StartCoroutine(TestLowerWallsVariable());
+    // }
 
-    IEnumerator TestLowerWallsVariable() {
+    // IEnumerator TestLowerWallsVariable() {
 
-        // start position of walls are stored in originalWalls list
-        float timeElapsed = 0;
-        float moveDuration = 4.0f;
+    //     // start position of walls are stored in originalWalls list
+    //     float timeElapsed = 0;
+    //     float moveDuration = 4.0f;
 
-        while (timeElapsed < moveDuration) {
-            currentWallLoweredPercentage = timeElapsed / moveDuration;
+    //     while (timeElapsed < moveDuration) {
+    //         currentWallLoweredPercentage = timeElapsed / moveDuration;
 
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-    }
+    //         timeElapsed += Time.deltaTime;
+    //         yield return null;
+    //     }
+    // }
 
 
     

@@ -25,11 +25,11 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // variables to manage how much the ceiling has opened and how much the walls have dropped
     // these variables are updated by button presses on the instructor side, or they are set by OnPhotonSerializeView
-    private float wallLoweredPercentage = 0.5f;
-    private float ceilingRemovedPercentage = 0.5f;
+    public float wallLoweredPercentage = 0.5f;
+    public float ceilingRemovedPercentage = 0.5f;
 
     // ceilingVisible will be a custom server property since it doesn't have to be streamed constantly
-    private bool ceilingVisible = true;
+    public bool ceilingVisible = true;
 
 
 
@@ -77,7 +77,15 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
         else {
             // this is a student, so read the bool value
             string key = "ceilingVisible";
-            ceilingVisible = (bool)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+
+            // if the custom property doesnt exist, then assume true
+            if (PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key)) {
+                ceilingVisible = (bool)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+            }
+            else {
+                ceilingVisible = true;
+            }
+
         }
 
 
