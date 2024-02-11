@@ -4,6 +4,7 @@ using UnityEngine;
 
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+using TMPro;
 
 public class GUIManager : MonoBehaviour
 {
@@ -31,6 +32,15 @@ public class GUIManager : MonoBehaviour
     private GameObject[] cameraButtons;
 
 
+    private bool studentViewEnabled = false;
+
+    [SerializeField]
+    private TextMeshProUGUI studentViewButtonLabel;
+
+    [SerializeField]
+    private GameObject colorsCanvas;
+
+
 
     // we need the instance so that we can default to StudentMode from StreamlineManager when a room is joined
     public static GUIManager Instance;
@@ -39,6 +49,16 @@ public class GUIManager : MonoBehaviour
             Instance = this;
         else
             Destroy(this);
+    }
+
+
+
+    public void OnToggleStudentViewButtonPressed() {
+        SampleController.Instance.Log("OnToggleStudentViewButtonPressed");
+        studentViewEnabled = !studentViewEnabled;
+        colorsCanvas.SetActive(studentViewEnabled);
+
+        studentViewButtonLabel.text = studentViewEnabled ? "Disable Student View" : "Enable Student View";
     }
 
 
