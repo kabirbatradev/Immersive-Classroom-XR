@@ -8,94 +8,101 @@ using RTG;
 
 // namespace RTG
 // {
-    public class RuntimeGizmo : MonoBehaviour
+public class RuntimeGizmo : MonoBehaviour
+{
+    private ObjectTransformGizmo objectRotateGizmo;
+    private ObjectTransformGizmo objectScaleGizmo;
+    private ObjectTransformGizmo laserMoveGizmo;
+    private GameObject targetObject;
+    public bool isGizmoActive = false;
+    private bool forceCenter = true;
+    // 0 -> Rotate
+    // 1 -> Scale
+    private int gizmoOption = 0;
+    public GameObject laserStartPoint;
+
+    private void Start()
     {
-        private ObjectTransformGizmo objectRotateGizmo;
-        private ObjectTransformGizmo objectScaleGizmo;
-        private ObjectTransformGizmo laserMoveGizmo;
-        private GameObject targetObject;
-        private static bool isGizmoActive = false;
-        private bool forceCenter = true;
-        // 0 -> Rotate
-        // 1 -> Scale
-        private int gizmoOption = 0;
-        public GameObject laserStartPoint;
+        objectRotateGizmo = RTGizmosEngine.Get.CreateObjectRotationGizmo();
+        objectScaleGizmo = RTGizmosEngine.Get.CreateObjectScaleGizmo();
+        laserMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
+    }
 
-        private void Start()
+    private void Update()
+    {
+        // Toggle the gizmo active state when 'T' key is pressed
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            objectRotateGizmo = RTGizmosEngine.Get.CreateObjectRotationGizmo();
-            objectScaleGizmo = RTGizmosEngine.Get.CreateObjectScaleGizmo();
-            laserMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
+            isGizmoActive = !isGizmoActive;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            gizmoOption = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gizmoOption = 1;
         }
 
-        private void Update()
+        if (!isGizmoActive)
         {
-            // Toggle the gizmo active state when 'T' key is pressed
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                isGizmoActive = !isGizmoActive;
-            }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                gizmoOption = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                gizmoOption = 1;
-            }
+            objectRotateGizmo.Gizmo.SetEnabled(false);
+            objectScaleGizmo.Gizmo.SetEnabled(false);
+            laserMoveGizmo.Gizmo.SetEnabled(false);
+            return;
+        }
 
-            if (CamRotate.Instance.currentTarget.gameObject == null)
-            {
-                return;
-            }
-            targetObject = CamRotate.Instance.currentTarget.gameObject;
+        if (CamRotate.Instance.currentTarget.gameObject == null)
+        {
+            return;
+        }
+        targetObject = CamRotate.Instance.currentTarget.gameObject;
 
-            // Update the gizmo only if it is active and the target object is found
-            if (isGizmoActive && targetObject != null)
+        // Update the gizmo only if it is active and the target object is found
+        if (isGizmoActive && targetObject != null)
+        {
+            // Object
+            if (gizmoOption == 0)
             {
-                // Object
-                if (gizmoOption == 0)
-                {
-                    objectRotateGizmo.Gizmo.SetEnabled(true);
-                    objectScaleGizmo.Gizmo.SetEnabled(false);
-                    objectRotateGizmo.SetTargetObject(targetObject);
-                }
-                else if (gizmoOption == 1)
-                {
-                    objectScaleGizmo.Gizmo.SetEnabled(true);
-                    objectRotateGizmo.Gizmo.SetEnabled(false);
-                    objectScaleGizmo.SetTargetObject(targetObject);
-                }
-                // Laser
-                laserMoveGizmo.Gizmo.SetEnabled(true);
-                laserMoveGizmo.SetTargetObject(laserStartPoint);
-            }
-            else
-            {
-                objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectRotateGizmo.Gizmo.SetEnabled(true);
                 objectScaleGizmo.Gizmo.SetEnabled(false);
-                laserMoveGizmo.Gizmo.SetEnabled(false);
+                objectRotateGizmo.SetTargetObject(targetObject);
             }
-
-            if (targetObject != null && forceCenter)
+            else if (gizmoOption == 1)
             {
-                targetObject.transform.position = new Vector3(0, 0, 0);
+                objectScaleGizmo.Gizmo.SetEnabled(true);
+                objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectScaleGizmo.SetTargetObject(targetObject);
             }
+            // Laser
+            laserMoveGizmo.Gizmo.SetEnabled(true);
+            laserMoveGizmo.SetTargetObject(laserStartPoint);
+        }
+        else
+        {
+            objectRotateGizmo.Gizmo.SetEnabled(false);
+            objectScaleGizmo.Gizmo.SetEnabled(false);
+            laserMoveGizmo.Gizmo.SetEnabled(false);
         }
 
-        private object GetRoomCustomProperty(string key)
+        if (targetObject != null && forceCenter)
         {
-            return PhotonNetwork.CurrentRoom.CustomProperties[key];
-        }
-
-        private bool RoomHasCustomProperty(string key)
-        {
-            return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
-        }
-
-        public static void ToggleGizmo(bool status)
-        {
-            isGizmoActive = status;
+            targetObject.transform.position = new Vector3(0, 0, 0);
         }
     }
-// }
+
+    private object GetRoomCustomProperty(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties[key];
+    }
+
+    private bool RoomHasCustomProperty(string key)
+    {
+        return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
+    }
+
+    public void ToggleGizmo(bool status)
+    {
+        isGizmoActive = status;
+    }
+}

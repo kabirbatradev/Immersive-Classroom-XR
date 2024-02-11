@@ -163,10 +163,11 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
 
 
     // once we have connected to the master and joined the lobby, automatically create a room
-    public override void OnJoinedLobby() {
+    public override void OnJoinedLobby()
+    {
 
-        // pretend that the create room button was pressed: 
-        // OnCreateRoomButtonPressed();
+        // pretend that the create room button was pressed:
+        //OnCreateRoomButtonPressed();
 
         // working around:
         // join any room that exists
@@ -294,7 +295,8 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
 
         Debug.Log("Room list was updated! Room list is of length " + roomList.Count);
 
-        if (roomList.Count == 0) {
+        if (roomList.Count == 0)
+        {
             Debug.Log("Since count is 0, doing nothing");
             return;
         }
