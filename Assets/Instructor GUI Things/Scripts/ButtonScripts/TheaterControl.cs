@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class TheaterControl : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void startTheaterMode()
     {
-        
+        StreamTheaterModeData.Instance.TriggerTheaterMode();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void pauseTheaterMode()
     {
-        
+        StreamTheaterModeData.Instance.PauseTheaterMode();
+    }
+
+    public void continueTheaterMode()
+    {
+        StreamTheaterModeData.Instance.ContinueTheaterMode();
+    }
+
+    public void resetTheaterMode()
+    {
+        StreamTheaterModeData.Instance.ResetTheaterMode();
     }
 }

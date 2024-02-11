@@ -8870,6 +8870,7 @@ GameObject:
   - component: {fileID: 619854023}
   - component: {fileID: 619854022}
   - component: {fileID: 619854021}
+  - component: {fileID: 619854024}
   - component: {fileID: 619854020}
   m_Layer: 5
   m_Name: Stop
@@ -8955,9 +8956,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 619854020}
-        m_TargetAssemblyTypeName: LaserControl, Assembly-CSharp
-        m_MethodName: AnchorLaserMode
+      - m_Target: {fileID: 619854024}
+        m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
+        m_MethodName: pauseTheaterMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9005,6 +9006,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619854018}
   m_CullTransparentMesh: 1
+--- !u!114 &619854024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619854018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &644227888
 GameObject:
   m_ObjectHideFlags: 0
@@ -15377,7 +15390,7 @@ GameObject:
   - component: {fileID: 988877537}
   - component: {fileID: 988877536}
   - component: {fileID: 988877535}
-  - component: {fileID: 988877534}
+  - component: {fileID: 988877538}
   m_Layer: 5
   m_Name: Reset
   m_TagString: Untagged
@@ -15405,19 +15418,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000011047, y: -46}
   m_SizeDelta: {x: 250, y: 17.1799}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &988877534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988877532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fba6ab79b5339544099da87b8ba529b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  laserScript: {fileID: 958794943}
 --- !u!114 &988877535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15462,9 +15462,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 988877534}
-        m_TargetAssemblyTypeName: LaserControl, Assembly-CSharp
-        m_MethodName: CameraLaserMode
+      - m_Target: {fileID: 988877538}
+        m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
+        m_MethodName: resetTheaterMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15512,6 +15512,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988877532}
   m_CullTransparentMesh: 1
+--- !u!114 &988877538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988877532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &990194205
 GameObject:
   m_ObjectHideFlags: 0
@@ -19949,7 +19961,7 @@ GameObject:
   - component: {fileID: 1163828566}
   - component: {fileID: 1163828565}
   - component: {fileID: 1163828564}
-  - component: {fileID: 1163828563}
+  - component: {fileID: 1163828567}
   m_Layer: 5
   m_Name: Student View
   m_TagString: Untagged
@@ -19977,19 +19989,6 @@ RectTransform:
   m_AnchoredPosition: {x: 367, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1163828563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1163828561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 536ca1b93999c744696d6548c8ba3b23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  filePath: Assets\\sai2.lnk
 --- !u!114 &1163828564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20034,9 +20033,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1163828563}
-        m_TargetAssemblyTypeName: StartExternal, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1163828567}
+        m_TargetAssemblyTypeName: StartStudentCam, Assembly-CSharp
+        m_MethodName: startStudentCam
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20084,6 +20083,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163828561}
   m_CullTransparentMesh: 1
+--- !u!114 &1163828567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163828561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1b43f78af5d964893088bd3c1178c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filePath: 
 --- !u!1 &1164599920
 GameObject:
   m_ObjectHideFlags: 0
@@ -20621,7 +20633,7 @@ GameObject:
   - component: {fileID: 1172723382}
   - component: {fileID: 1172723381}
   - component: {fileID: 1172723380}
-  - component: {fileID: 1172723379}
+  - component: {fileID: 1172723383}
   m_Layer: 5
   m_Name: Continue
   m_TagString: Untagged
@@ -20649,23 +20661,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000011047, y: -19.1}
   m_SizeDelta: {x: 250, y: 17.1799}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1172723379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1172723377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d40230fb97f0774882f371376cb2b75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  theaterRetract: {fileID: 1853474390}
-  wallTimer: 0
-  ceilingTimer: 0
-  finishedTime: 10
-  startCeilingTimer: 0
 --- !u!114 &1172723380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20710,9 +20705,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1172723379}
-        m_TargetAssemblyTypeName: SimulateInput, Assembly-CSharp
-        m_MethodName: timerButton
+      - m_Target: {fileID: 1172723383}
+        m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
+        m_MethodName: continueTheaterMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20760,6 +20755,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172723377}
   m_CullTransparentMesh: 1
+--- !u!114 &1172723383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172723377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1177219109
 GameObject:
   m_ObjectHideFlags: 0
@@ -33618,8 +33625,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1695803637}
-        m_TargetAssemblyTypeName: SimulateInput, Assembly-CSharp
-        m_MethodName: timerButton
+        m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
+        m_MethodName: startTheaterMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -33676,14 +33683,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1695803631}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d40230fb97f0774882f371376cb2b75, type: 3}
+  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  theaterRetract: {fileID: 1853474390}
-  wallTimer: 0
-  ceilingTimer: 0
-  finishedTime: 10
-  startCeilingTimer: 0
 --- !u!1 &1701765079
 GameObject:
   m_ObjectHideFlags: 0
