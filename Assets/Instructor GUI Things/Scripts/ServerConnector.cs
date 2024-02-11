@@ -303,11 +303,11 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
 
 
 
-        // when the room list updates, then 
+        // when the room list updates, then
         // 1) make sure you are not already connected to a room
         // 2) join the first room
 
-        // forget about checking if you are alrady in a room for now
+        // forget about checking if you are already in a room for now
 
         string roomToJoin = roomList[0].Name;
 
