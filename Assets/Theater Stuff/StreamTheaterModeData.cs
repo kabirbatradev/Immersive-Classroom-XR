@@ -32,6 +32,90 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     public bool ceilingVisible = true;
 
 
+    private bool theaterModePaused = false;
+
+    private Coroutine latestCoroutine = null;
+
+
+
+    // functions for instructor gui to easily control the walls and ceiling dropping
+
+    // pause function
+    public void PauseTheaterMode() {
+        theaterModePaused = true;
+    }
+
+    // continue function
+    public void ContinueTheaterMode() {
+        theaterModePaused = true;
+    }
+
+    // reset function
+    public void ResetTheaterMode() {
+        // stop the coroutines
+        if (latestCoroutine != null)
+            StopCoroutine(latestCoroutine);
+        
+        // reset the values
+
+        ceilingVisible = true;
+        ceilingRemovedPercentage = 0.0f;
+        wallLoweredPercentage = 0.0f;
+        
+    }
+
+    // start the open theater procedure
+    public void TriggerTheaterMode() {
+        ResetTheaterMode();
+        latestCoroutine = StartCoroutine(RemoveCeiling());
+    }
+
+    // coroutines for opening the theater mode
+    IEnumerator RemoveCeiling() {
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = 4.0f;
+
+        while (timeElapsed < moveDuration) {
+
+            if (theaterModePaused) {
+                // then skip to the next frame instead of continuing the animation
+                yield return null;
+            }
+
+            ceilingRemovedPercentage = timeElapsed / moveDuration;
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        ceilingVisible = false;
+        latestCoroutine = StartCoroutine(LowerTheWalls());
+    }
+
+    IEnumerator LowerTheWalls() {
+
+        // start position of walls are stored in originalWalls list
+        float timeElapsed = 0;
+        float moveDuration = 4.0f;
+
+        while (timeElapsed < moveDuration) {
+
+            if (theaterModePaused) {
+                // then skip to the next frame instead of continuing the animation
+                yield return null;
+            }
+
+            wallLoweredPercentage = timeElapsed / moveDuration;
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        latestCoroutine = null;
+    }
+
+
 
 
     // public GameObject head;
