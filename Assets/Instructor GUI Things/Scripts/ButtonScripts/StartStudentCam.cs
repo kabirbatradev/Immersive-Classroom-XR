@@ -18,7 +18,7 @@ public class StartStudentCam : MonoBehaviour
         string filename = System.IO.Directory.GetCurrentDirectory();
         print(filename);
 
-        process.StartInfo.FileName = filename + "\\StabilizationMonitor\\windowCap.exe";
+        process.StartInfo.FileName = filename + "\\Stabilization\\windowCap.exe";
         
         try
         {
