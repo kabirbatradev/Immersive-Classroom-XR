@@ -8,8 +8,11 @@ public class SplitStudent : MonoBehaviour
     public GameObject[] students;
 
     // ------------ Button Functions ------------
+    // Used to split students into individual groups
     public void SplitIndividual()
     {
+        // Find all markers and students
+        // This is set during runtime so that the markers and students are found after they are created
         markers = GameObject.FindGameObjectsWithTag("Marker");
         students = GameObject.FindGameObjectsWithTag("FakeStudent");
         int group = 1;
@@ -18,9 +21,13 @@ public class SplitStudent : MonoBehaviour
             student.GetComponent<FakeStudent>().group = group;
             group++;
         }
+        // Set the color of the students
+        // This is used for debugging purposes
+        // Remove this for production
         setStudentColor(36);
     }
 
+    // Used to split students into rows
     public void SplitRow()
     {
         markers = GameObject.FindGameObjectsWithTag("Marker");
@@ -33,6 +40,7 @@ public class SplitStudent : MonoBehaviour
         setStudentColor(6);
     }
 
+    // Used to split students int two rows
     public void SplitDoubleRow()
     {
         markers = GameObject.FindGameObjectsWithTag("Marker");
@@ -45,6 +53,7 @@ public class SplitStudent : MonoBehaviour
         setStudentColor(3);
     }
 
+    // Used to split students into squares of 4
     public void SplitFour()
     {
         markers = GameObject.FindGameObjectsWithTag("Marker");
@@ -61,6 +70,7 @@ public class SplitStudent : MonoBehaviour
 
 
     // ------------ Helper Functions ------------
+    // Find the closest marker to the student and return the row
     public int findRow(GameObject student)
     {
         float minDist = Mathf.Infinity;
@@ -77,6 +87,7 @@ public class SplitStudent : MonoBehaviour
         return closestMarker.GetComponent<Marker>().GetRow();
     }
 
+    // Find the closest marker to the student and return the column
     public int findCol(GameObject student)
     {
         float minDist = Mathf.Infinity;
@@ -93,6 +104,7 @@ public class SplitStudent : MonoBehaviour
         return closestMarker.GetComponent<Marker>().GetColumn();
     }
 
+    // Find the closest marker to the student and return the group
     public int findFourGroup(GameObject student)
     {
         float minDist = Mathf.Infinity;
