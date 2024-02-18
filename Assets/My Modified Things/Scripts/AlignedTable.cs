@@ -33,11 +33,12 @@ public class AlignedTable : MonoBehaviour
     {
         if (photonView.IsMine) {
             // this table was created by this client
-
             // update the position of the table so that if a recenter/realignment occurs, the table is still attached to the anchor
-            transform.position = tableAnchor.transform.position;
-            transform.rotation = tableAnchor.transform.rotation;
 
+            transform.SetPositionAndRotation(tableAnchor.transform.position, tableAnchor.transform.rotation);
+
+            // transform.position = tableAnchor.transform.position;
+            // transform.rotation = tableAnchor.transform.rotation;
         }
     }
 }
