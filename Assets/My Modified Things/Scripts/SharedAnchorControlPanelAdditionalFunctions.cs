@@ -504,7 +504,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     
     private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
 
-        GameObject tableObject = Instantiate(alignedTablePrefab, new Vector3(0,0,0), Quaternion.identity);
+        GameObject tableObject = PhotonPun.PhotonNetwork.Instantiate(alignedTablePrefab.name, new Vector3(0,0,0), Quaternion.identity);
         // Bounds tableBounds = tableObject.GetComponent<MeshFilter>().mesh.bounds;
         // mesh bounds are in local space, and renderer bounds are in global space
         Bounds tableBounds = tableObject.GetComponent<MeshRenderer>().bounds;
