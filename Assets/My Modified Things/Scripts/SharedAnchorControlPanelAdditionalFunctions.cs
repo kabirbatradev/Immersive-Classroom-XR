@@ -503,6 +503,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     
     private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
+
         GameObject tableObject = Instantiate(alignedTablePrefab, new Vector3(0,0,0), Quaternion.identity);
         // Bounds tableBounds = tableObject.GetComponent<MeshFilter>().mesh.bounds;
         // mesh bounds are in local space, and renderer bounds are in global space
@@ -534,7 +535,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // the top of the table should be at bottomLeft.y
         // the new height of the table is tableBounds.size.y
         // therefore, place the table at bottomLeft.y - (tableBounds.size.y / 2)
-        tableObject.transform.position = new Vector3(0, bottomLeft.y - (tableBounds.size.y / 2), 0);
+        // also add an offset to the y value because the controller cannot go through the table when placing the points
+        // new Vector3(0, 0.04f, 0)
+        tableObject.transform.position = new Vector3(0, bottomLeft.y - (tableBounds.size.y / 2) - 0.04f, 0);
 
         // old code:
         // tableObject.transform.position.y -= tableBounds.min.y;
