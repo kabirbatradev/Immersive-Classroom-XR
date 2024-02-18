@@ -54,6 +54,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     // private int countAButton = 0;
     private List<Vector3> tablePoints = new();
 
+    // [SerializeField] private OVRSpatialAnchor anchorPrefab;
+
+
+
+
     private GameObject mostRecentSphere;
 
 
@@ -120,6 +125,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
                 var controllerType = OVRInput.Controller.RTouch; // the right controller
                 Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
+                Quaternion controllerRotation = OVRInput.GetLocalControllerRotation(controllerType);
 
                 string x = controllerPosition.x.ToString("0.00");
                 string y = controllerPosition.y.ToString("0.00");
@@ -127,6 +133,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 SampleController.Instance.Log(x + " " + y + " " + z);
 
                 tablePoints.Add(controllerPosition);
+
+                // create a spatial anchor at the point so we can lock the table to these anchors
+                // Instantiate(anchorPrefab, controllerPosition, controllerRotation).GetComponent<SharedAnchor>();
+                // nvm im going to create the anchor on a script on the table itself
                 
 
                 // countAButton++;
