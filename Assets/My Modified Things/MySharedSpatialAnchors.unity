@@ -4494,6 +4494,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867689760}
   m_CullTransparentMesh: 1
+--- !u!4 &885548459 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5416228678627992663, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
+  m_PrefabInstance: {fileID: 2982998299393685461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &905039731
 GameObject:
   m_ObjectHideFlags: 0
@@ -14092,7 +14097,7 @@ MonoBehaviour:
   alignedTablePrefab: {fileID: 6481747464286981364, guid: efec995bbb3cd5d4795faeeeed1167a0, type: 3}
   spawnPoint: {fileID: 1774543904}
   mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
-  anchorPrefab: {fileID: 2899251731682138844, guid: 41588200ee5cdd14bb075f3542630420, type: 3}
+  rightControllerTransform: {fileID: 885548459}
   laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 7f0e1fcda541e234e957c73b2f46eee1, type: 3}
   groupNumberTextObject: {fileID: 935712103}
 --- !u!224 &8607079647158505907 stripped

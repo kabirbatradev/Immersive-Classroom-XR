@@ -53,6 +53,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private bool alignTableMode = false;
     // private int countAButton = 0;
     private List<Vector3> tablePoints = new();
+    [SerializeField]
+    private Transform rightControllerTransform;
 
     // [SerializeField] private OVRSpatialAnchor anchorPrefab;
 
@@ -123,9 +125,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             if (buttonPressed) {
                 SampleController.Instance.Log("The A button was pressed!");
 
-                var controllerType = OVRInput.Controller.RTouch; // the right controller
-                Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
-                Quaternion controllerRotation = OVRInput.GetLocalControllerRotation(controllerType);
+                // var controllerType = OVRInput.Controller.RTouch; // the right controller
+                // Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
+                // Quaternion controllerRotation = OVRInput.GetLocalControllerRotation(controllerType);
+                Vector3 controllerPosition = rightControllerTransform.position;
+                Quaternion controllerRotation = rightControllerTransform.rotation;
+
 
                 string x = controllerPosition.x.ToString("0.00");
                 string y = controllerPosition.y.ToString("0.00");
