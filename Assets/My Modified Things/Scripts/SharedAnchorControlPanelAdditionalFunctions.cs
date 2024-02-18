@@ -32,7 +32,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject jengaPrefab;
 
     [SerializeField]
-    private GameObject tablePrefab;
+    private GameObject alignedTablePrefab;
 
 
     [SerializeField]
@@ -50,8 +50,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     // private GameObject[] studentButtons;
 
 
-    // private bool alignTableMode = false;
+    private bool alignTableMode = false;
     // private int countAButton = 0;
+    private List<Vector3> tablePoints = new();
 
     private GameObject mostRecentSphere;
 
@@ -107,7 +108,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             return;
         }
 
-        /*
+        // /*
         if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
@@ -125,14 +126,20 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 string z = controllerPosition.z.ToString("0.00");
                 SampleController.Instance.Log(x + " " + y + " " + z);
 
-                countAButton++;
-                if (countAButton == 2) {
-                    countAButton = 0;
+                tablePoints.Add(controllerPosition);
+                
+
+                // countAButton++;
+                if (tablePoints.Count == 3) {
+                    // countAButton = 0;
                     alignTableMode = false;
+                    SampleController.Instance.Log("Creating Table...");
+                    InstantiateAlignedTable(tablePoints[0], tablePoints[1], tablePoints[2]);
+                    tablePoints.Clear();
                 }
             }
         }
-        */
+        // */
 
 
         /*
@@ -495,7 +502,85 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     // private bool isShootingExisted = false;
 
     
+    private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
+        GameObject tableObject = Instantiate(alignedTablePrefab, new Vector3(0,0,0), Quaternion.identity);
+        // Bounds tableBounds = tableObject.GetComponent<MeshFilter>().mesh.bounds;
+        // mesh bounds are in local space, and renderer bounds are in global space
+        Bounds tableBounds = tableObject.GetComponent<MeshRenderer>().bounds;
 
+        
+
+        // adjust table y scale
+        // goal table height: obj1.transform.position.y
+        // current table height: tableHeight
+        // scale up factor needed: obj1.transform.position.y / tableHeight
+        float tableHeight = tableBounds.size.y;
+        float yScaleUpFactor = bottomLeft.y / tableHeight;
+
+        tableObject.transform.localScale = new Vector3(
+            tableObject.transform.localScale.x,
+            tableObject.transform.localScale.y * yScaleUpFactor,
+            tableObject.transform.localScale.z
+        );
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // adjust table y level
+
+        // tableObject.transform.position.y -= tableBounds.min.y;
+        tableObject.transform.position -= new Vector3(0, tableBounds.min.y, 0);
+
+
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // adjust table x,z position
+
+        // find table center position using bottomLeft and topRight diagonal's center
+        Vector3 diagonalMiddlePosition = (bottomLeft + topRight) / 2;
+
+        // goal "center" position is diagonalMiddlePosition.x, current "center" position tableBounds.center.x, 
+        // so we should add diagonalMiddlePosition.x - tableBounds.center.x to shift it over
+
+        tableObject.transform.position += new Vector3(
+            diagonalMiddlePosition.x - tableBounds.center.x, 
+            0, 
+            diagonalMiddlePosition.z - tableBounds.center.z
+        );
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+
+
+        // scale the table x z up so that the width and length match the distances between the points
+        // distance between points = 
+        float pointsDistanceX = Vector3.Distance(bottomLeft, bottomRight);
+        float pointsDistanceZ = Vector3.Distance(bottomRight, topRight);
+
+        float tableOriginalX = tableBounds.size.x;
+        float tableOriginalZ = tableBounds.size.z;
+
+        // scale up = distance / original length
+        float xScaleUpFactor = pointsDistanceX / tableOriginalX;
+        float zScaleUpFactor = pointsDistanceZ / tableOriginalZ;
+        
+        tableObject.transform.localScale = new Vector3(
+            tableObject.transform.localScale.x * xScaleUpFactor,
+            tableObject.transform.localScale.y,
+            tableObject.transform.localScale.z * zScaleUpFactor
+        );
+
+        
+
+        // rotate the table so its corners can be in the same axes as the points
+        // direction of table forward can be obtained using the first 2 points cross product with up direction
+        Vector3 tableForwardDirection = Vector3.Cross(bottomRight - bottomLeft, Vector3.up).normalized;
+        var headingChange = Quaternion.FromToRotation(tableObject.transform.forward, tableForwardDirection);
+        tableObject.transform.localRotation *= headingChange;
+    }
 
 
 
@@ -603,41 +688,32 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // photonGrabbable.TransferOwnershipToLocalPlayer();
     }
 
-    public void OnSpawnTableButtonPressed()
-    {
-        SampleController.Instance.Log("OnSpawnTableButtonPressed");
+    // public void OnSpawnTableButtonPressed()
+    // {
+    //     SampleController.Instance.Log("OnSpawnTableButtonPressed");
 
-        SpawnTable();
+    //     SpawnTable();
+    // }
+
+    // private void SpawnTable()
+    // {
+    //     var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
+    //     // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+    //     // photonGrabbable.TransferOwnershipToLocalPlayer();
+    // }
+
+
+
+    public void OnCreateNewAlignedTableButtonPressed()
+    {
+        SampleController.Instance.Log("OnCreateNewAlignedTableButtonPressed");
+
+        CreateNewAlignedTable();
     }
 
-    private void SpawnTable()
+    private void CreateNewAlignedTable()
     {
-        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
-        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
-        // photonGrabbable.TransferOwnershipToLocalPlayer();
-    }
-
-
-
-    public void OnSpawnAlignedTableButtonPressed()
-    {
-        SampleController.Instance.Log("OnSpawnAlignedTableButtonPressed");
-
-        SpawnAlignedTable();
-    }
-
-    private void SpawnAlignedTable()
-    {
-
-        // var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
-        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
-        // photonGrabbable.TransferOwnershipToLocalPlayer();
-
-
-
-        // alignTableMode = true;
-        // SampleController.Instance.Log(alignTableMode.ToString());
-        
+        alignTableMode = true;
     }
 
 
