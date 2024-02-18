@@ -137,7 +137,6 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 // create a spatial anchor at the point so we can lock the table to these anchors
                 // Instantiate(anchorPrefab, controllerPosition, controllerRotation).GetComponent<SharedAnchor>();
                 // nvm im going to create the anchor on a script on the table itself
-                
 
                 // countAButton++;
                 if (tablePoints.Count == 3) {
