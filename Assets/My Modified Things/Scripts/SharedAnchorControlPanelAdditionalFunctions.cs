@@ -515,7 +515,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // current table height: tableHeight
         // scale up factor needed: obj1.transform.position.y / tableHeight
         float tableHeight = tableBounds.size.y;
-        float yScaleUpFactor = bottomLeft.y / tableHeight;
+
+        // float yScaleUpFactor = bottomLeft.y / tableHeight;
+        // instead of making the table go to the ground, hardcode the table height and make it floating
+        float yScaleUpFactor = 0.08f / tableHeight;
 
         tableObject.transform.localScale = new Vector3(
             tableObject.transform.localScale.x,
@@ -526,10 +529,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // get the bounds again because they were updated because we scaled up the table
         tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
 
-        // adjust table y level
+        // adjust table y level so that the position of the table is set to half way to the top
 
+        // the top of the table should be at bottomLeft.y
+        // the new height of the table is tableBounds.size.y
+        // therefore, place the table at bottomLeft.y - (tableBounds.size.y / 2)
+        tableObject.transform.position = new Vector3(0, bottomLeft.y - (tableBounds.size.y / 2), 0);
+
+        // old code:
         // tableObject.transform.position.y -= tableBounds.min.y;
-        tableObject.transform.position -= new Vector3(0, tableBounds.min.y, 0);
+        // tableObject.transform.position -= new Vector3(0, tableBounds.min.y, 0);
+        // tableObject.transform.position = new Vector3(0, -tableBounds.min.y, 0);
 
 
 
