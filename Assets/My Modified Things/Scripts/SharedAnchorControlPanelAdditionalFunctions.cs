@@ -608,6 +608,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         Vector3 tableForwardDirection = Vector3.Cross(bottomRight - bottomLeft, Vector3.up).normalized;
         var headingChange = Quaternion.FromToRotation(tableObject.transform.forward, tableForwardDirection);
         tableObject.transform.localRotation *= headingChange;
+
+        nextDeskRowNumber++;
     }
 
 
