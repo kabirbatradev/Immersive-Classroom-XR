@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MainObjectContainer
   - SeatMarker
+  - AlignedTable
   layers:
   - Default
   - TransparentFX

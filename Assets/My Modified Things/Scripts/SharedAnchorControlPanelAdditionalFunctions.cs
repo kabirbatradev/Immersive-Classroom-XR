@@ -77,10 +77,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject laserGameObjectPrefab;
 
 
-
     [SerializeField]
     private GameObject groupNumberTextObject;
 
+
+    private int nextDeskRowNumber = 1;
     
 
 
@@ -608,6 +609,28 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         var headingChange = Quaternion.FromToRotation(tableObject.transform.forward, tableForwardDirection);
         tableObject.transform.localRotation *= headingChange;
     }
+
+
+
+    private void DestroyAndResetAlignedTables() {
+        nextDeskRowNumber = 1;
+
+        // get all desks
+        GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+
+        // delete all spatial anchors
+
+        // delete all desks
+
+        // delete all markers
+        GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
+
+
+    }
+
+
+
+
 
 
 
