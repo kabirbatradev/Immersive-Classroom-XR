@@ -612,21 +612,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
         int rowNumber = nextDeskRowNumber;
-        int seatsInThisRow;
-        switch (rowNumber) {
-            case 1:
-                seatsInThisRow = 6;
-                break;
-            case 2:
-                seatsInThisRow = 9;
-                break;
-            default:
-                seatsInThisRow = 15;
-                break;
-        }
-
-
-
+        var seatsInThisRow = rowNumber switch
+        {
+            1 => 6,
+            2 => 9,
+            _ => 15,
+        };
         nextDeskRowNumber++;
     }
 
