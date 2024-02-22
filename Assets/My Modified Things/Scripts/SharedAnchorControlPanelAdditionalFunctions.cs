@@ -644,6 +644,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             
             string key = "marker" + newMarkerObject.GetPhotonView().ViewID;
             SetRoomCustomProperty(key, value);
+
+            // enable the visual component of the marker for debugging purposes
+            newMarkerObject.transform.GetChild(0).gameObject.SetActive(true);
         }
 
 
