@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+using Photon.Pun;
 // using PlayerProperties = Photon.Pun.PhotonNetwork.CustomProperties;
 // using PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 // using LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
@@ -82,6 +83,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     private int nextDeskRowNumber = 1;
+
+    [SerializeField]
+    private GameObject seatMarkerPrefab;
     
 
 
@@ -601,7 +605,42 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             tableObject.transform.localScale.z * zScaleUpFactor
         );
 
+
+        // before doing the rotations, create SeatMarker child objects for grouping purposes
+        int rowNumber = nextDeskRowNumber;
+        var seatsInThisRow = rowNumber switch
+        {
+            1 => 6,
+            2 => 9,
+            _ => 15,
+        };
+        nextDeskRowNumber++;
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // create evenly spaced markers along the length of the desk, shifted back to esimate the position of the seats
+        for (int i = 1; i <= seatsInThisRow; i++) {
+            // length of the table is in x direction
+            float tableLength = tableBounds.size.x;
+            float markerX = tableBounds.min.x + i * (tableLength / (seatsInThisRow+1));
+
+            float tableWidth = tableBounds.size.z;
+            // place seat marker behind the desk
+            float markerZ = tableBounds.center.z - tableBounds.size.z;
+
+            float markerY = tableBounds.center.y;
+
+            GameObject newMarkerObject = PhotonNetwork.Instantiate(seatMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
+            newMarkerObject.transform.SetParent(tableObject.transform);
+            // set the parent to the table object before rotation so that,
+            // after rotation, the marker positions will remain with respect to the desk.
+        }
+
+
         
+        // now that we have created the markers with respect to the bounds, we can rotate to lose
+        // the guarantee that the table is axis aligned
 
         // rotate the table so its corners can be in the same axes as the points
         // direction of table forward can be obtained using the first 2 points cross product with up direction
@@ -611,14 +650,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-        int rowNumber = nextDeskRowNumber;
-        var seatsInThisRow = rowNumber switch
-        {
-            1 => 6,
-            2 => 9,
-            _ => 15,
-        };
-        nextDeskRowNumber++;
+        
     }
 
 

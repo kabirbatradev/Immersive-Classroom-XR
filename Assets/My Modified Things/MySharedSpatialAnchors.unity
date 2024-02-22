@@ -14100,6 +14100,7 @@ MonoBehaviour:
   rightControllerTransform: {fileID: 885548459}
   laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 7f0e1fcda541e234e957c73b2f46eee1, type: 3}
   groupNumberTextObject: {fileID: 935712103}
+  seatMarkerPrefab: {fileID: 3226519048542732199, guid: f05482441d888844f81aaa6364c11f47, type: 3}
 --- !u!224 &8607079647158505907 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8607079647650679341, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
