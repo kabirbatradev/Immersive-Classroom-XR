@@ -635,6 +635,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             newMarkerObject.transform.SetParent(tableObject.transform);
             // set the parent to the table object before rotation so that,
             // after rotation, the marker positions will remain with respect to the desk.
+
+            // when instantiating the seat markers, set photon custom properties 
         }
 
 

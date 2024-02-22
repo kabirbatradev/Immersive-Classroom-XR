@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
+
+public struct MarkerDataStruct {
+    public int row;
+    public int column;
+    public int totalColumnsInThisRow;
+}
+
 public class MarkerData : MonoBehaviour
 {
-
-    struct MarkerDataStruct {
-        public int row;
-        public int column;
-        public int totalColumnsInThisRow;
-    }
-
 
     private PhotonView photonView;
 
@@ -26,7 +26,7 @@ public class MarkerData : MonoBehaviour
         
     // }
 
-    private bool SetThisMarkerData() {
+    private bool SetThisMarkerDataCache() {
         if (photonView == null) {
             return false;
         }
@@ -44,7 +44,7 @@ public class MarkerData : MonoBehaviour
 
     public int GetRow() {
         if (markerDataSet == false) {
-            SetThisMarkerData();
+            SetThisMarkerDataCache();
             markerDataSet = true;
         }
 
@@ -53,7 +53,7 @@ public class MarkerData : MonoBehaviour
 
     public int GetColumn() {
         if (markerDataSet == false) {
-            SetThisMarkerData();
+            SetThisMarkerDataCache();
             markerDataSet = true;
         }
 
@@ -62,7 +62,7 @@ public class MarkerData : MonoBehaviour
 
     public int GetTotalColumnsInThisRow() {
         if (markerDataSet == false) {
-            SetThisMarkerData();
+            SetThisMarkerDataCache();
             markerDataSet = true;
         }
 
