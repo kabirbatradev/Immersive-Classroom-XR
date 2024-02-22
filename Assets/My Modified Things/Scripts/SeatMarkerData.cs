@@ -7,7 +7,7 @@ using UnityEngine;
 public struct MarkerDataStruct {
     public int row;
     public int column;
-    public int totalColumnsInThisRow;
+    public int totalSeatsInThisRow;
 }
 
 public class MarkerData : MonoBehaviour
@@ -44,29 +44,30 @@ public class MarkerData : MonoBehaviour
 
     public int GetRow() {
         if (markerDataSet == false) {
-            SetThisMarkerDataCache();
-            markerDataSet = true;
+            markerDataSet = SetThisMarkerDataCache();
         }
+        if (!markerDataSet) return -1;
 
         return thisMarkerData.row;
     }
 
     public int GetColumn() {
         if (markerDataSet == false) {
-            SetThisMarkerDataCache();
             markerDataSet = true;
+            markerDataSet = SetThisMarkerDataCache();
         }
+        if (!markerDataSet) return -1;
 
         return thisMarkerData.column;
     }
 
-    public int GetTotalColumnsInThisRow() {
+    public int GetTotalSeatsInThisRow() {
         if (markerDataSet == false) {
-            SetThisMarkerDataCache();
-            markerDataSet = true;
+            markerDataSet = SetThisMarkerDataCache();
         }
+        if (!markerDataSet) return -1;
 
-        return thisMarkerData.totalColumnsInThisRow;
+        return thisMarkerData.totalSeatsInThisRow;
     }
 
 
