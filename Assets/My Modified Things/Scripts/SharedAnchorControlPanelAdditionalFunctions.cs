@@ -618,9 +618,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // get all desks
         GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
 
-        // delete all spatial anchors
-
-        // delete all desks
+        // delete all desks and spatial anchors
+        foreach (GameObject alignedTable in alignedTableObjects) {
+            alignedTable.GetComponent<AlignedTable>().DestroyThisAndAnchor();
+        }
 
         // delete all markers
         GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");

@@ -11,7 +11,7 @@ public class AlignedTable : MonoBehaviour
     [SerializeField]
     private OVRSpatialAnchor anchorPrefab;
 
-    SharedAnchor tableAnchor;
+    private SharedAnchor tableAnchor;
 
     // Start is called before the first frame update
     void Start()
@@ -40,5 +40,11 @@ public class AlignedTable : MonoBehaviour
             // transform.position = tableAnchor.transform.position;
             // transform.rotation = tableAnchor.transform.rotation;
         }
+    }
+
+    
+    public void DestroyThisAndAnchor() {
+        Destroy(tableAnchor.gameObject);
+        Destroy(gameObject);
     }
 }
