@@ -609,6 +609,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         var headingChange = Quaternion.FromToRotation(tableObject.transform.forward, tableForwardDirection);
         tableObject.transform.localRotation *= headingChange;
 
+
+
+        int rowNumber = nextDeskRowNumber;
+        int seatsInThisRow;
+        switch (rowNumber) {
+            case 1:
+                seatsInThisRow = 6;
+                break;
+            case 2:
+                seatsInThisRow = 9;
+                break;
+            default:
+                seatsInThisRow = 15;
+                break;
+        }
+
+
+
         nextDeskRowNumber++;
     }
 
