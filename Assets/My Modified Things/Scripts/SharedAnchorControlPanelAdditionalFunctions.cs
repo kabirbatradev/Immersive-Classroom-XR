@@ -637,10 +637,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // after rotation, the marker positions will remain with respect to the desk.
 
             // when instantiating the seat markers, set photon custom properties 
-            MarkerDataStruct value = new();
-            value.row = rowNumber;
-            value.column = i;
-            value.totalSeatsInThisRow = seatsInThisRow;
+            // MarkerDataStruct value = new();
+            int[] value = new int[3];
+            // value.row = rowNumber;
+            // value.column = i;
+            // value.totalSeatsInThisRow = seatsInThisRow;
+            value[0] = rowNumber;
+            value[1] = i;
+            value[2] = seatsInThisRow;
             
             string key = "marker" + newMarkerObject.GetPhotonView().ViewID;
             SetRoomCustomProperty(key, value);
