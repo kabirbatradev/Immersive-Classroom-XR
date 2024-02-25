@@ -381,18 +381,84 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
+    // set single player's group number
+    // skips admins and local player
+    private void SetPlayerGroupNumber(Player player, int groupNumber) {
 
-
-
-    public void SetPlayerGroupNumberFromPlayerHeadObject(GameObject playerHead, int groupNumber) {
-        if (!playerHead.CompareTag("PlayerHead")) {
-            Debug.Log("Error: This object is not a player head object (does not have player head tag)");
+        // if the player is the current player (the instructor), then skip
+        if (player.Equals(PhotonNetwork.LocalPlayer)) {
+            Debug.Log("(not setting the localplayer/instructor's group number)");
             return;
         }
 
-        Player player = playerHead.GetPhotonView().Owner;
+        // skip players of group number 0 (admins and camera mode)
+        if (GetPlayerGroupNumber(player) == 0) {
+            Debug.Log("skipping player with group number 0: " + player.NickName);
+            return;
+        }
 
+
+        // set the player group number
         player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+        // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
+        player.CustomProperties["groupNumber"] = groupNumber;
+        Debug.Log("Set player group of nickname: " + player.NickName);
+
+    }
+
+
+
+    
+    // helper function for getting player object from player head game object
+    private Player GetPlayerFromPlayerHeadObject(GameObject playerHead) {
+        if (!playerHead.CompareTag("PlayerHead")) {
+            Debug.Log("Error: This object is not a player head object (does not have player head tag)");
+            return null;
+        }
+        
+        return playerHead.GetPhotonView().Owner;
+    }
+
+
+    // sets a specific group number value for each student
+    // automatically skips admins and local player
+    // helper function to be used in AssignEachPlayerHeadToSpecificGroupNumber
+    public void AssignEachStudentToSpecificGroupNumber(Player[] playerArray, int[] groupNumbers) {
+        if (playerArray.Length != groupNumbers.Length) {
+            Debug.Log("Error: playerArray and groupNumbers length mismatch");
+            return;
+        }
+        for (int i = 0; i < playerArray.Length; i++) {
+            Player player = playerArray[i];
+            int groupNumber = groupNumbers[i];
+
+            SetPlayerGroupNumber(player, groupNumber);
+        }
+        RecreateMainObjectsIfTheyExist();
+    }
+
+
+
+
+
+
+    // usage: 
+    // GameObject[] FindGameObjectsWithTag(string tag) where tag = "PlayerHead"
+    // use the transform of this object to determine which group number it should be assigned to
+    // call this function, passing in the game object array and an array of group numbers
+    // use InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(..) to access this function globally
+    public void AssignEachPlayerHeadToSpecificGroupNumber(GameObject[] playerHeadArray, int[] groupNumbers) {
+        Player[] playerArray = new Player[playerHeadArray.Length];
+        for (int i = 0; i < playerHeadArray.Length; i++) {
+            GameObject playerHead = playerHeadArray[i];
+            playerArray[i] = GetPlayerFromPlayerHeadObject(playerHead);
+            if (playerArray[i] == null) {
+                Debug.Log("Since one of the player head objects is null, we will not assign group numbers");
+                return;
+            }
+        }        
+        
+        AssignEachStudentToSpecificGroupNumber(playerArray, groupNumbers);
     }
 
 
