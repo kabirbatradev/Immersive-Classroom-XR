@@ -453,7 +453,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             GameObject playerHead = playerHeadArray[i];
             playerArray[i] = GetPlayerFromPlayerHeadObject(playerHead);
             if (playerArray[i] == null) {
-                Debug.Log("Since one of the player head objects is null, we will not assign group numbers");
+                Debug.Log("Since one of the player head objects is does not have the PlayerHead tag, we will not assign group numbers");
                 return;
             }
         }        
