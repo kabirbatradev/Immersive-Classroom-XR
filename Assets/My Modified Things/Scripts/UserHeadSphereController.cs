@@ -19,7 +19,7 @@ public class UserHeadSphereController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = transform.parent.transform.position + new Vector3(0, 0.6f, 0);
+        gameObject.transform.position = transform.parent.transform.position + new Vector3(0, 0.3f, 0);
         gameObject.transform.rotation = Quaternion.identity;
 
         // renderer.material.color = Color.red;

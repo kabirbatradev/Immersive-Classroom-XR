@@ -7,6 +7,7 @@ TagManager:
   - MainObjectContainer
   - SeatMarker
   - AlignedTable
+  - PlayerHead
   layers:
   - Default
   - TransparentFX
