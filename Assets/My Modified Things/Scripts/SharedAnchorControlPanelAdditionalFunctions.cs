@@ -612,6 +612,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         {
             1 => 6,
             2 => 9,
+            3 => 11,
             _ => 15,
         };
         nextDeskRowNumber++;
