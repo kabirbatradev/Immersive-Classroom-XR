@@ -422,6 +422,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // sets a specific group number value for each student
     // automatically skips admins and local player
+    // also automatically creates new main objects if they should currently be displayed
     // helper function to be used in AssignEachPlayerHeadToSpecificGroupNumber
     public void AssignEachStudentToSpecificGroupNumber(Player[] playerArray, int[] groupNumbers) {
         if (playerArray.Length != groupNumbers.Length) {
@@ -447,6 +448,10 @@ public class InstructorCloudFunctions : MonoBehaviour
     // use the transform of this object to determine which group number it should be assigned to
     // call this function, passing in the game object array and an array of group numbers
     // use InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(..) to access this function globally
+
+    // sets a specific group number value for each student
+    // automatically skips admins and local player
+    // also automatically creates new main objects if they should currently be displayed
     public void AssignEachPlayerHeadToSpecificGroupNumber(GameObject[] playerHeadArray, int[] groupNumbers) {
         Player[] playerArray = new Player[playerHeadArray.Length];
         for (int i = 0; i < playerHeadArray.Length; i++) {
