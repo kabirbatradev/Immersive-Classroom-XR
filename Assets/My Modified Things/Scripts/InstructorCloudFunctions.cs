@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 using PhotonPun = Photon.Pun;
@@ -378,6 +380,20 @@ public class InstructorCloudFunctions : MonoBehaviour
         
     }
 
+
+
+
+
+    public void SetPlayerGroupNumberFromPlayerHeadObject(GameObject playerHead, int groupNumber) {
+        if (!playerHead.CompareTag("PlayerHead")) {
+            Debug.Log("Error: This object is not a player head object (does not have player head tag)");
+            return;
+        }
+
+        Player player = playerHead.GetPhotonView().Owner;
+
+        player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+    }
 
 
 
