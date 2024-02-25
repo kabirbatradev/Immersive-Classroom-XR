@@ -627,7 +627,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             float tableWidth = tableBounds.size.z;
             // place seat marker behind the desk
-            float markerZ = tableBounds.center.z - tableBounds.size.z;
+            // float markerZ = tableBounds.center.z - tableWidth;
+            float markerZ = tableBounds.center.z + tableWidth; // plus because I assume the admin is facing the back of the room when creating the table
 
             float markerY = tableBounds.center.y;
 
