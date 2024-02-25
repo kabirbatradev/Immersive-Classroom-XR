@@ -670,8 +670,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     }
 
 
+    public void OnDestroyAndResetAlignedTablesPressed() {
+        SampleController.Instance.Log("OnDestroyAndResetAlignedTablesPressed");
+        DestroyAndResetAlignedTables();
+    }
 
     private void DestroyAndResetAlignedTables() {
+        // reset next row number
         nextDeskRowNumber = 1;
 
         // get all desks
