@@ -2,7 +2,7 @@
 
 **Immersive Visualization in Large Lecture (IVLL)** is a project for an in-progress research paper. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will alow students to view immersive 3D visualizations to enhance their learning, all the while seeing elements of the real world to avoid cybersickness.
 
-HMD Features:
+HMD (Head Mounted Display) Features:
 - Mixed reality passthrough (you can see the real world).
 - Shared coordinate space (users see virtual objects in the same physical space).
 - Custom interactable virtual objects.
