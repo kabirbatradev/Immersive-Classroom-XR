@@ -1,4 +1,4 @@
-# immersive-vis-in-large-lecture
+# immersive-visualization-in-large-lecture
 
 **Immersive Visualization in Large Lecture (IVLL)** is a project for an in-progress research paper. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will alow students to view immersive 3D visualizations to enhance their learning, all the while seeing elements of the real world to avoid cybersickness.
 
