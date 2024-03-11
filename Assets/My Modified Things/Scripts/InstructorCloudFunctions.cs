@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -467,6 +468,58 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
+    // basically an AABB (axis aligned bounding box)
+    private struct MinMax {
+        public List<Vector3> points;
+        public Vector3 min;
+        public Vector3 max;
 
+        public void AddPoint(Vector3 point) {
+
+            points.Add(point);
+
+            // update min and max of bounding box
+            min.x = Mathf.Min(point.x, min.x);
+            min.y = Mathf.Min(point.y, min.y);
+            min.z = Mathf.Min(point.z, min.z);
+
+            max.x = Mathf.Max(point.x, max.x);
+            max.y = Mathf.Max(point.y, max.y);
+            max.z = Mathf.Max(point.z, max.z);
+        }
+    }
+
+    
+    public void CreatePanelPerGroup() {
+        Debug.Log("CreatePanelPerGroup called");
+
+        int maxGroupNum = GetMaxGroupNumber();
+
+        // for each group, keep track of min max of each student position to position the table
+        List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
+
+
+        var players = PhotonNetwork.CurrentRoom.Players.Values;
+        foreach (Player player in players) {
+            int groupNumber = GetPlayerGroupNumber(player);
+
+            // if the player is the current player, then skip
+            if (player.Equals(PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (groupNumber == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            // where are the players?
+            // player.
+            // // after filtering, build bounds list depending on group number
+            // groupBounds[groupNumber].AddPoint(... wait)
+        }
+
+    }
 
 }
