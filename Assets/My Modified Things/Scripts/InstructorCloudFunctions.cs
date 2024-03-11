@@ -468,6 +468,8 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
+
+
     // basically an AABB (axis aligned bounding box)
     private struct MinMax {
         public List<Vector3> points;
@@ -494,13 +496,22 @@ public class InstructorCloudFunctions : MonoBehaviour
         Debug.Log("CreatePanelPerGroup called");
 
         int maxGroupNum = GetMaxGroupNumber();
+        if (maxGroupNum == 0) {
+            // all players are admins
+            Debug.Log("all players are admins; not creating any panels");
+            return;
+        }
 
         // for each group, keep track of min max of each student position to position the table
         List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
 
+        // get PlayerHead game objects instead of the players list so we know where they are too
+        GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
 
-        var players = PhotonNetwork.CurrentRoom.Players.Values;
-        foreach (Player player in players) {
+        // var players = PhotonNetwork.CurrentRoom.Players.Values;
+        // foreach (Player player in players) {
+        foreach (GameObject playerHeadObject in playerHeadObjects) {
+            Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
             // if the player is the current player, then skip
@@ -514,10 +525,9 @@ public class InstructorCloudFunctions : MonoBehaviour
                 continue;
             }
 
-            // where are the players?
-            // player.
-            // // after filtering, build bounds list depending on group number
-            // groupBounds[groupNumber].AddPoint(... wait)
+            // where are the players? they are at the position of the playerHeadObject
+            // after filtering, build bounds list depending on group number
+            groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
         }
 
     }
