@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.Mathematics;
 using UnityEngine;
 
 using PhotonPun = Photon.Pun;
@@ -32,6 +33,11 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     [SerializeField]
     private GameObject mainObjectContainerPrefab;
+
+
+    [SerializeField]
+    private GameObject panelPrefab;
+    
 
 
 
@@ -494,6 +500,10 @@ public class InstructorCloudFunctions : MonoBehaviour
     
     public void CreatePanelPerGroup() {
         Debug.Log("CreatePanelPerGroup called");
+        if (panelPrefab == null) {
+            Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
+        }
+
 
         int maxGroupNum = GetMaxGroupNumber();
         if (maxGroupNum == 0) {
@@ -528,6 +538,22 @@ public class InstructorCloudFunctions : MonoBehaviour
             // where are the players? they are at the position of the playerHeadObject
             // after filtering, build bounds list depending on group number
             groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
+        }
+
+        // now that we have all of the group bounding boxes
+        for (int i = 1; i < groupBounds.Count; i++) {
+            Vector3 max = groupBounds[i].max;
+            Vector3 min = groupBounds[i].min;
+            Vector3 center = (min + max) / 2;
+            // Bounds b = new Bounds(center, max-min); // (Vector3 center, Vector3 size)
+
+            // place table to the right of the group
+            // max.x is the right of the bounding box
+            Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
+            
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+            // rotate it to face the group
+            // TODO
         }
 
     }
