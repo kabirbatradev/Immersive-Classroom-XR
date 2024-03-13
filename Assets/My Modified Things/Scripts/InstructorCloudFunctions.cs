@@ -503,6 +503,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         public void AddPoint(Vector3 point) {
 
+            if (points == null) points = new();
+
             points.Add(point);
 
             // update min and max of bounding box
@@ -538,10 +540,12 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // get PlayerHead game objects instead of the players list so we know where they are too
         GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+        Debug.Log(playerHeadObjects.Length);
 
         // var players = PhotonNetwork.CurrentRoom.Players.Values;
         // foreach (Player player in players) {
         foreach (GameObject playerHeadObject in playerHeadObjects) {
+            Debug.Log(playerHeadObject);
             Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
