@@ -503,8 +503,16 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         public void AddPoint(Vector3 point) {
 
-            if (points == null) points = new();
+            if (points == null) {
+                points = new();
+                points.Add(point);
 
+                min = point; max = point;
+
+                return;
+            }
+
+            // otherwise
             points.Add(point);
 
             // update min and max of bounding box
@@ -567,6 +575,10 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // now that we have all of the group bounding boxes
         for (int i = 1; i < groupBounds.Count; i++) {
+            foreach (Vector3 point in groupBounds[i].points) {
+                Debug.Log(point);
+            }
+            
             Vector3 max = groupBounds[i].max;
             Vector3 min = groupBounds[i].min;
             Vector3 center = (min + max) / 2;
@@ -574,7 +586,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             // place table to the right of the group
             // max.x is the right of the bounding box
-            Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
+            // Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
+            Vector3 panelPos = groupBounds[i].points[0] + new Vector3(1, 0, 0);
             
             GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
             // rotate it to face the group
