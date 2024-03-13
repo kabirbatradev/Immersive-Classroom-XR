@@ -592,8 +592,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             // place table to the right of the group
             // max.x is the right of the bounding box
-            // Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
-            Vector3 panelPos = groupBounds[i].points[0] + new Vector3(1, 0, 0);
+            Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
+            // Vector3 panelPos = groupBounds[i].points[0] + new Vector3(1, 0, 0); // test code
             
             GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
             // rotate it to face the group
