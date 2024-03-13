@@ -496,18 +496,23 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
     // basically an AABB (axis aligned bounding box)
-    private struct MinMax {
+    private class MinMax {
         public List<Vector3> points;
         public Vector3 min;
         public Vector3 max;
 
         public void AddPoint(Vector3 point) {
 
+            Debug.Log("AddPoint was called");
+
             if (points == null) {
+                Debug.Log("points was null");
                 points = new();
                 points.Add(point);
 
                 min = point; max = point;
+
+                Debug.Log("points is now " + points);
 
                 return;
             }
@@ -575,6 +580,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // now that we have all of the group bounding boxes
         for (int i = 1; i < groupBounds.Count; i++) {
+            Debug.Log(groupBounds[i].points);
             foreach (Vector3 point in groupBounds[i].points) {
                 Debug.Log(point);
             }
