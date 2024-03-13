@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 using PhotonPun = Photon.Pun;
@@ -37,6 +38,24 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     [SerializeField]
     private GameObject panelPrefab;
+
+    [SerializeField]
+    private bool debugMode = false;
+
+    void Update() {
+        if (debugMode) {
+            if (Input.GetKeyDown(KeyCode.P)) {
+                // p for spawning panels
+                CreatePanelPerGroup();
+            }
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                // p for spawning panels
+                // DeleteAllPanels();
+            }
+        }
+
+    }
     
 
 
@@ -514,6 +533,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // for each group, keep track of min max of each student position to position the table
         List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
+        // this list needs to be filled
+        for (int i = 0; i < maxGroupNum+1; i++) { groupBounds.Add(new MinMax()); }
 
         // get PlayerHead game objects instead of the players list so we know where they are too
         GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
