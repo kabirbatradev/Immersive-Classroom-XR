@@ -3229,7 +3229,7 @@ GameObject:
   - component: {fileID: 2899251731682138844}
   - component: {fileID: 5832612762285196102}
   m_Layer: 0
-  m_Name: MySpatialAnchorPrefab
+  m_Name: AlignedTableSpatialAnchorPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
