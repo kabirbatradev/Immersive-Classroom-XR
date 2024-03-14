@@ -93,6 +93,8 @@ public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
     // this function is called by SharedAnchorLoader.Instance.InstantiateUnboundAnchor (when a new shared anchor is being instantiated)
     public void NewAnchorWasCreated(SharedAnchor anchor) {
 
+        SampleController.Instance.Log("NewAnchorWasCreated");
+
         // automatically align with the new shared anchor
         AutoAlignAnchor(anchor);
 
