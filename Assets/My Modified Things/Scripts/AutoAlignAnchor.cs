@@ -5,9 +5,14 @@ using UnityEngine;
 public class AutoAlignAnchor : MonoBehaviour
 {
 
+    private bool fromCloud = false;
     private bool hasAutoAligned = false;
 
     private OVRSpatialAnchor anchorData;
+
+    public void SetFromCloudTrue() {
+        fromCloud = true;
+    }
 
     void Start() {
         anchorData = GetComponent<OVRSpatialAnchor>();
@@ -28,8 +33,10 @@ public class AutoAlignAnchor : MonoBehaviour
             SampleController.Instance.Log("auto aligning...");
             GetComponent<SharedAnchor>().OnAlignButtonPressed();
 
-            // we could even make the anchor invisible once its job is done
-            gameObject.SetActive(false);
+            // we could even make the anchor invisible once its job is done (only if not local anchor created by admin)
+            if (fromCloud) {
+                gameObject.SetActive(false);
+            }
 
             hasAutoAligned = true;
         }
