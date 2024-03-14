@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class AutoAlignAnchor : MonoBehaviour
@@ -11,6 +12,7 @@ public class AutoAlignAnchor : MonoBehaviour
     private OVRSpatialAnchor anchorData;
 
     public void SetFromCloudTrue() {
+        SampleController.Instance.Log("this anchor was shared with me so it should be invisible");
         fromCloud = true;
     }
 
