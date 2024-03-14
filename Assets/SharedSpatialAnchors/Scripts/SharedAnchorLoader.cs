@@ -267,6 +267,9 @@ public class SharedAnchorLoader : MonoBehaviour
             if (exists) {
                 aaa.SetFromCloudTrue();
             }
+            else {
+                SampleController.Instance.Log("auto align anchor component does not exist for this anchor");
+            }
 
             // original code to attempt to auto align anchors: (now considering a new approach)
             // if (StreamlineManager.Instance != null) {
