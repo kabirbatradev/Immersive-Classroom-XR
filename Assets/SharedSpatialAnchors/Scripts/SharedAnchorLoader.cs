@@ -262,9 +262,19 @@ public class SharedAnchorLoader : MonoBehaviour
             //Disable the share icon since this anchor has been shared with me
             sharedAnchor.DisableShareIcon();
 
-            if (StreamlineManager.Instance != null) {
-                StreamlineManager.Instance.NewAnchorWasCreated(sharedAnchor);
+            // here, we know it was a shared anchor, so we can tell that to the AutoAlignAnchor component
+            bool exists = TryGetComponent<AutoAlignAnchor>(out AutoAlignAnchor aaa);
+            if (exists) {
+                aaa.SetFromCloudTrue();
             }
+            else {
+                SampleController.Instance.Log("auto align anchor component does not exist for this anchor");
+            }
+
+            // original code to attempt to auto align anchors: (now considering a new approach)
+            // if (StreamlineManager.Instance != null) {
+            //     StreamlineManager.Instance.NewAnchorWasCreated(sharedAnchor);
+            // }
         }
 
         var cachedAnchor = spatialAnchor.GetComponent<CachedSharedAnchor>();

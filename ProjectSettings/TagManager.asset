@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - MainObjectContainer
+  - SeatMarker
+  - AlignedTable
+  - PlayerHead
   layers:
   - Default
   - TransparentFX

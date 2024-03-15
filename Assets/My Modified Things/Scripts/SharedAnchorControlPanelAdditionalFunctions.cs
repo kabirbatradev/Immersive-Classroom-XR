@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+using Photon.Pun;
 // using PlayerProperties = Photon.Pun.PhotonNetwork.CustomProperties;
 // using PlayerProperties = Photon.Pun.PhotonNetwork.LocalPlayer.CustomProperties;
 // using LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
@@ -32,7 +33,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject jengaPrefab;
 
     [SerializeField]
-    private GameObject tablePrefab;
+    private GameObject alignedTablePrefab;
 
 
     [SerializeField]
@@ -50,8 +51,16 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     // private GameObject[] studentButtons;
 
 
-    // private bool alignTableMode = false;
+    private bool alignTableMode = false;
     // private int countAButton = 0;
+    private List<Vector3> tablePoints = new();
+    [SerializeField]
+    private Transform rightControllerTransform;
+
+    // [SerializeField] private OVRSpatialAnchor anchorPrefab;
+
+
+
 
     private GameObject mostRecentSphere;
 
@@ -69,10 +78,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject laserGameObjectPrefab;
 
 
-
     [SerializeField]
     private GameObject groupNumberTextObject;
 
+
+    private int nextDeskRowNumber = 1;
+
+    [SerializeField]
+    private GameObject seatMarkerPrefab;
     
 
 
@@ -107,7 +120,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             return;
         }
 
-        /*
+        // /*
         if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
@@ -117,22 +130,35 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             if (buttonPressed) {
                 SampleController.Instance.Log("The A button was pressed!");
 
-                var controllerType = OVRInput.Controller.RTouch; // the right controller
-                Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
+                // var controllerType = OVRInput.Controller.RTouch; // the right controller
+                // Vector3 controllerPosition = OVRInput.GetLocalControllerPosition(controllerType);
+                // Quaternion controllerRotation = OVRInput.GetLocalControllerRotation(controllerType);
+                Vector3 controllerPosition = rightControllerTransform.position;
+                Quaternion controllerRotation = rightControllerTransform.rotation;
+
 
                 string x = controllerPosition.x.ToString("0.00");
                 string y = controllerPosition.y.ToString("0.00");
                 string z = controllerPosition.z.ToString("0.00");
                 SampleController.Instance.Log(x + " " + y + " " + z);
 
-                countAButton++;
-                if (countAButton == 2) {
-                    countAButton = 0;
+                tablePoints.Add(controllerPosition);
+
+                // create a spatial anchor at the point so we can lock the table to these anchors
+                // Instantiate(anchorPrefab, controllerPosition, controllerRotation).GetComponent<SharedAnchor>();
+                // nvm im going to create the anchor on a script on the table itself
+
+                // countAButton++;
+                if (tablePoints.Count == 3) {
+                    // countAButton = 0;
                     alignTableMode = false;
+                    SampleController.Instance.Log("Creating Table...");
+                    InstantiateAlignedTable(tablePoints[0], tablePoints[1], tablePoints[2]);
+                    tablePoints.Clear();
                 }
             }
         }
-        */
+        // */
 
 
         /*
@@ -495,6 +521,184 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     // private bool isShootingExisted = false;
 
     
+    private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
+
+        GameObject tableObject = PhotonPun.PhotonNetwork.Instantiate(alignedTablePrefab.name, new Vector3(0,0,0), Quaternion.identity);
+        // Bounds tableBounds = tableObject.GetComponent<MeshFilter>().mesh.bounds;
+        // mesh bounds are in local space, and renderer bounds are in global space
+        Bounds tableBounds = tableObject.GetComponent<MeshRenderer>().bounds;
+
+        
+
+        // adjust table y scale
+        // goal table height: obj1.transform.position.y
+        // current table height: tableHeight
+        // scale up factor needed: obj1.transform.position.y / tableHeight
+        float tableHeight = tableBounds.size.y;
+
+        // float yScaleUpFactor = bottomLeft.y / tableHeight;
+        // instead of making the table go to the ground, hardcode the table height and make it floating
+        float yScaleUpFactor = 0.08f / tableHeight;
+
+        tableObject.transform.localScale = new Vector3(
+            tableObject.transform.localScale.x,
+            tableObject.transform.localScale.y * yScaleUpFactor,
+            tableObject.transform.localScale.z
+        );
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // adjust table y level so that the position of the table is set to half way to the top
+
+        // the top of the table should be at bottomLeft.y
+        // the new height of the table is tableBounds.size.y
+        // therefore, place the table at bottomLeft.y - (tableBounds.size.y / 2)
+        // also add an offset to the y value because the controller cannot go through the table when placing the points
+        // new Vector3(0, 0.04f, 0)
+        tableObject.transform.position = new Vector3(0, bottomLeft.y - (tableBounds.size.y / 2) - 0.04f, 0);
+
+        // old code:
+        // tableObject.transform.position.y -= tableBounds.min.y;
+        // tableObject.transform.position -= new Vector3(0, tableBounds.min.y, 0);
+        // tableObject.transform.position = new Vector3(0, -tableBounds.min.y, 0);
+
+
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // adjust table x,z position
+
+        // find table center position using bottomLeft and topRight diagonal's center
+        Vector3 diagonalMiddlePosition = (bottomLeft + topRight) / 2;
+
+        // goal "center" position is diagonalMiddlePosition.x, current "center" position tableBounds.center.x, 
+        // so we should add diagonalMiddlePosition.x - tableBounds.center.x to shift it over
+
+        tableObject.transform.position += new Vector3(
+            diagonalMiddlePosition.x - tableBounds.center.x, 
+            0, 
+            diagonalMiddlePosition.z - tableBounds.center.z
+        );
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+
+
+        // scale the table x z up so that the width and length match the distances between the points
+        // distance between points = 
+        float pointsDistanceX = Vector3.Distance(bottomLeft, bottomRight);
+        float pointsDistanceZ = Vector3.Distance(bottomRight, topRight);
+
+        float tableOriginalX = tableBounds.size.x;
+        float tableOriginalZ = tableBounds.size.z;
+
+        // scale up = distance / original length
+        float xScaleUpFactor = pointsDistanceX / tableOriginalX;
+        float zScaleUpFactor = pointsDistanceZ / tableOriginalZ;
+        
+        tableObject.transform.localScale = new Vector3(
+            tableObject.transform.localScale.x * xScaleUpFactor,
+            tableObject.transform.localScale.y,
+            tableObject.transform.localScale.z * zScaleUpFactor
+        );
+
+
+        // before doing the rotations, create SeatMarker child objects for grouping purposes
+        int rowNumber = nextDeskRowNumber;
+        var seatsInThisRow = rowNumber switch
+        {
+            1 => 6,
+            2 => 9,
+            3 => 11,
+            _ => 15,
+        };
+        nextDeskRowNumber++;
+
+        // get the bounds again because they were updated because we scaled up the table
+        tableBounds = tableObject.GetComponent<MeshRenderer>().bounds; 
+
+        // create evenly spaced markers along the length of the desk, shifted back to esimate the position of the seats
+        for (int i = 1; i <= seatsInThisRow; i++) {
+            // length of the table is in x direction
+            float tableLength = tableBounds.size.x;
+            float markerX = tableBounds.min.x + i * (tableLength / (seatsInThisRow+1));
+
+            float tableWidth = tableBounds.size.z;
+            // place seat marker behind the desk
+            // float markerZ = tableBounds.center.z - tableWidth;
+            float markerZ = tableBounds.center.z + tableWidth; // plus because I assume the admin is facing the back of the room when creating the table
+
+            float markerY = tableBounds.center.y;
+
+            GameObject newMarkerObject = PhotonNetwork.Instantiate(seatMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
+            newMarkerObject.transform.SetParent(tableObject.transform);
+            // set the parent to the table object before rotation so that,
+            // after rotation, the marker positions will remain with respect to the desk.
+
+            // when instantiating the seat markers, set photon custom properties 
+            // MarkerDataStruct value = new();
+            int[] value = new int[3];
+            // value.row = rowNumber;
+            // value.column = i;
+            // value.totalSeatsInThisRow = seatsInThisRow;
+            value[0] = rowNumber;
+            value[1] = i;
+            value[2] = seatsInThisRow;
+            
+            string key = "marker" + newMarkerObject.GetPhotonView().ViewID;
+            SetRoomCustomProperty(key, value);
+
+            // enable the visual component of the marker for debugging purposes
+            newMarkerObject.transform.GetChild(0).gameObject.SetActive(true);
+        }
+
+
+        
+        // now that we have created the markers with respect to the bounds, we can rotate to lose
+        // the guarantee that the table is axis aligned
+
+        // rotate the table so its corners can be in the same axes as the points
+        // direction of table forward can be obtained using the first 2 points cross product with up direction
+        Vector3 tableForwardDirection = Vector3.Cross(bottomRight - bottomLeft, Vector3.up).normalized;
+        var headingChange = Quaternion.FromToRotation(tableObject.transform.forward, tableForwardDirection);
+        tableObject.transform.localRotation *= headingChange;
+
+
+
+        
+    }
+
+
+    public void OnDestroyAndResetAlignedTablesPressed() {
+        SampleController.Instance.Log("OnDestroyAndResetAlignedTablesPressed");
+        DestroyAndResetAlignedTables();
+    }
+
+    private void DestroyAndResetAlignedTables() {
+        // reset next row number
+        nextDeskRowNumber = 1;
+
+        // get all desks
+        GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+
+        // delete all desks and spatial anchors
+        foreach (GameObject alignedTable in alignedTableObjects) {
+            alignedTable.GetComponent<AlignedTable>().DestroyThisAndAnchor();
+        }
+
+        // delete all markers
+        GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
+        foreach (GameObject seatMarkers in seatMarkerObjects) {
+            Destroy(seatMarkers);
+        }
+
+    }
+
+
+
 
 
 
@@ -603,41 +807,32 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // photonGrabbable.TransferOwnershipToLocalPlayer();
     }
 
-    public void OnSpawnTableButtonPressed()
-    {
-        SampleController.Instance.Log("OnSpawnTableButtonPressed");
+    // public void OnSpawnTableButtonPressed()
+    // {
+    //     SampleController.Instance.Log("OnSpawnTableButtonPressed");
 
-        SpawnTable();
+    //     SpawnTable();
+    // }
+
+    // private void SpawnTable()
+    // {
+    //     var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
+    //     // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
+    //     // photonGrabbable.TransferOwnershipToLocalPlayer();
+    // }
+
+
+
+    public void OnCreateNewAlignedTableButtonPressed()
+    {
+        SampleController.Instance.Log("OnCreateNewAlignedTableButtonPressed");
+
+        CreateNewAlignedTable();
     }
 
-    private void SpawnTable()
+    private void CreateNewAlignedTable()
     {
-        var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
-        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
-        // photonGrabbable.TransferOwnershipToLocalPlayer();
-    }
-
-
-
-    public void OnSpawnAlignedTableButtonPressed()
-    {
-        SampleController.Instance.Log("OnSpawnAlignedTableButtonPressed");
-
-        SpawnAlignedTable();
-    }
-
-    private void SpawnAlignedTable()
-    {
-
-        // var networkedCube = PhotonPun.PhotonNetwork.Instantiate(tablePrefab.name, spawnPoint.position, spawnPoint.rotation);
-        // var photonGrabbable = networkedCube.GetComponent<PhotonGrabbableObject>();
-        // photonGrabbable.TransferOwnershipToLocalPlayer();
-
-
-
-        // alignTableMode = true;
-        // SampleController.Instance.Log(alignTableMode.ToString());
-        
+        alignTableMode = true;
     }
 
 

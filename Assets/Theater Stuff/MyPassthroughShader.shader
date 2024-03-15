@@ -7,6 +7,8 @@ Shader "Unlit/MyPassthroughShader"
         // extra added from standard passthrough shader thing
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2 //"Back"
         [Enum(Off,0,On,1)] _ZWrite("ZWrite", Float) = 0 //"Off" // do not write z value because it should be infinitely far
+        // Actually needs to be On because otherwise the passthrough just doesnt show up... (this results in objects being occluded by the passthrough being placed on the walls)
+
         [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 4 //"LessEqual" // do a z test, although this doesnt matter because the renderer queue value is set to before everything including geometry
 
         // [Enum(UnityEngine.Rendering.BlendOp)] _BlendOpColor("Blend Color", Float) = 2 //"ReverseSubtract"

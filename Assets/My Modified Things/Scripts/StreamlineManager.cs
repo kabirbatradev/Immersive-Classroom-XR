@@ -89,17 +89,19 @@ public class StreamlineManager : PhotonPun.MonoBehaviourPunCallbacks
     }
 
 
-
+    // this function is no longer used; instead, AutoAlignAnchor script manages this
     // this function is called by SharedAnchorLoader.Instance.InstantiateUnboundAnchor (when a new shared anchor is being instantiated)
-    public void NewAnchorWasCreated(SharedAnchor anchor) {
+    // public void NewAnchorWasCreated(SharedAnchor anchor) {
 
-        // automatically align with the new shared anchor
-        AutoAlignAnchor(anchor);
+    //     SampleController.Instance.Log("NewAnchorWasCreated");
+
+    //     // automatically align with the new shared anchor
+    //     AutoAlignAnchor(anchor);
 
 
-        // hide the anchor and save it in a list for viewing in admin mode
-        // TODO
-    }
+    //     // hide the anchor and save it in a list for viewing in admin mode
+    //     // TODO
+    // }
 
 
     public void AutoAlignAnchor(SharedAnchor anchor) {

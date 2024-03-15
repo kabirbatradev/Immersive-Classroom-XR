@@ -1,5 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 using PhotonPun = Photon.Pun;
@@ -29,6 +34,29 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     [SerializeField]
     private GameObject mainObjectContainerPrefab;
+
+
+    [SerializeField]
+    private GameObject panelPrefab;
+
+    [SerializeField]
+    private bool debugMode = false;
+
+    void Update() {
+        if (debugMode) {
+            if (Input.GetKeyDown(KeyCode.P)) {
+                // p for spawning panels
+                CreatePanelPerGroup();
+            }
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                // p for spawning panels
+                // DeleteAllPanels();
+            }
+        }
+
+    }
+    
 
 
 
@@ -379,7 +407,199 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
+    // set single player's group number
+    // skips admins and local player
+    private void SetPlayerGroupNumber(Player player, int groupNumber) {
+
+        // if the player is the current player (the instructor), then skip
+        if (player.Equals(PhotonNetwork.LocalPlayer)) {
+            Debug.Log("(not setting the localplayer/instructor's group number)");
+            return;
+        }
+
+        // skip players of group number 0 (admins and camera mode)
+        if (GetPlayerGroupNumber(player) == 0) {
+            Debug.Log("skipping player with group number 0: " + player.NickName);
+            return;
+        }
 
 
+        // set the player group number
+        player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
+        // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
+        player.CustomProperties["groupNumber"] = groupNumber;
+        Debug.Log("Set player group of nickname: " + player.NickName);
+
+    }
+
+
+
+    
+    // helper function for getting player object from player head game object
+    private Player GetPlayerFromPlayerHeadObject(GameObject playerHead) {
+        if (!playerHead.CompareTag("PlayerHead")) {
+            Debug.Log("Error: This object is not a player head object (does not have player head tag)");
+            return null;
+        }
+        
+        return playerHead.GetPhotonView().Owner;
+    }
+
+
+    // sets a specific group number value for each student
+    // automatically skips admins and local player
+    // also automatically creates new main objects if they should currently be displayed
+    // helper function to be used in AssignEachPlayerHeadToSpecificGroupNumber
+    public void AssignEachStudentToSpecificGroupNumber(Player[] playerArray, int[] groupNumbers) {
+        if (playerArray.Length != groupNumbers.Length) {
+            Debug.Log("Error: playerArray and groupNumbers length mismatch");
+            return;
+        }
+        for (int i = 0; i < playerArray.Length; i++) {
+            Player player = playerArray[i];
+            int groupNumber = groupNumbers[i];
+
+            SetPlayerGroupNumber(player, groupNumber);
+        }
+        RecreateMainObjectsIfTheyExist();
+    }
+
+
+
+
+
+
+    // usage: 
+    // GameObject[] FindGameObjectsWithTag(string tag) where tag = "PlayerHead"
+    // use the transform of this object to determine which group number it should be assigned to
+    // call this function, passing in the game object array and an array of group numbers
+    // use InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(..) to access this function globally
+
+    // sets a specific group number value for each student
+    // automatically skips admins and local player
+    // also automatically creates new main objects if they should currently be displayed
+    public void AssignEachPlayerHeadToSpecificGroupNumber(GameObject[] playerHeadArray, int[] groupNumbers) {
+        Player[] playerArray = new Player[playerHeadArray.Length];
+        for (int i = 0; i < playerHeadArray.Length; i++) {
+            GameObject playerHead = playerHeadArray[i];
+            playerArray[i] = GetPlayerFromPlayerHeadObject(playerHead);
+            if (playerArray[i] == null) {
+                Debug.Log("Since one of the player head objects is does not have the PlayerHead tag, we will not assign group numbers");
+                return;
+            }
+        }        
+        
+        AssignEachStudentToSpecificGroupNumber(playerArray, groupNumbers);
+    }
+
+
+
+
+    // basically an AABB (axis aligned bounding box)
+    private class MinMax {
+        public List<Vector3> points;
+        public Vector3 min;
+        public Vector3 max;
+
+        public void AddPoint(Vector3 point) {
+
+            Debug.Log("AddPoint was called");
+
+            if (points == null) {
+                Debug.Log("points was null");
+                points = new();
+                points.Add(point);
+
+                min = point; max = point;
+
+                Debug.Log("points is now " + points);
+
+                return;
+            }
+
+            // otherwise
+            points.Add(point);
+
+            // update min and max of bounding box
+            min.x = Mathf.Min(point.x, min.x);
+            min.y = Mathf.Min(point.y, min.y);
+            min.z = Mathf.Min(point.z, min.z);
+
+            max.x = Mathf.Max(point.x, max.x);
+            max.y = Mathf.Max(point.y, max.y);
+            max.z = Mathf.Max(point.z, max.z);
+        }
+    }
+
+    
+    public void CreatePanelPerGroup() {
+        Debug.Log("CreatePanelPerGroup called");
+        if (panelPrefab == null) {
+            Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
+        }
+
+
+        int maxGroupNum = GetMaxGroupNumber();
+        if (maxGroupNum == 0) {
+            // all players are admins
+            Debug.Log("all players are admins; not creating any panels");
+            return;
+        }
+
+        // for each group, keep track of min max of each student position to position the table
+        List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
+        // this list needs to be filled
+        for (int i = 0; i < maxGroupNum+1; i++) { groupBounds.Add(new MinMax()); }
+
+        // get PlayerHead game objects instead of the players list so we know where they are too
+        GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+        Debug.Log(playerHeadObjects.Length);
+
+        // var players = PhotonNetwork.CurrentRoom.Players.Values;
+        // foreach (Player player in players) {
+        foreach (GameObject playerHeadObject in playerHeadObjects) {
+            Debug.Log(playerHeadObject);
+            Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
+            int groupNumber = GetPlayerGroupNumber(player);
+
+            // if the player is the current player, then skip
+            if (player.Equals(PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (groupNumber == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            // where are the players? they are at the position of the playerHeadObject
+            // after filtering, build bounds list depending on group number
+            groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
+        }
+
+        // now that we have all of the group bounding boxes
+        for (int i = 1; i < groupBounds.Count; i++) {
+            Debug.Log(groupBounds[i].points);
+            foreach (Vector3 point in groupBounds[i].points) {
+                Debug.Log(point);
+            }
+            
+            Vector3 max = groupBounds[i].max;
+            Vector3 min = groupBounds[i].min;
+            Vector3 center = (min + max) / 2;
+            // Bounds b = new Bounds(center, max-min); // (Vector3 center, Vector3 size)
+
+            // place table to the right of the group
+            // max.x is the right of the bounding box
+            Vector3 panelPos = new Vector3(max.x + 1, center.y, center.z);
+            // Vector3 panelPos = groupBounds[i].points[0] + new Vector3(1, 0, 0); // test code
+            
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+            // rotate it to face the group
+            // TODO
+        }
+
+    }
 
 }
