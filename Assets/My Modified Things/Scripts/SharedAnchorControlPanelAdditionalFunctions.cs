@@ -691,8 +691,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // delete all markers
         GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
-        foreach (GameObject seatMarkers in seatMarkerObjects) {
-            Destroy(seatMarkers);
+        foreach (GameObject seatMarker in seatMarkerObjects) {
+            // Destroy(seatMarkers);
+            PhotonNetwork.Destroy(seatMarker); // cloud object; call cloud destroy
         }
 
     }
