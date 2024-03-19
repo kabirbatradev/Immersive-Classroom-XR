@@ -22,6 +22,8 @@ public class TestEnableOVRSceneManager : MonoBehaviour
         if (buttonPressed) {
             // flip the active state of this object
             OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
+
+            // note that once its turned on, turning it off and on again doesnt do anything
         }
         
     }
