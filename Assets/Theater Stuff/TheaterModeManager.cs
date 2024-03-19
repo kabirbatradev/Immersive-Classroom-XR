@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class TheaterModeManager : MonoBehaviour
@@ -27,8 +28,9 @@ public class TheaterModeManager : MonoBehaviour
     private List<GameObject> wallClones = new List<GameObject>();
     private List<GameObject> ceilingClones = new List<GameObject>();
 
-    private List<Vector3> wallTargetPositions = new();
-    private List<Vector3> ceilingTargetPositions = new();
+    // no longer doing target positions; instead, it is computed every frame wrt og walls (because the original walls can drift with the anchors)
+    // private List<Vector3> wallTargetPositions = new();
+    // private List<Vector3> ceilingTargetPositions = new();
 
 
     // private List<GameObject> originalWallScenePlanes = new List<GameObject>();
@@ -40,6 +42,10 @@ public class TheaterModeManager : MonoBehaviour
     private float ceilingWidth;
 
 
+    [SerializeField] 
+    private GameObject PassthroughWallPrefab;
+
+
 
     void Start()
     {
@@ -49,6 +55,11 @@ public class TheaterModeManager : MonoBehaviour
 
     // // Update is called once per frame
     void Update() {
+
+        if (originalCeiling == null) {
+            // this is not the admin device, so no need to update wall positions etc
+            return;
+        }
         
         // foreach (GameObject wall in wallClones) {
         //     if (wall != null) {
@@ -237,7 +248,9 @@ public class TheaterModeManager : MonoBehaviour
                 // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
                 for (int i = 0; i < 4; i++) {
                     // new clone every time
-                    GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                    
+                    // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
                     ceilingClones.Add(clone); 
                     // clone.GetComponent<MeshRenderer>().enabled = false;
                 }
@@ -249,11 +262,13 @@ public class TheaterModeManager : MonoBehaviour
                 ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
                 Debug.Log("CEILING WIDTH: " + ceilingWidth);
                 // the bounding box is axis aligned so, this may not work
-                
+                // TODO?
                 
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
-                GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+                // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+                
                 // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
                 // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
                 // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
