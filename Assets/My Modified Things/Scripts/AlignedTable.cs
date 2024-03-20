@@ -44,7 +44,8 @@ public class AlignedTable : MonoBehaviour
 
     
     public void DestroyThisAndAnchor() {
-        Destroy(tableAnchor.gameObject);
-        Destroy(gameObject);
+        Destroy(tableAnchor.gameObject); // local object; call local destroy
+        // Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject); // cloud object; call cloud destroy
     }
 }

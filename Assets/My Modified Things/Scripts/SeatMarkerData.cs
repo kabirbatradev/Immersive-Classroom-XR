@@ -10,7 +10,7 @@ using UnityEngine;
 //     public int totalSeatsInThisRow;
 // }
 
-public class MarkerData : MonoBehaviour
+public class SeatMarkerData : MonoBehaviour
 {
 
     private PhotonView photonView;
