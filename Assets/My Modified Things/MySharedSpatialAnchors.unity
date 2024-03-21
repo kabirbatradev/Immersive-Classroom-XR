@@ -7331,6 +7331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PassthroughWallPrefab: {fileID: 1874268499307850282, guid: d63557d00306a5d4d83eb6bd67ff2b63, type: 3}
+  PassthroughCeilingPrefab: {fileID: 1874268499307850282, guid: b934066177cf36d49b2408ff79216bdf, type: 3}
 --- !u!1 &1312789331
 GameObject:
   m_ObjectHideFlags: 0

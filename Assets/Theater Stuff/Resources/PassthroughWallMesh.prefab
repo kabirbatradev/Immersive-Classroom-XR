@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 67581764562382347}
   - component: {fileID: 7703466426630373111}
   m_Layer: 0
-  m_Name: PassthroughWall
+  m_Name: PassthroughWallMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
