@@ -44,6 +44,8 @@ public class TheaterModeManager : MonoBehaviour
 
     [SerializeField] 
     private GameObject PassthroughWallPrefab;
+    [SerializeField] 
+    private GameObject PassthroughCeilingPrefab;
 
 
 
@@ -56,11 +58,6 @@ public class TheaterModeManager : MonoBehaviour
     // // Update is called once per frame
     void Update() {
 
-        if (originalCeiling == null) {
-            // this is not the admin device, so no need to update wall positions etc
-            return;
-        }
-        
         // foreach (GameObject wall in wallClones) {
         //     if (wall != null) {
                 // wall.transform.position += Vector3.down * 0.5f * Time.deltaTime;
@@ -77,8 +74,6 @@ public class TheaterModeManager : MonoBehaviour
         // }
 
 
-
-
         // update values for these from cloud
         float currentWallLoweredPercentage = 0.0f;
         float currentCeilingRemovedPercentage = 0.0f;
@@ -91,6 +86,20 @@ public class TheaterModeManager : MonoBehaviour
             currentWallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
             currentCeilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
             ceilingClonesActive = StreamTheaterModeData.Instance.ceilingVisible;
+        }
+
+
+        // this is not the admin device, so no need to update wall positions etc
+        if (originalCeiling == null) {
+
+            // but WE DO need to update the ceiling visibility
+            GameObject[] ceilingMeshes = GameObject.FindGameObjectsWithTag("CeilingMesh"); // get ceiling objects (ceiling tag)
+            foreach (GameObject ceiling in ceilingMeshes) {
+                // ceiling clones should not be visible if ceilingClonesActive = false
+                // ceiling.SetActive(ceilingClonesActive);
+                ceiling.GetComponent<MeshRenderer>().enabled = ceilingClonesActive;
+            }
+            return;
         }
 
 
@@ -129,7 +138,9 @@ public class TheaterModeManager : MonoBehaviour
             // GameObject originalCeiling
 
             // if ceiling clones should not be visible, then no need to set their position
-            ceiling.SetActive(ceilingClonesActive);
+            // ceiling.SetActive(ceilingClonesActive);
+            ceiling.GetComponent<MeshRenderer>().enabled = ceilingClonesActive;
+
             if (!ceilingClonesActive) {
                 continue;
             }
@@ -250,7 +261,7 @@ public class TheaterModeManager : MonoBehaviour
                     // new clone every time
                     
                     // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
-                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
                     ceilingClones.Add(clone); 
                     // clone.GetComponent<MeshRenderer>().enabled = false;
                 }
