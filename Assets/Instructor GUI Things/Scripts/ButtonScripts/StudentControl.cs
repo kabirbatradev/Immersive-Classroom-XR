@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class StudentnControl : MonoBehaviour
 {
@@ -55,7 +56,8 @@ public class StudentnControl : MonoBehaviour
         {
             int row = findRow(student);
             Debug.Log("Row: " + row);
-            groupAssignment[index] = int(row / 2) + 1;
+            int group = row / 2 + 1;
+            groupAssignment[index] = group;
             index++;
         }
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
