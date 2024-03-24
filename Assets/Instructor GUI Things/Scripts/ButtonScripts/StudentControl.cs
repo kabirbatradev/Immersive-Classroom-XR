@@ -10,22 +10,15 @@ public class StudentnControl : MonoBehaviour
     public GameObject[] studentsHeads;
 
     // ------------ Button Functions ------------
+    // Used to put everyone student in the same group
+    public void SplitAll()
+    {
+        InstructorCloudFunctions.Instance.SetAllStudentsGroupOne();
+    }
     // Used to split students into individual groups
     public void SplitIndividual()
     {
-        // Find all markers and students
-        // This is set during runtime so that the markers and students are found after they are created
-        markers = GameObject.FindGameObjectsWithTag("SeatMarker");
-        studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
-        int[] groupAssignment = new int[studentsHeads.Length];
-        int group = 1;
-        foreach (GameObject student in studentsHeads)
-        {
-            // append current group to groupAssignment
-            groupAssignment[group - 1] = group;
-            group++;
-        }
-        InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
+        InstructorCloudFunctions.Instance.SetStudentsIntoIndividualGroups();
     }
 
     // Used to split students into rows

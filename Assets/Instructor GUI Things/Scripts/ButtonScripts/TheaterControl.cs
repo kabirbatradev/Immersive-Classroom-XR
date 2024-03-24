@@ -4,23 +4,34 @@ using UnityEngine;
 
 public class TheaterControl : MonoBehaviour
 {
-    public void startTheaterMode()
+    private bool theaterStarted = false;
+    private bool theaterGoing = false;
+    public void toggleTheater()
     {
-        StreamTheaterModeData.Instance.TriggerTheaterMode();
-    }
-
-    public void pauseTheaterMode()
-    {
-        StreamTheaterModeData.Instance.PauseTheaterMode();
-    }
-
-    public void continueTheaterMode()
-    {
-        StreamTheaterModeData.Instance.ContinueTheaterMode();
+        if (!theaterStarted)
+        {
+            StreamTheaterModeData.Instance.TriggerTheaterMode();
+            theaterStarted = true;
+        }
+        else
+        {
+            if (theaterGoing)
+            {
+                StreamTheaterModeData.Instance.PauseTheaterMode();
+                theaterGoing = false;
+            }
+            else
+            {
+                StreamTheaterModeData.Instance.ContinueTheaterMode();
+                theaterGoing = true;
+            }
+        }
     }
 
     public void resetTheaterMode()
     {
         StreamTheaterModeData.Instance.ResetTheaterMode();
+        theaterStarted = false;
+        theaterGoing = false;
     }
 }
