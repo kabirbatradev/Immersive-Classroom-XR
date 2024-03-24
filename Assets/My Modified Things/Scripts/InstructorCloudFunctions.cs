@@ -465,6 +465,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             SetPlayerGroupNumber(player, groupNumber);
         }
         RecreateMainObjectsIfTheyExist();
+        DestroyAllPanels();
         CreatePanelPerGroup(); // in this case we do need panels per group
     }
 
@@ -584,9 +585,13 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // now that we have all of the group bounding boxes
         for (int i = 1; i < groupBounds.Count; i++) {
-            Debug.Log(groupBounds[i].points);
-            foreach (Vector3 point in groupBounds[i].points) {
-                Debug.Log(point);
+            // Debug.Log(groupBounds[i].points);
+            // foreach (Vector3 point in groupBounds[i].points) {
+            //     Debug.Log(point);
+            // }
+            if (groupBounds[i].points.Count == 0) {
+                Debug.Log("there are no students in group " + i + ", skipping creation of panel");
+                continue;
             }
             
             Vector3 max = groupBounds[i].max;
@@ -602,6 +607,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
             // rotate it to face the group
             // TODO
+            // it seems to face the right way right now so no need?
         }
 
     }
