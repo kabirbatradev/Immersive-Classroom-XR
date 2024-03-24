@@ -137,7 +137,7 @@ public class TheaterModeManager : MonoBehaviour
 
         // update ceiling clone positions
         Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right}; 
-        for (int i = 0; i < wallClones.Count; i++) {
+        for (int i = 0; i < ceilingClones.Count; i++) {
             GameObject ceiling = ceilingClones[i];
             // GameObject originalCeiling
 
@@ -326,6 +326,15 @@ public class TheaterModeManager : MonoBehaviour
             originalFloor = passthroughMeshObject;
 
             floorClone = clone;
+        }
+        else {
+            // what classification is this?
+            SampleController.Instance.Log("unexpected scene plane classification");
+
+            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+            renderer.enabled = false;
+            // disable its renderer so nothing unexpected happens
         }
     }
 
