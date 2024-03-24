@@ -283,6 +283,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         RecreateMainObjectsIfTheyExist();
+        DestroyAllPanels();
 
     }
 
@@ -322,6 +323,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         RecreateMainObjectsIfTheyExist();
+        DestroyAllPanels();
 
     }
 
@@ -354,6 +356,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         RecreateMainObjectsIfTheyExist();
+        DestroyAllPanels();
 
     }
 
@@ -462,6 +465,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             SetPlayerGroupNumber(player, groupNumber);
         }
         RecreateMainObjectsIfTheyExist();
+        CreatePanelPerGroup(); // in this case we do need panels per group
     }
 
 
@@ -599,6 +603,13 @@ public class InstructorCloudFunctions : MonoBehaviour
             // rotate it to face the group
             // TODO
         }
+
+    }
+
+    public void DestroyAllPanels() {
+        Debug.Log("DestroyAllPanels was called");
+
+        
 
     }
 
