@@ -8,23 +8,24 @@ public class TheaterControl : MonoBehaviour
     private bool theaterGoing = false;
     public void toggleTheater()
     {
-        if (!theaterStarted)
-        {
-            StreamTheaterModeData.Instance.TriggerTheaterMode();
-            theaterStarted = true;
-        }
-        else
+        if (theaterStarted)
         {
             if (theaterGoing)
             {
-                StreamTheaterModeData.Instance.PauseTheaterMode();
+                pauseTheaterMode();
                 theaterGoing = false;
             }
             else
             {
-                StreamTheaterModeData.Instance.ContinueTheaterMode();
+                continueTheaterMode();
                 theaterGoing = true;
             }
+        }
+        else
+        {
+            startTheaterMode();
+            theaterStarted = true;
+            theaterGoing = true;
         }
     }
 
@@ -33,5 +34,20 @@ public class TheaterControl : MonoBehaviour
         StreamTheaterModeData.Instance.ResetTheaterMode();
         theaterStarted = false;
         theaterGoing = false;
+    }
+
+    public void startTheaterMode()
+    {
+        StreamTheaterModeData.Instance.TriggerTheaterMode();
+    }
+
+    public void pauseTheaterMode()
+    {
+        StreamTheaterModeData.Instance.PauseTheaterMode();
+    }
+
+    public void continueTheaterMode()
+    {
+        StreamTheaterModeData.Instance.ContinueTheaterMode();
     }
 }
