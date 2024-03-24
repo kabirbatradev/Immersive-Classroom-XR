@@ -8901,7 +8901,6 @@ GameObject:
   - component: {fileID: 619854023}
   - component: {fileID: 619854022}
   - component: {fileID: 619854021}
-  - component: {fileID: 619854024}
   m_Layer: 5
   m_Name: reset
   m_TagString: Untagged
@@ -8973,7 +8972,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 619854024}
+      - m_Target: {fileID: 1027039904}
         m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
         m_MethodName: resetTheaterMode
         m_Mode: 1
@@ -9023,18 +9022,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619854018}
   m_CullTransparentMesh: 1
---- !u!114 &619854024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619854018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &644227888
 GameObject:
   m_ObjectHideFlags: 0
@@ -14858,7 +14845,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -14928,18 +14915,15 @@ MonoBehaviour:
   laserStartPoint: {fileID: 1261141254}
   laserMaterial: {fileID: 2100000, guid: 2903d14fccbb2714db6aace8717a898d, type: 2}
   laserFromCamera: 1
---- !u!114 &958794944
-MonoBehaviour:
+--- !u!45 &958794944
+Skybox:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 958794938}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db18b8661b08dc644bb1e629948d51bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_CustomSkybox: {fileID: 2100000, guid: 7b667a4ac826dc7469159165bf9680c8, type: 2}
 --- !u!1 &959885933
 GameObject:
   m_ObjectHideFlags: 0
@@ -16023,6 +16007,7 @@ GameObject:
   - component: {fileID: 1027039901}
   - component: {fileID: 1027039903}
   - component: {fileID: 1027039902}
+  - component: {fileID: 1027039904}
   m_Layer: 5
   m_Name: Mode Change
   m_TagString: Untagged
@@ -16090,6 +16075,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027039900}
   m_CullTransparentMesh: 1
+--- !u!114 &1027039904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027039900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  theaterStarted: 0
+  theaterGoing: 0
 --- !u!1 &1040068830
 GameObject:
   m_ObjectHideFlags: 0
@@ -31504,7 +31503,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1649751369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32631,7 +32630,6 @@ GameObject:
   - component: {fileID: 1695803636}
   - component: {fileID: 1695803635}
   - component: {fileID: 1695803634}
-  - component: {fileID: 1695803637}
   m_Layer: 5
   m_Name: toggle
   m_TagString: Untagged
@@ -32703,7 +32701,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1695803637}
+      - m_Target: {fileID: 1027039904}
         m_TargetAssemblyTypeName: TheaterControl, Assembly-CSharp
         m_MethodName: toggleTheater
         m_Mode: 1
@@ -32753,18 +32751,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695803631}
   m_CullTransparentMesh: 1
---- !u!114 &1695803637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1695803631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2964b5bc48c2adf41b18bf35db9ec7e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1701765079
 GameObject:
   m_ObjectHideFlags: 0

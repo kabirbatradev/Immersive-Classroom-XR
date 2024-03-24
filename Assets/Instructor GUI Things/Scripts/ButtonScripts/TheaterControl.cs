@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TheaterControl : MonoBehaviour
 {
-    private bool theaterStarted = false;
-    private bool theaterGoing = false;
+    public bool theaterStarted = false;
+    public bool theaterGoing = false;
     public void toggleTheater()
     {
         if (theaterStarted)
