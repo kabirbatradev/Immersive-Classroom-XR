@@ -525,6 +525,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         SampleController.Instance.Log("AdminEnableSceneManager Pressed\nenabling OVRSceneManagerObj");
         OVRSceneManagerObj.SetActive(true);
         // OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
+        SampleController.Instance.Log("Scene manager state: " + OVRSceneManagerObj.activeSelf);
+
     }
 
 
