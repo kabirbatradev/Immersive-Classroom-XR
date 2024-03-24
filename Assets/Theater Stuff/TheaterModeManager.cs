@@ -43,9 +43,9 @@ public class TheaterModeManager : MonoBehaviour
 
 
     [SerializeField] 
-    private GameObject PassthroughWallPrefab;
+    private GameObject PassthroughWallMesh;
     [SerializeField] 
-    private GameObject PassthroughCeilingPrefab;
+    private GameObject PassthroughCeilingMesh;
 
 
 
@@ -240,7 +240,7 @@ public class TheaterModeManager : MonoBehaviour
     public void AddScenePlane(GameObject scenePlaneObject) {
 
         OVRSemanticClassification classification = scenePlaneObject.GetComponent<OVRSemanticClassification>();
-
+        SampleController.Instance.Log("adding new Scene plane of classification: " + classification);
         if (classification == null) {
             // thats weird
             Debug.Log("scene plane object doesnt have a classification yet?");
@@ -261,7 +261,8 @@ public class TheaterModeManager : MonoBehaviour
                     // new clone every time
                     
                     // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
-                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+
                     ceilingClones.Add(clone); 
                     // clone.GetComponent<MeshRenderer>().enabled = false;
                 }
@@ -278,7 +279,7 @@ public class TheaterModeManager : MonoBehaviour
             }
             else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
                 // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
-                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallPrefab), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
                 
                 // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
                 // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
