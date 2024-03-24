@@ -613,6 +613,10 @@ public class InstructorCloudFunctions : MonoBehaviour
             // rotate it to face the group
             // TODO
             // it seems to face the right way right now so no need?
+
+
+            // give the panel a group number!
+            SetPhotonObjectGroupNumber(panelObject, i);
         }
 
     }
