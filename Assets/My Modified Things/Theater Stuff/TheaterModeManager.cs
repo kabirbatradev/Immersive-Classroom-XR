@@ -27,6 +27,8 @@ public class TheaterModeManager : MonoBehaviour
     
     private List<GameObject> wallClones = new List<GameObject>();
     private List<GameObject> ceilingClones = new List<GameObject>();
+    private GameObject floorClone = null;
+
 
     // no longer doing target positions; instead, it is computed every frame wrt og walls (because the original walls can drift with the anchors)
     // private List<Vector3> wallTargetPositions = new();
@@ -37,6 +39,8 @@ public class TheaterModeManager : MonoBehaviour
     // private GameObject originalCeilingScenePlane;
     private List<GameObject> originalWalls = new List<GameObject>();
     private GameObject originalCeiling;
+    private GameObject originalFloor;
+    
 
     private float wallHeight;
     private float ceilingWidth;
@@ -159,6 +163,11 @@ public class TheaterModeManager : MonoBehaviour
         }
 
 
+        // update the floor clone position as well (make it match with the anchored floor)
+        floorClone.transform.SetPositionAndRotation(
+            originalFloor.transform.position, 
+            originalFloor.transform.rotation
+        );
 
 
 
@@ -240,75 +249,84 @@ public class TheaterModeManager : MonoBehaviour
     public void AddScenePlane(GameObject scenePlaneObject) {
 
         OVRSemanticClassification classification = scenePlaneObject.GetComponent<OVRSemanticClassification>();
-        SampleController.Instance.Log("adding new Scene plane of classification: " + classification);
         if (classification == null) {
             // thats weird
             Debug.Log("scene plane object doesnt have a classification yet?");
         }   
         // if ceiling or walls
-        else if (classification.Contains(OVRSceneManager.Classification.Ceiling) || classification.Contains(OVRSceneManager.Classification.WallFace)) {
+        else if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
+            SampleController.Instance.Log("adding new Scene plane of classification: Ceiling");
+
             // get child object 
             // contains the mesh renderer of the passthrough
             GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
-            
             MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
-            // renderer.enabled = false;
 
-
-            if (classification.Contains(OVRSceneManager.Classification.Ceiling)) {
-                // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
-                for (int i = 0; i < 4; i++) {
-                    // new clone every time
-                    
-                    // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
-                    GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
-                    // copy the scale to the clone too
-                    clone.transform.localScale = passthroughMeshObject.transform.localScale;
-                    ceilingClones.Add(clone); 
-                    // clone.GetComponent<MeshRenderer>().enabled = false;
-                }
-
-                // originalCeilingScenePlane = scenePlaneObject; // save the original object
-                originalCeiling = passthroughMeshObject;
-
-                // also update the width of the ceiling (set it to the larger value)
-                ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
-                Debug.Log("CEILING WIDTH: " + ceilingWidth);
-                // the bounding box is axis aligned so, this may not work
-                // TODO?
+            // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
+            for (int i = 0; i < 4; i++) {
+                // new clone every time
                 
-            }
-            else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
-                // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
-                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
-                
-                // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
-                // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
-                // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
-                // clone.transform.localScale += new Vector3(0.003f,0.003f,0.003f);
-                clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
+                // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
                 // copy the scale to the clone too
                 clone.transform.localScale = passthroughMeshObject.transform.localScale;
-                wallClones.Add(clone);
-
-                // originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
-                originalWalls.Add(passthroughMeshObject);
-
-                // also update the height of the walls
-                wallHeight = renderer.bounds.size.y;
+                ceilingClones.Add(clone); 
+                // clone.GetComponent<MeshRenderer>().enabled = false;
             }
+
+            // originalCeilingScenePlane = scenePlaneObject; // save the original object
+            originalCeiling = passthroughMeshObject;
+
+            // also update the width of the ceiling (set it to the larger value)
+            ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
+            Debug.Log("CEILING WIDTH: " + ceilingWidth);
+            // the bounding box is axis aligned so, this may not work
+            // TODO?
+
             renderer.enabled = false; // do not renderer the original passthrough meshes so we just see the clones and their movement
-            // when we reset the theater, then we can destroy the clones and enable the renderer on these passthroughMeshObjects
-
-            
-
         }
-        // else if (classification.Contains(OVRSceneManager.Classification.Floor)) {
-        //     GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
-        //     MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
-        //     renderer.enabled = false;
-        //     // get rid of the renderer for now
-        // }
+        else if (classification.Contains(OVRSceneManager.Classification.WallFace)) {
+            SampleController.Instance.Log("adding new Scene plane of classification: WallFace");
+
+            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+
+            // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+            GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+            
+            // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
+            // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
+            // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
+            // clone.transform.localScale += new Vector3(0.003f,0.003f,0.003f);
+            clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
+            // copy the scale to the clone too
+            clone.transform.localScale = passthroughMeshObject.transform.localScale;
+            wallClones.Add(clone);
+
+            // originalWallScenePlanes.Add(scenePlaneObject); // save the original objects
+            originalWalls.Add(passthroughMeshObject);
+
+            // also update the height of the walls
+            wallHeight = renderer.bounds.size.y;
+
+            renderer.enabled = false;
+        }
+        else if (classification.Contains(OVRSceneManager.Classification.Floor)) {
+            SampleController.Instance.Log("adding new Scene plane of classification: Floor");
+
+            GameObject passthroughMeshObject = scenePlaneObject.transform.GetChild(0).gameObject; 
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+            renderer.enabled = false; // do not render the original floor because we will clone it
+            
+            // we can use the wall mesh again for the floor
+            GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+            // copy the scale to the clone too
+            clone.transform.localScale = passthroughMeshObject.transform.localScale;
+
+            originalFloor = passthroughMeshObject;
+
+            floorClone = clone;
+        }
     }
 
 
