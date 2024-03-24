@@ -23,13 +23,15 @@ public class PassthroughToSkyboxController : MonoBehaviour
         // var centerCamera = ovrCameraRig.centerEyeAnchor.GetComponent<Camera>();
         if (wallObjectsExist) {
             // show passthrough anyway if walls and ceiling have not been lowered at all
-            if (StreamTheaterModeData.Instance.wallLoweredPercentage == 0
-                    && StreamTheaterModeData.Instance.ceilingRemovedPercentage == 0) {
-                
+            if (
+                StreamTheaterModeData.Instance != null
+                && StreamTheaterModeData.Instance.wallLoweredPercentage == 0
+                && StreamTheaterModeData.Instance.ceilingRemovedPercentage == 0
+            ) {
                 centerCamera.clearFlags = CameraClearFlags.SolidColor;
             }
             else {
-                // show the skybox if the walls/ceiling have been lowered
+                // show the skybox if the walls/ceiling have been lowered (or StreamTheaterModeData doesnt exist)
                 centerCamera.clearFlags = CameraClearFlags.Skybox;
             }
 
