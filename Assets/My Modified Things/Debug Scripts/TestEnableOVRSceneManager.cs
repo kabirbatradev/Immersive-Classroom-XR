@@ -20,6 +20,7 @@ public class TestEnableOVRSceneManager : MonoBehaviour
     {   
         bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.X);
         if (buttonPressed) {
+            SampleController.Instance.Log("X was pressed, enabling OVRSceneManagerObj");
             // flip the active state of this object
             OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
 

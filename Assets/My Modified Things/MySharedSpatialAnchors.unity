@@ -3969,6 +3969,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 710639287}
   m_CullTransparentMesh: 1
+--- !u!1 &729229444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 729229445}
+  - component: {fileID: 729229446}
+  m_Layer: 0
+  m_Name: PassthroughToSkyboxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &729229445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729229444}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &729229446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729229444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 710a8543c5bba5941acb828bb6ea60c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &737114685
 GameObject:
   m_ObjectHideFlags: 0
@@ -7330,7 +7374,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a785453f2e4dd4f91546524f2f4a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PassthroughWallPrefab: {fileID: 1874268499307850282, guid: d63557d00306a5d4d83eb6bd67ff2b63, type: 3}
+  PassthroughWallMesh: {fileID: 1874268499307850282, guid: d63557d00306a5d4d83eb6bd67ff2b63, type: 3}
+  PassthroughCeilingMesh: {fileID: 1874268499307850282, guid: b934066177cf36d49b2408ff79216bdf, type: 3}
 --- !u!1 &1312789331
 GameObject:
   m_ObjectHideFlags: 0
@@ -11279,50 +11324,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892166983}
   m_CullTransparentMesh: 1
---- !u!1 &1901322305
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1901322307}
-  - component: {fileID: 1901322306}
-  m_Layer: 0
-  m_Name: RequestPermissionSpatialData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1901322306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901322305}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 083c7d370c0c52849817ba290e05ecaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1901322307
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901322305}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.24225712, y: 1.206038, z: -1.7374902}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1902799571
 GameObject:
   m_ObjectHideFlags: 0
@@ -12633,7 +12634,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071098694}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f582c8c50a12a544087c53b206444b61, type: 3}
   m_Name: 
@@ -13373,7 +13374,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244174007119, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_ClearFlags
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5414912244174007119, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       propertyPath: m_CullingMask.m_Bits
@@ -14678,9 +14679,9 @@ RectTransform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 705507995}
   - {fileID: 3283511192588958399}
   - {fileID: 8607079647158505904}
-  - {fileID: 705507995}
   - {fileID: 543581507}
   - {fileID: 703945377}
   - {fileID: 2982998299393685461}
@@ -14690,5 +14691,5 @@ SceneRoots:
   - {fileID: 1920820876}
   - {fileID: 1298837697}
   - {fileID: 2064493740}
-  - {fileID: 1901322307}
   - {fileID: 2071098696}
+  - {fileID: 729229445}

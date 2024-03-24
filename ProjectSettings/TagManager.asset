@@ -8,6 +8,8 @@ TagManager:
   - SeatMarker
   - AlignedTable
   - PlayerHead
+  - CeilingMesh
+  - SidePanel
   layers:
   - Default
   - TransparentFX
