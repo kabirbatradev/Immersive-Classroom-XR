@@ -605,11 +605,13 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
     }
-
+    
     public void DestroyAllPanels() {
         Debug.Log("DestroyAllPanels was called");
 
-        
+        GameObject[] panels = GameObject.FindGameObjectsWithTag("SidePanel");
+        foreach (GameObject panel in panels)
+            PhotonNetwork.Destroy(panel);
 
     }
 
