@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 3477830518618809500}
   m_Layer: 0
   m_Name: SidePanelPrefab
-  m_TagString: Untagged
+  m_TagString: SidePanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
