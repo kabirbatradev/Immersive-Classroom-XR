@@ -506,18 +506,20 @@ public class InstructorCloudFunctions : MonoBehaviour
         public Vector3 min;
         public Vector3 max;
 
+        public void InitializePointsArray() {
+            points = new();
+        }
+
         public void AddPoint(Vector3 point) {
 
             Debug.Log("AddPoint was called");
 
-            if (points == null) {
-                Debug.Log("points was null");
+            if (points.Count == 0) {
+                Debug.Log("points count was, setting min and max");
                 points = new();
                 points.Add(point);
 
                 min = point; max = point;
-
-                Debug.Log("points is now " + points);
 
                 return;
             }
@@ -554,7 +556,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         // for each group, keep track of min max of each student position to position the table
         List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
         // this list needs to be filled
-        for (int i = 0; i < maxGroupNum+1; i++) { groupBounds.Add(new MinMax()); }
+        for (int i = 0; i < maxGroupNum+1; i++) {
+            groupBounds.Add(new MinMax());
+            groupBounds[i].InitializePointsArray();
+        }
 
         // get PlayerHead game objects instead of the players list so we know where they are too
         GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
