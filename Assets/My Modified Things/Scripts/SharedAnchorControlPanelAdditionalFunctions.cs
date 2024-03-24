@@ -86,6 +86,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     [SerializeField]
     private GameObject seatMarkerPrefab;
+
+
+    [SerializeField]
+    private GameObject OVRSceneManagerObj;
     
 
 
@@ -517,8 +521,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     }
 
-    // testing purposes
-    // private bool isShootingExisted = false;
+    public void OnAdminEnableSceneManager() {
+        SampleController.Instance.Log("AdminEnableSceneManager Pressed\nenabling OVRSceneManagerObj");
+        OVRSceneManagerObj.SetActive(true);
+        // OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
+    }
+
+
+
 
     
     private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
