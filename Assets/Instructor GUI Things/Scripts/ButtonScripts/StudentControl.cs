@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class StudentnControl : MonoBehaviour
 {
@@ -18,7 +19,6 @@ public class StudentnControl : MonoBehaviour
         studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
         int[] groupAssignment = new int[studentsHeads.Length];
         int group = 1;
-        Debug.Log("Len of studentsHeads: " + studentsHeads.Length);
         foreach (GameObject student in studentsHeads)
         {
             // append current group to groupAssignment
@@ -38,8 +38,7 @@ public class StudentnControl : MonoBehaviour
         foreach (GameObject student in studentsHeads)
         {
             int row = findRow(student);
-            Debug.Log("Row: " + row);
-            groupAssignment[index] = row + 1;
+            groupAssignment[index] = row;
             index++;
         }
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
@@ -55,8 +54,7 @@ public class StudentnControl : MonoBehaviour
         foreach (GameObject student in studentsHeads)
         {
             int row = findRow(student);
-            Debug.Log("Row: " + row);
-            int group = row / 2 + 1;
+            int group = row / 2;
             groupAssignment[index] = group;
             index++;
         }
@@ -69,16 +67,57 @@ public class StudentnControl : MonoBehaviour
         markers = GameObject.FindGameObjectsWithTag("SeatMarker");
         studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
         int[] groupAssignment = new int[studentsHeads.Length];
-        int group = 1;
-        Debug.Log("Len of studentsHeads: " + studentsHeads.Length);
+
+        // Assuming 6 rows, pre-define the maximum number of rows
+        int maxRow = 5; // 0-based indexing, so row 6 is index 5
+
+        // Sort students into a list based on their row and column for easier processing
+        List<(GameObject student, int row, int col)> sortedStudents = new List<(GameObject student, int row, int col)>();
+
         foreach (GameObject student in studentsHeads)
         {
-            // append current group to groupAssignment
-            groupAssignment[group - 1] = group;
-            group++;
+            int row = findRow(student);
+            int col = findCol(student);
+            sortedStudents.Add((student, row, col));
         }
+
+        // Sort students by row and then by column to process in order
+        sortedStudents.Sort((a, b) => a.row == b.row ? a.col.CompareTo(b.col) : a.row.CompareTo(b.row));
+
+        int groupNumber = 1; // Start with group 1
+
+        // We'll group students by taking two from one row and two from the next row
+        for (int row = 0; row < maxRow; row += 2) // Iterate through rows in pairs
+        {
+            var currentRowStudents = sortedStudents.Where(s => s.row == row).ToList();
+            var nextRowStudents = sortedStudents.Where(s => s.row == row + 1).ToList();
+
+            int pairsInCurrentRow = currentRowStudents.Count / 2;
+            int pairsInNextRow = nextRowStudents.Count / 2;
+            int maxPairs = Math.Min(pairsInCurrentRow, pairsInNextRow);
+
+            for (int i = 0; i < maxPairs * 2; i++)
+            {
+                if (i < currentRowStudents.Count)
+                {
+                    int studentIndex = Array.IndexOf(studentsHeads, currentRowStudents[i].student);
+                    groupAssignment[studentIndex] = groupNumber + (i / 2);
+                }
+
+                if (i < nextRowStudents.Count)
+                {
+                    int studentIndex = Array.IndexOf(studentsHeads, nextRowStudents[i].student);
+                    groupAssignment[studentIndex] = groupNumber + (i / 2);
+                }
+            }
+
+            // Adjust groupNumber for next set of rows
+            groupNumber += maxPairs;
+        }
+
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
     }
+
     // ------------ Button Functions ------------
 
 
