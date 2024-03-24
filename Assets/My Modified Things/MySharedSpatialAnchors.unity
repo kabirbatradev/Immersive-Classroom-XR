@@ -15149,7 +15149,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 1774543904}
   mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
   rightControllerTransform: {fileID: 885548459}
-  laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 7f0e1fcda541e234e957c73b2f46eee1, type: 3}
+  laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 140b7d11df0757d4eb0e753a32f3de31, type: 3}
   groupNumberTextObject: {fileID: 935712103}
   seatMarkerPrefab: {fileID: 3226519048542732199, guid: f05482441d888844f81aaa6364c11f47, type: 3}
   OVRSceneManagerObj: {fileID: 1694797267}
