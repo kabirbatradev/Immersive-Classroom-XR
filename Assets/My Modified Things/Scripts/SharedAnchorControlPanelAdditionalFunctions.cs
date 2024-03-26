@@ -462,6 +462,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                     if (mainObjectIndex >= laserGameObjects.Count) {
                         laserGameObjects.Add(Instantiate(laserGameObjectPrefab));
                     }
+
                     // get the corresponding laser object to this main object at this main object index
                     GameObject laserInstance = laserGameObjects[mainObjectIndex];
 
@@ -499,6 +500,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
+        // if the number of groups fell (for example from 4 to 2), then we should destroy extra laser objects
+        // mainObjectContainers.Length = number of main objects aka number of lasers to render
+        if (laserGameObjects.Count > mainObjectContainers.Length) {
+            int numberOfLasersToDestroy = laserGameObjects.Count - mainObjectContainers.Length;
+
+            // start from after the lasers we want to keep, destory all of the rest of the lasers
+            laserGameObjects.RemoveRange(mainObjectContainers.Length, numberOfLasersToDestroy);
+        }
 
 
 
