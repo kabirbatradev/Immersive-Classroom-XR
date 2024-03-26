@@ -115,7 +115,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.ProcessVideoRawData
             }
             else if (_needResize)
             {
-                _texture.Resize(_videoFrameWidth, _videoFrameHeight);
+                _texture.Reinitialize(_videoFrameWidth, _videoFrameHeight);
                 _texture.Apply();
                 _needResize = false;
             }
