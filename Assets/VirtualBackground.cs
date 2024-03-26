@@ -35,13 +35,15 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
             LoadAssetData();
             InitEngine();
             JoinChannel();
+
+            PermissionHelper.RequestMicrophontPermission();
+            PermissionHelper.RequestCameraPermission();
         }
 
         // Update is called once per frame
         private void Update()
         {
-            PermissionHelper.RequestMicrophontPermission();
-            PermissionHelper.RequestCameraPermission();
+            
         }
 
         //Show data in AgoraBasicProfile
