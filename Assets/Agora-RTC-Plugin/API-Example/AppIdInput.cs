@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 
 
-namespace Agora_RTC_Plugin.API_Example
+namespace io.agora.rtc.demo
 {
     [CreateAssetMenu(menuName = "Agora/AppIdInput", fileName = "AppIdInput", order = 1)]
     [Serializable]

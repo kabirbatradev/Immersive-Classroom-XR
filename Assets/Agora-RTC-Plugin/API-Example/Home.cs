@@ -8,12 +8,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// #if AGORA_RTC
+#if AGORA_RTC
 using Agora.Rtc;
-// using io.agora.rtc.demo;
-// #else
-// using io.agora.rtm.demo;
-// #endif
+using io.agora.rtc.demo;
+#else
+using io.agora.rtm.demo;
+#endif
 
 using System;
 
