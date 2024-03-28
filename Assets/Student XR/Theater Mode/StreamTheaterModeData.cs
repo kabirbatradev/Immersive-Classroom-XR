@@ -29,7 +29,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     [NonSerialized]
     public float wallLoweredPercentage = 0.0f;
     [NonSerialized]
-    public float ceilingRemovedPercentage = 0.25f;
+    public float ceilingRemovedPercentage = 0.0f;
 
     // ceilingVisible will be a custom server property since it doesn't have to be streamed constantly
     public bool ceilingVisible = true;

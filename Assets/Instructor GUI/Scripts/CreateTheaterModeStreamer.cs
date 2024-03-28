@@ -11,6 +11,7 @@ public class CreateTheaterModeStreamer : PhotonPun.MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() {
 
         // GameObject streamObject = GameObject.Find("StreamTheaterModeData");
+        // it seems to have failed to find this object
         GameObject streamObject = GameObject.FindWithTag("StreamTheaterModeData");
 
         if (streamObject == null)
