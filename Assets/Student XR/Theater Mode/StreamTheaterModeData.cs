@@ -111,7 +111,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         // start position of walls are stored in originalWalls list
         float timeElapsed = 0;
-        float moveDuration = 4.0f;
+        float moveDuration = 8.0f;
 
         while (timeElapsed < moveDuration) {
 
@@ -135,7 +135,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         // start position of walls are stored in originalWalls list
         float timeElapsed = 0;
-        float moveDuration = 4.0f;
+        float moveDuration = 8.0f;
 
         while (timeElapsed < moveDuration) {
 
