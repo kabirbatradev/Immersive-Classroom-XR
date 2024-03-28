@@ -97,10 +97,11 @@ public class TheaterModeManager : MonoBehaviour
             ceilingClonesActive = StreamTheaterModeData.Instance.ceilingVisible;
         }
 
+        
+        // this means we dont own any clones, so they must be cloud objects controlled by another admin
+        if (wallClones.Count == 0 && ceilingClones.Count == 0 && floorClone == null) {
 
-        // this is not the admin device, so no need to update wall positions etc
-        if (originalCeiling == null) {
-
+            // so no need to update wall positions etc
             // but WE DO need to update the ceiling visibility
             GameObject[] ceilingMeshes = GameObject.FindGameObjectsWithTag("CeilingMesh"); // get ceiling objects (ceiling tag)
             foreach (GameObject ceiling in ceilingMeshes) {
@@ -108,10 +109,9 @@ public class TheaterModeManager : MonoBehaviour
                 // ceiling.SetActive(ceilingClonesActive);
                 ceiling.GetComponent<MeshRenderer>().enabled = ceilingClonesActive;
             }
-            return;
-        }
 
-        if (wallClones.Count == 0 && ceilingClones.Count == 0) {
+
+
             // the clones must have been disabled or destroyed (perhaps there is another admin)
             // therefore, no need to update positions of clones that don't exist
             return;
