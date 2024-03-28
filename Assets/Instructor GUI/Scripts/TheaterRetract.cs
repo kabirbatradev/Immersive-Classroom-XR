@@ -31,15 +31,15 @@ public class TheaterRetract : MonoBehaviour
         foreach (GameObject ceiling in ceilings)
         {
             ceiling.transform.localPosition = new Vector3(ceiling.transform.localPosition.x +
-                (ceiling.transform.localPosition.x / Math.Abs(ceiling.transform.localPosition.x * 10 * ceilingPercent)),
-            ceiling.transform.localPosition.y + wallPercent * -20.0f,
+                (ceiling.transform.localPosition.x / Math.Abs(ceiling.transform.localPosition.x * 50 * ceilingPercent)),
+            ceiling.transform.localPosition.y + wallPercent * -100.0f,
             ceiling.transform.localPosition.z);
         }
         foreach (GameObject wall in walls)
         {
             wall.transform.localPosition = new Vector3(
                 wall.transform.localPosition.x,
-                wall.transform.localPosition.y + wallPercent * -40.0f,
+                wall.transform.localPosition.y + wallPercent * -100.0f,
                 wall.transform.localPosition.z);
         }
     }
