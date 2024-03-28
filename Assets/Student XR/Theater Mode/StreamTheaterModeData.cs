@@ -44,6 +44,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     // functions for instructor gui to easily control the walls and ceiling dropping
     private bool hasBeenReset = true; // reset by default
     public void ToggleTheaterMode() {
+        TakeOwnershipOfStreamer();
         
         if (hasBeenReset) {
             // safely assume that everything is 0, can simply start theater mode
@@ -63,6 +64,8 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // reset function
     public void ResetTheaterMode() {
+        TakeOwnershipOfStreamer();
+
         // stop the coroutines
         if (latestCoroutine != null)
             StopCoroutine(latestCoroutine);
@@ -78,6 +81,10 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         hasBeenReset = true;
         
+    }
+
+    private void TakeOwnershipOfStreamer() {
+        gameObject.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
     }
 
     // // pause function
