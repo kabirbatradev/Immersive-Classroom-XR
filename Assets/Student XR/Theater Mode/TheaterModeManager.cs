@@ -167,9 +167,20 @@ public class TheaterModeManager : MonoBehaviour
             // Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingWidth;
             // directions are often not in line with the actual ceiling since the room does not have to be axis aligned
             
+            // if up down, set ceilingDistance to y scale
+            // if left right, set ceilingDistance to x scale
+            float ceilingDistance = 0;
+            if (i <= 1) {
+                ceilingDistance = originalCeiling.transform.localScale.y;
+            }
+            else {
+                ceilingDistance = originalCeiling.transform.localScale.x;
+            }
+
             // new direction code using transform direction
+            // replace ceiling width with new ceilingDistance (width or length, uses scale instead of AA bounding box)
             Vector3 targetPosition = originalCeiling.transform.position 
-                + originalCeiling.transform.TransformDirection(directions[i]) * ceilingWidth;
+                + originalCeiling.transform.TransformDirection(directions[i]) * ceilingDistance;
             
 
             // update the position of the clone
@@ -481,7 +492,10 @@ public class TheaterModeManager : MonoBehaviour
 
             // also update the width of the ceiling (set it to the larger value)
             ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
-            Debug.Log("CEILING WIDTH: " + ceilingWidth);
+            Debug.Log("CEILING WIDTH (bounding box x): " + renderer.bounds.size.x);
+            Debug.Log("CEILING WIDTH (bounding box z): " + renderer.bounds.size.z);
+            Debug.Log("CEILING WIDTH (scale x): " + passthroughMeshObject.transform.localScale.x);
+            Debug.Log("CEILING WIDTH (scale y): " + passthroughMeshObject.transform.localScale.y);
             // the bounding box is axis aligned so, this may not work
             // TODO: figure out the direction the ceiling's edges are facing to translate them in the right direction in theater mode
 
