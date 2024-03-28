@@ -71,6 +71,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     public void TriggerTheaterMode() {
         ResetTheaterMode();
         latestCoroutine = StartCoroutine(RemoveCeiling());
+        // if paused, ResetTheaterMode will make sure to unpause
     }
 
     // coroutines for opening the theater mode
@@ -187,12 +188,12 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     // streaming happens many times per second (very fast)
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
-        Debug.Log("OnPhotonSerializeView");
+        Debug.Log("Stream Theater Mode Data's OnPhotonSerializeView");
 
         // if writing, then this object was instantiated locally (it is the local head)
         if (stream.IsWriting) {
 
-            Debug.Log("writing values for wallLoweredPercentage etc");
+            // Debug.Log("writing values for wallLoweredPercentage etc");
 
 
             // write the head data of the head transform located in the UserHeadPositionTrackerManager
@@ -207,12 +208,14 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             stream.SendNext(wallLoweredPercentage);
             stream.SendNext(ceilingRemovedPercentage);
 
+            Debug.Log($"writing wallLoweredPercentage: {wallLoweredPercentage}");
+            Debug.Log($"writing ceilingRemovedPercentage: {ceilingRemovedPercentage}");
+
         }
 
         // if reading, this object must have been instantiated elsewhere (it is someone elses head)
         else {
 
-            Debug.Log("reading values for wallLoweredPercentage etc");
 
             // by recieving data on someone elses head, we can move around this current prefab itself
                 // if this prefab has a child object with an actual mesh, then we will see that mesh correspond to the head
@@ -223,6 +226,9 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
             wallLoweredPercentage = (float)stream.ReceiveNext();
             ceilingRemovedPercentage = (float)stream.ReceiveNext();
+            Debug.Log($"reading wallLoweredPercentage: {wallLoweredPercentage}");
+            Debug.Log($"reading ceilingRemovedPercentage: {ceilingRemovedPercentage}");
+
         }
 
     }
