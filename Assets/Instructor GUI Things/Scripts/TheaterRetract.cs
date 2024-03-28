@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class TheaterRetract : MonoBehaviour
 {
     public float ceilingPercent = 0.0f;
     public float wallPercent = 0.0f;
-    public GameObject percentageDisplay;
+    public GameObject[] ceilings;
+    public GameObject[] walls;
 
     public void Update()
     {
@@ -26,7 +28,19 @@ public class TheaterRetract : MonoBehaviour
 
     public void retract(float ceilingPercent, float wallPercent)
     {
-        // set percentage display text
-        percentageDisplay.GetComponent<TextMeshProUGUI>().text = "Ceiling: " + (ceilingPercent * 100).ToString("F0") + "%\n" + "Walls: " + (wallPercent * 100).ToString("F0") + "%";
+        foreach (GameObject ceiling in ceilings)
+        {
+            ceiling.transform.localPosition = new Vector3(ceiling.transform.localPosition.x +
+                (ceiling.transform.localPosition.x / Math.Abs(ceiling.transform.localPosition.x * 10 * ceilingPercent)),
+            ceiling.transform.localPosition.y + wallPercent * -20.0f,
+            ceiling.transform.localPosition.z);
+        }
+        foreach (GameObject wall in walls)
+        {
+            wall.transform.localPosition = new Vector3(
+                wall.transform.localPosition.x,
+                wall.transform.localPosition.y + wallPercent * -40.0f,
+                wall.transform.localPosition.z);
+        }
     }
 }

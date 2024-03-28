@@ -15,7 +15,7 @@ public class RuntimeGizmo : MonoBehaviour
     private ObjectTransformGizmo laserMoveGizmo;
     private GameObject targetObject;
     public bool isGizmoActive = false;
-    private bool forceCenter = true;
+    private bool forceCenter = false;
     // 0 -> Rotate
     // 1 -> Scale
     private int gizmoOption = 0;
