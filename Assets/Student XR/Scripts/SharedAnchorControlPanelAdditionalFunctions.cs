@@ -193,6 +193,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // and enable or disable them based on if their group number matches the current 
         // user's group number
 
+        // also disable passthrough wall meshes for instructor 
+        
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
         if (isInstructorGUIToggle) currentUserGroupNumber = 0; // this hardcode is also in the GetCurrentGroupNumber function
@@ -208,6 +210,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 // SampleController.Instance.Log("photonView was attached to null object");
                 // Debug.Log("photonView was attached to null object");
                 continue;
+            }
+
+
+            // if is instructor and this object is a passthrough mesh, then disable
+            if (isInstructorGUIToggle && (obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh"))) {
+                obj.SetActive(false);
             }
 
 
@@ -229,6 +237,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+
+        
 
 
 
