@@ -10,6 +10,7 @@ TagManager:
   - PlayerHead
   - CeilingMesh
   - SidePanel
+  - WallMesh
   layers:
   - Default
   - TransparentFX

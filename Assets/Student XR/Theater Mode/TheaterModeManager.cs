@@ -342,8 +342,34 @@ public class TheaterModeManager : MonoBehaviour
         }
     }
 
+    
+
+    public void DestroyScenePlaneClones() {
+
+        // get all walls etc
+        // for each, take photon ownership
+        // then photon destroy
+
+    }
 
 
+    public void RecreateScenePlaneClones() {
+        
+        // first, call destroy on all walls etc
+        DestroyScenePlaneClones();
+
+        // if the scene manager is not enabled, then enable it, and AddScenePlane should be automatically called, so return
+
+        // otherwise, go through all the original walls and ceilings and floors etc and make clones of them
+        // if they dont exist, give an error message
+    }
+
+
+    
+
+
+
+    // old theater mode code below ---------
 
 
     /*
