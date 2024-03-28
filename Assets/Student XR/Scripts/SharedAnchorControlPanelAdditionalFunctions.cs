@@ -86,6 +86,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     [SerializeField]
     private GameObject seatMarkerPrefab;
+
+
+    // [SerializeField]
+    // private GameObject OVRSceneManagerObj;
     
 
 
@@ -189,6 +193,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // and enable or disable them based on if their group number matches the current 
         // user's group number
 
+        // also disable passthrough wall meshes for instructor 
+        
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
         if (isInstructorGUIToggle) currentUserGroupNumber = 0; // this hardcode is also in the GetCurrentGroupNumber function
@@ -204,6 +210,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 // SampleController.Instance.Log("photonView was attached to null object");
                 // Debug.Log("photonView was attached to null object");
                 continue;
+            }
+
+
+            // if is instructor and this object is a passthrough mesh, then disable
+            if (isInstructorGUIToggle && (obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh"))) {
+                obj.SetActive(false);
             }
 
 
@@ -225,6 +237,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+
+        
 
 
 
@@ -458,6 +472,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                     if (mainObjectIndex >= laserGameObjects.Count) {
                         laserGameObjects.Add(Instantiate(laserGameObjectPrefab));
                     }
+
                     // get the corresponding laser object to this main object at this main object index
                     GameObject laserInstance = laserGameObjects[mainObjectIndex];
 
@@ -495,6 +510,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         }
 
+        // if the number of groups fell (for example from 4 to 2), then we should destroy extra laser objects
+        // mainObjectContainers.Length = number of main objects aka number of lasers to render
+        if (laserGameObjects.Count > mainObjectContainers.Length) {
+            int numberOfLasersToDestroy = laserGameObjects.Count - mainObjectContainers.Length;
+
+            // start from after the lasers we want to keep, destory all of the rest of the lasers
+            laserGameObjects.RemoveRange(mainObjectContainers.Length, numberOfLasersToDestroy);
+        }
 
 
 
@@ -517,8 +540,31 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     }
 
-    // testing purposes
-    // private bool isShootingExisted = false;
+    // this function is now redundant because of OnCreateWallsPressed()
+    // public void OnAdminEnableSceneManager() {
+    //     SampleController.Instance.Log("AdminEnableSceneManager Pressed\nenabling OVRSceneManagerObj");
+    //     OVRSceneManagerObj.SetActive(true);
+    //     // OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
+    //     SampleController.Instance.Log("Scene manager state: " + OVRSceneManagerObj.activeSelf);
+
+    // }
+
+    public void OnCreateWallsPressed() {
+        SampleController.Instance.Log("OnCreateWallsPressed");
+
+        TheaterModeManager.Instance.CreateScenePlaneClones();
+
+    }
+    
+    public void OnDestroyWallsPressed() {
+        SampleController.Instance.Log("OnDestroyWallsPressed");
+
+        TheaterModeManager.Instance.DestroyScenePlaneClones();
+
+    }
+
+
+
 
     
     private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {

@@ -51,7 +51,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.X)) {
                 // p for spawning panels
-                // DeleteAllPanels();
+                // DestroyAllPanels();
             }
         }
 
@@ -613,6 +613,10 @@ public class InstructorCloudFunctions : MonoBehaviour
             // rotate it to face the group
             // TODO
             // it seems to face the right way right now so no need?
+
+
+            // give the panel a group number!
+            SetPhotonObjectGroupNumber(panelObject, i);
         }
 
     }
@@ -621,8 +625,14 @@ public class InstructorCloudFunctions : MonoBehaviour
         Debug.Log("DestroyAllPanels was called");
 
         GameObject[] panels = GameObject.FindGameObjectsWithTag("SidePanel");
-        foreach (GameObject panel in panels)
+        foreach (GameObject panel in panels) {
+            // must claim ownership of panel first to destroy it (otherwise it fails if a student owns the photon view)
+
+            PhotonView photonView = panel.GetComponent<PhotonView>();
+            photonView.TransferOwnership(PhotonNetwork.LocalPlayer); // transfer to instructor
+
             PhotonNetwork.Destroy(panel);
+        }
 
     }
 
