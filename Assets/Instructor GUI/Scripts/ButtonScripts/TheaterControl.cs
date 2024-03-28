@@ -8,6 +8,8 @@ public class TheaterControl : MonoBehaviour
     // private bool theaterGoing = false;
     public void toggleTheater()
     {
+
+
         // if (!theaterStarted)
         // {
         //     StreamTheaterModeData.Instance.TriggerTheaterMode();
@@ -28,6 +30,9 @@ public class TheaterControl : MonoBehaviour
         // }
 
         StreamTheaterModeData.Instance.ToggleTheaterMode();
+
+        GameObject[] streamObjects = GameObject.FindGameObjectsWithTag("StreamTheaterModeData");
+        Debug.Log("toggle debug log stream objects length: " + streamObjects.Length);
     }
 
     public void resetTheaterMode()
