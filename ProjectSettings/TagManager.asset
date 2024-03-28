@@ -11,6 +11,7 @@ TagManager:
   - CeilingMesh
   - SidePanel
   - WallMesh
+  - StreamTheaterModeData
   layers:
   - Default
   - TransparentFX
