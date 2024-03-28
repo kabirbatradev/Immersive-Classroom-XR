@@ -10,6 +10,24 @@ public class TheaterRetract : MonoBehaviour
     public float wallPercent = 0.0f;
     public GameObject[] ceilings;
     public GameObject[] walls;
+    public Vector3[] originalCeilingPositions;
+    public Vector3[] originalWallPositions;
+    public Vector3[] originalCeilingScales;
+    public void Start()
+    {
+        originalCeilingPositions = new Vector3[ceilings.Length];
+        originalWallPositions = new Vector3[walls.Length];
+        originalCeilingScales = new Vector3[ceilings.Length];
+        for (int i = 0; i < ceilings.Length; i++)
+        {
+            originalCeilingPositions[i] = ceilings[i].transform.localPosition;
+            originalCeilingScales[i] = ceilings[i].transform.localScale;
+        }
+        for (int i = 0; i < walls.Length; i++)
+        {
+            originalWallPositions[i] = walls[i].transform.localPosition;
+        }
+    }
 
     public void Update()
     {
@@ -30,17 +48,30 @@ public class TheaterRetract : MonoBehaviour
     {
         foreach (GameObject ceiling in ceilings)
         {
-            ceiling.transform.localPosition = new Vector3(ceiling.transform.localPosition.x +
-                (ceiling.transform.localPosition.x / Math.Abs(ceiling.transform.localPosition.x * 50 * ceilingPercent)),
-            ceiling.transform.localPosition.y + wallPercent * -100.0f,
+            ceiling.transform.localPosition = new Vector3(50 * ceilingPercent,
+            50 + wallPercent * -100.0f,
             ceiling.transform.localPosition.z);
+            ceiling.transform.localScale = new Vector3(1.0f - ceilingPercent, 1.0f - ceilingPercent, 1.0f - ceilingPercent);
         }
         foreach (GameObject wall in walls)
         {
             wall.transform.localPosition = new Vector3(
                 wall.transform.localPosition.x,
-                wall.transform.localPosition.y + wallPercent * -100.0f,
+                wallPercent * -100.0f,
                 wall.transform.localPosition.z);
+        }
+    }
+
+    public void reset()
+    {
+        for (int i = 0; i < ceilings.Length; i++)
+        {
+            ceilings[i].transform.localPosition = originalCeilingPositions[i];
+            ceilings[i].transform.localScale = originalCeilingScales[i];
+        }
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i].transform.localPosition = originalWallPositions[i];
         }
     }
 }
