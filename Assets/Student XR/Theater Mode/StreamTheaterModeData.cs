@@ -6,6 +6,7 @@ using Photon.Pun;
 
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+using System;
 
 public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 {
@@ -25,8 +26,10 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // variables to manage how much the ceiling has opened and how much the walls have dropped
     // these variables are updated by button presses on the instructor side, or they are set by OnPhotonSerializeView
-    public float wallLoweredPercentage = 0.5f;
-    public float ceilingRemovedPercentage = 0.5f;
+    [NonSerialized]
+    public float wallLoweredPercentage = 0.0f;
+    [NonSerialized]
+    public float ceilingRemovedPercentage = 0.25f;
 
     // ceilingVisible will be a custom server property since it doesn't have to be streamed constantly
     public bool ceilingVisible = true;
