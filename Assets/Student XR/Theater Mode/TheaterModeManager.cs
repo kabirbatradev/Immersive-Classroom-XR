@@ -413,7 +413,80 @@ public class TheaterModeManager : MonoBehaviour
 
 
     private void MakeCloneOfOriginalScenePlane(GameObject originalScenePlaneMesh, string type) {
+        SampleController.Instance.Log($"cloning scene plane: {type}");
 
+        if (type == null) {
+            // thats weird
+            Debug.Log("Error: scene plane object type is null");
+        }   
+        else if (type == "ceiling") {
+
+            GameObject passthroughMeshObject = originalScenePlaneMesh;
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+
+            // create 4 ceiling clones instead so that we can transition them outward and open the ceiling
+            for (int i = 0; i < 4; i++) {
+                // new clone every time
+                
+                // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughCeilingMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+                // copy the scale to the clone too
+                clone.transform.localScale = passthroughMeshObject.transform.localScale;
+                ceilingClones.Add(clone); 
+            }
+
+            // also update the width of the ceiling (set it to the larger value)
+            ceilingWidth = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y);
+            Debug.Log("CEILING WIDTH: " + ceilingWidth);
+            // the bounding box is axis aligned so, this may not work
+            // TODO: figure out the direction the ceiling's edges are facing to translate them in the right direction in theater mode
+
+            renderer.enabled = false; // do not renderer the original passthrough meshes so we just see the clones and their movement
+        }
+        else if (type == "wallFace") {
+
+            GameObject passthroughMeshObject = originalScenePlaneMesh;
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+
+            // GameObject clone = Instantiate(passthroughMeshObject, passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+            GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation); 
+            
+            // clone.transform.localScale += new Vector3(-0.1f,-0.1f,-0.1f);
+            // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
+            // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
+            // clone.transform.localScale += new Vector3(0.003f,0.003f,0.003f);
+            clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
+            // copy the scale to the clone too
+            clone.transform.localScale = passthroughMeshObject.transform.localScale;
+            wallClones.Add(clone);
+
+            // also update the height of the walls
+            wallHeight = renderer.bounds.size.y;
+
+            renderer.enabled = false;
+        }
+        else if (type == "floor") {
+
+            GameObject passthroughMeshObject = originalScenePlaneMesh;
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+            renderer.enabled = false; // do not render the original floor because we will clone it
+            
+            // we can use the wall mesh again for the floor
+            GameObject clone = PhotonNetwork.Instantiate(nameof(PassthroughWallMesh), passthroughMeshObject.transform.position, passthroughMeshObject.transform.rotation);
+            // copy the scale to the clone too
+            clone.transform.localScale = passthroughMeshObject.transform.localScale;
+
+            floorClone = clone;
+        }
+        else {
+            // what classification is this?
+            SampleController.Instance.Log("Error: scene plane object type is invalid");
+
+            GameObject passthroughMeshObject = originalScenePlaneMesh; 
+            MeshRenderer renderer = passthroughMeshObject.GetComponent<MeshRenderer>();
+            renderer.enabled = false;
+            // disable its renderer so nothing unexpected happens
+        }
 
 
     }
