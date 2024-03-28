@@ -159,17 +159,16 @@ public class TheaterModeManager : MonoBehaviour
                 continue;
             }
 
-            Vector3 startPosition = originalCeiling.transform.position;
 
-            // mesh facing direction
-            // Vector3 dir = originalCeiling.transform.TransformDirection(Vector3.forward);
+
+
 
             // Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingWidth;
             // directions are often not in line with the actual ceiling since the room does not have to be axis aligned
-            
+
             // if up down, set ceilingDistance to y scale
             // if left right, set ceilingDistance to x scale
-            float ceilingDistance = 0;
+            float ceilingDistance;
             if (i <= 1) {
                 ceilingDistance = originalCeiling.transform.localScale.y;
             }
@@ -177,10 +176,19 @@ public class TheaterModeManager : MonoBehaviour
                 ceilingDistance = originalCeiling.transform.localScale.x;
             }
 
+            // mesh facing direction
+            // Vector3 dir = originalCeiling.transform.TransformDirection(Vector3.forward);
+            Vector3 moveDirection = originalCeiling.transform.TransformDirection(directions[i]);
+
+            // target position should actually be approximately half way (because ceilings all begin overlapping)
+            // Vector3 startPosition = originalCeiling.transform.position;
+            Vector3 startPosition = originalCeiling.transform.position 
+                + moveDirection * ceilingDistance * 0.48f; // less than 50% so even if its off by a bit, it still looks good
+
             // new direction code using transform direction
             // replace ceiling width with new ceilingDistance (width or length, uses scale instead of AA bounding box)
             Vector3 targetPosition = originalCeiling.transform.position 
-                + originalCeiling.transform.TransformDirection(directions[i]) * ceilingDistance;
+                + moveDirection * ceilingDistance;
             
 
             // update the position of the clone
