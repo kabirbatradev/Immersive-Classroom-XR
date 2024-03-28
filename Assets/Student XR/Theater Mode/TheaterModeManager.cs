@@ -178,7 +178,7 @@ public class TheaterModeManager : MonoBehaviour
 
 
 
-
+        /*
         // A button pressed, debug logs
         if (OVRInput.GetDown(OVRInput.RawButton.A)) {  
             Debug.Log("A button was pressed");
@@ -195,18 +195,22 @@ public class TheaterModeManager : MonoBehaviour
             // TriggerTheaterMode();
             // StartCoroutine(TestRemoveCeilingVariable());
         }
+        */
 
-
+        /*
         if (OVRInput.GetDown(OVRInput.RawButton.B)) {  
             foreach (var wall in wallClones) {
                 // wall.transform.Translate(Vector3.up * 1.0f)
                 wall.transform.Translate(Vector3.up * Random.Range(0.0f, 2.0f));
             }
         }
+        */
 
+        /*
         if (OVRInput.GetDown(OVRInput.RawButton.X)) {  
             // ResetTheaterMode();
         }
+        */
 
 
     }
