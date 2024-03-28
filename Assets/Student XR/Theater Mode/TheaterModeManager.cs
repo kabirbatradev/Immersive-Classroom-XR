@@ -345,23 +345,77 @@ public class TheaterModeManager : MonoBehaviour
     
 
     public void DestroyScenePlaneClones() {
+        
+        SampleController.Instance.Log("DestroyScenePlaneClones was called");
 
         // get all walls etc
         // for each, take photon ownership
         // then photon destroy
 
+        // also clear the wallclones and ceiling clones arrays etc
+
+        var walls = GameObject.FindGameObjectsWithTag("WallMesh");
+        var ceilings = GameObject.FindGameObjectsWithTag("CeilingMesh");
+
+        foreach (var wall in walls) {
+            wall.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
+            PhotonNetwork.Destroy(wall);
+        }
+
+        foreach (var ceil in ceilings) {
+            ceil.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
+            PhotonNetwork.Destroy(ceil);
+        }
+
+        wallClones.Clear();
+        ceilingClones.Clear();
+        floorClone = null;
+
+        SampleController.Instance.Log($"Destroyed {walls.Length + ceilings.Length} scene plane meshes");
+
     }
 
 
     public void RecreateScenePlaneClones() {
+
+        SampleController.Instance.Log("RecreateScenePlaneClones was called");
         
         // first, call destroy on all walls etc
+        SampleController.Instance.Log("calling DestroyScenePlaneClones from RecreateScenePlaneClones");
         DestroyScenePlaneClones();
 
         // if the scene manager is not enabled, then enable it, and AddScenePlane should be automatically called, so return
+        GameObject sceneManager = GameObject.Find("OVRSceneManager");
+        if (!sceneManager.activeSelf) {
+            SampleController.Instance.Log("setting OVRSceneManager to active to create walls");
+            sceneManager.SetActive(true);
+            return;
+        }
 
         // otherwise, go through all the original walls and ceilings and floors etc and make clones of them
         // if they dont exist, give an error message
+
+        // originalCeiling
+        // originalFloor
+        // originalWalls
+        int totalCount = originalWalls.Count + 2;
+
+        SampleController.Instance.Log($"cloning {totalCount} scene plane meshes");
+
+        // wallClones.Clear();
+        // ceilingClones.Clear();
+        // floorClone = null;
+
+        // go through all the originals and clone them
+        // call MakeCloneOfOriginalScenePlane
+        
+    }
+
+
+    private void MakeCloneOfOriginalScenePlane(GameObject originalScenePlaneMesh, string type) {
+
+
+
     }
 
 
