@@ -111,7 +111,11 @@ public class TheaterModeManager : MonoBehaviour
             return;
         }
 
-
+        if (wallClones.Count == 0 && ceilingClones.Count == 0) {
+            // the clones must have been disabled or destroyed (perhaps there is another admin)
+            // therefore, no need to update positions of clones that don't exist
+            return;
+        }
 
 
 
@@ -382,11 +386,13 @@ public class TheaterModeManager : MonoBehaviour
         var ceilings = GameObject.FindGameObjectsWithTag("CeilingMesh");
 
         foreach (var wall in walls) {
+            SampleController.Instance.Log($"Photon view: {wall.GetPhotonView().ToString()}");
             wall.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
             PhotonNetwork.Destroy(wall);
         }
 
         foreach (var ceil in ceilings) {
+            SampleController.Instance.Log($"Photon view: {ceil.GetPhotonView().ToString()}");
             ceil.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
             PhotonNetwork.Destroy(ceil);
         }
@@ -395,7 +401,7 @@ public class TheaterModeManager : MonoBehaviour
         ceilingClones.Clear();
         floorClone = null;
 
-        SampleController.Instance.Log($"Destroyed {walls.Length + ceilings.Length} scene plane meshes");
+        SampleController.Instance.Log($"Attempted to destroy {walls.Length + ceilings.Length} scene plane meshes");
 
     }
 
