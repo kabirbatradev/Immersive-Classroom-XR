@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using UnityEngine;
 
-public class PassthroughToSkyboxController : MonoBehaviour
+public class SkyboxController : MonoBehaviour
 {
     // private OVRCameraRig ovrCameraRig;
     private Camera centerCamera;
