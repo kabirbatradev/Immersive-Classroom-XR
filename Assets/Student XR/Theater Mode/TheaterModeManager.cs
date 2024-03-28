@@ -145,7 +145,8 @@ public class TheaterModeManager : MonoBehaviour
         }
 
         // update ceiling clone positions
-        Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right}; 
+        // Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right}; 
+        Vector3[] directions = {Vector3.up, Vector3.down, Vector3.left, Vector3.right}; 
         for (int i = 0; i < ceilingClones.Count; i++) {
             GameObject ceiling = ceilingClones[i];
             // GameObject originalCeiling
@@ -160,8 +161,16 @@ public class TheaterModeManager : MonoBehaviour
 
             Vector3 startPosition = originalCeiling.transform.position;
 
-            Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingWidth;
+            // mesh facing direction
+            // Vector3 dir = originalCeiling.transform.TransformDirection(Vector3.forward);
+
+            // Vector3 targetPosition = originalCeiling.transform.position + directions[i] * ceilingWidth;
             // directions are often not in line with the actual ceiling since the room does not have to be axis aligned
+            
+            // new direction code using transform direction
+            Vector3 targetPosition = originalCeiling.transform.position 
+                + originalCeiling.transform.TransformDirection(directions[i]) * ceilingWidth;
+            
 
             // update the position of the clone
             // also update the rotation of the clone (for the chance that we changed the anchor alignment)
