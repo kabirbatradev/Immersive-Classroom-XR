@@ -530,11 +530,26 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     }
 
-    public void OnAdminEnableSceneManager() {
-        SampleController.Instance.Log("AdminEnableSceneManager Pressed\nenabling OVRSceneManagerObj");
-        OVRSceneManagerObj.SetActive(true);
-        // OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
-        SampleController.Instance.Log("Scene manager state: " + OVRSceneManagerObj.activeSelf);
+    // this function is now redundant because of OnCreateWallsPressed()
+    // public void OnAdminEnableSceneManager() {
+    //     SampleController.Instance.Log("AdminEnableSceneManager Pressed\nenabling OVRSceneManagerObj");
+    //     OVRSceneManagerObj.SetActive(true);
+    //     // OVRSceneManagerObj.SetActive(!OVRSceneManagerObj.activeSelf);
+    //     SampleController.Instance.Log("Scene manager state: " + OVRSceneManagerObj.activeSelf);
+
+    // }
+
+    public void OnCreateWallsPressed() {
+        SampleController.Instance.Log("OnCreateWallsPressed");
+
+        TheaterModeManager.Instance.CreateScenePlaneClones();
+
+    }
+    
+    public void OnDestroyWallsPressed() {
+        SampleController.Instance.Log("OnDestroyWallsPressed");
+
+        TheaterModeManager.Instance.DestroyScenePlaneClones();
 
     }
 
