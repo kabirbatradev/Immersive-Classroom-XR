@@ -407,7 +407,7 @@ public class TheaterModeManager : MonoBehaviour
         ceilingClones.Clear();
         floorClone = null;
 
-        SampleController.Instance.Log($"Attempted to destroy {totalCount} scene plane meshes");
+        SampleController.Instance.Log($"Destroy {totalCount} scene plane meshes");
 
     }
 
@@ -434,7 +434,7 @@ public class TheaterModeManager : MonoBehaviour
         // originalWalls
         int totalCount = originalWalls.Count + 2;
 
-        SampleController.Instance.Log($"cloning {totalCount} scene plane meshes");
+        SampleController.Instance.Log($"cloning {totalCount} scene plane meshes (+3 for duplicate ceilings)");
 
         // go through all the originals and clone them
         // call MakeCloneOfOriginalScenePlane
