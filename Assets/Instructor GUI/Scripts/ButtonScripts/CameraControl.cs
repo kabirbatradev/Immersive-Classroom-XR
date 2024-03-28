@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public GameObject camera;
+    public new GameObject camera;
     public CamRotate camScript;
     public void ResetCamera()
     {

@@ -6,6 +6,7 @@ using Photon.Pun;
 
 using PhotonPun = Photon.Pun;
 using PhotonRealtime = Photon.Realtime;
+using System;
 
 public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 {
@@ -25,8 +26,10 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // variables to manage how much the ceiling has opened and how much the walls have dropped
     // these variables are updated by button presses on the instructor side, or they are set by OnPhotonSerializeView
-    public float wallLoweredPercentage = 0.5f;
-    public float ceilingRemovedPercentage = 0.5f;
+    [NonSerialized]
+    public float wallLoweredPercentage = 0.0f;
+    [NonSerialized]
+    public float ceilingRemovedPercentage = 0.0f;
 
     // ceilingVisible will be a custom server property since it doesn't have to be streamed constantly
     public bool ceilingVisible = true;
@@ -39,19 +42,30 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
 
     // functions for instructor gui to easily control the walls and ceiling dropping
+    private bool hasBeenReset = true; // reset by default
+    public void ToggleTheaterMode() {
+        TakeOwnershipOfStreamer();
+        
+        if (hasBeenReset) {
+            // safely assume that everything is 0, can simply start theater mode
+            TriggerTheaterMode();
 
-    // pause function
-    public void PauseTheaterMode() {
-        theaterModePaused = true;
-    }
+            // dont forget to set hasBeenReset
+            hasBeenReset = false;
+            return;
+        }
 
-    // continue function
-    public void ContinueTheaterMode() {
-        theaterModePaused = false;
+        // otherwise, its either paused or playing (or finished)
+        // can just flip the paused state
+        theaterModePaused = !theaterModePaused;
+
+
     }
 
     // reset function
     public void ResetTheaterMode() {
+        TakeOwnershipOfStreamer();
+
         // stop the coroutines
         if (latestCoroutine != null)
             StopCoroutine(latestCoroutine);
@@ -64,13 +78,32 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
         ceilingVisible = true;
         ceilingRemovedPercentage = 0.0f;
         wallLoweredPercentage = 0.0f;
+
+        hasBeenReset = true;
         
     }
 
+    private void TakeOwnershipOfStreamer() {
+        gameObject.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
+    }
+
+    // // pause function
+    // private void PauseTheaterMode() {
+    //     theaterModePaused = true;
+    // }
+
+    // // continue function
+    // private void ContinueTheaterMode() {
+    //     theaterModePaused = false;
+    // }
+
+    
+
     // start the open theater procedure
-    public void TriggerTheaterMode() {
+    private void TriggerTheaterMode() {
         ResetTheaterMode();
         latestCoroutine = StartCoroutine(RemoveCeiling());
+        // if paused, ResetTheaterMode will make sure to unpause
     }
 
     // coroutines for opening the theater mode
@@ -102,7 +135,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         // start position of walls are stored in originalWalls list
         float timeElapsed = 0;
-        float moveDuration = 4.0f;
+        float moveDuration = 8.0f;
 
         while (timeElapsed < moveDuration) {
 
@@ -187,12 +220,12 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     // streaming happens many times per second (very fast)
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
-        Debug.Log("OnPhotonSerializeView");
+        Debug.Log("Stream Theater Mode Data's OnPhotonSerializeView");
 
         // if writing, then this object was instantiated locally (it is the local head)
         if (stream.IsWriting) {
 
-            Debug.Log("writing values for wallLoweredPercentage etc");
+            // Debug.Log("writing values for wallLoweredPercentage etc");
 
 
             // write the head data of the head transform located in the UserHeadPositionTrackerManager
@@ -207,12 +240,14 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             stream.SendNext(wallLoweredPercentage);
             stream.SendNext(ceilingRemovedPercentage);
 
+            Debug.Log($"writing wallLoweredPercentage: {wallLoweredPercentage}");
+            Debug.Log($"writing ceilingRemovedPercentage: {ceilingRemovedPercentage}");
+
         }
 
         // if reading, this object must have been instantiated elsewhere (it is someone elses head)
         else {
 
-            Debug.Log("reading values for wallLoweredPercentage etc");
 
             // by recieving data on someone elses head, we can move around this current prefab itself
                 // if this prefab has a child object with an actual mesh, then we will see that mesh correspond to the head
@@ -223,6 +258,9 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
             wallLoweredPercentage = (float)stream.ReceiveNext();
             ceilingRemovedPercentage = (float)stream.ReceiveNext();
+            Debug.Log($"reading wallLoweredPercentage: {wallLoweredPercentage}");
+            Debug.Log($"reading ceilingRemovedPercentage: {ceilingRemovedPercentage}");
+
         }
 
     }
