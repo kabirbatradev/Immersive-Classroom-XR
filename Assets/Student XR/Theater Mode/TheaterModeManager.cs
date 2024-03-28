@@ -395,7 +395,7 @@ public class TheaterModeManager : MonoBehaviour
     }
 
 
-    public void RecreateScenePlaneClones() {
+    public void CreateScenePlaneClones() {
 
         SampleController.Instance.Log("RecreateScenePlaneClones was called");
         
