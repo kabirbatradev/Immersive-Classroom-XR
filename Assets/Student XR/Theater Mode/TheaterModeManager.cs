@@ -385,23 +385,29 @@ public class TheaterModeManager : MonoBehaviour
         var walls = GameObject.FindGameObjectsWithTag("WallMesh");
         var ceilings = GameObject.FindGameObjectsWithTag("CeilingMesh");
 
+        var totalCount = 0;
+
         foreach (var wall in walls) {
-            SampleController.Instance.Log($"Photon view: {wall.GetPhotonView().ToString()}");
+            // SampleController.Instance.Log($"Photon view: {wall.GetPhotonView().ToString()}");
+            if (wall.GetPhotonView().ViewID == 0) continue;
             wall.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
             PhotonNetwork.Destroy(wall);
+            totalCount++;
         }
 
         foreach (var ceil in ceilings) {
-            SampleController.Instance.Log($"Photon view: {ceil.GetPhotonView().ToString()}");
+            // SampleController.Instance.Log($"Photon view: {ceil.GetPhotonView().ToString()}");
+            if (ceil.GetPhotonView().ViewID == 0) continue;
             ceil.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
             PhotonNetwork.Destroy(ceil);
+            totalCount++;
         }
 
         wallClones.Clear();
         ceilingClones.Clear();
         floorClone = null;
 
-        SampleController.Instance.Log($"Attempted to destroy {walls.Length + ceilings.Length} scene plane meshes");
+        SampleController.Instance.Log($"Attempted to destroy {totalCount} scene plane meshes");
 
     }
 
