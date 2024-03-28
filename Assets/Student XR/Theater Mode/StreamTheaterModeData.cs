@@ -39,15 +39,23 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
 
     // functions for instructor gui to easily control the walls and ceiling dropping
+    private bool hasBeenReset = true; // reset by default
+    public void ToggleTheaterMode() {
+        
+        if (hasBeenReset) {
+            // safely assume that everything is 0, can simply start theater mode
+            TriggerTheaterMode();
 
-    // pause function
-    public void PauseTheaterMode() {
-        theaterModePaused = true;
-    }
+            // dont forget to set hasBeenReset
+            hasBeenReset = false;
+            return;
+        }
 
-    // continue function
-    public void ContinueTheaterMode() {
-        theaterModePaused = false;
+        // otherwise, its either paused or playing (or finished)
+        // can just flip the paused state
+        theaterModePaused = !theaterModePaused;
+
+
     }
 
     // reset function
@@ -64,11 +72,25 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
         ceilingVisible = true;
         ceilingRemovedPercentage = 0.0f;
         wallLoweredPercentage = 0.0f;
+
+        hasBeenReset = true;
         
     }
 
+    // // pause function
+    // private void PauseTheaterMode() {
+    //     theaterModePaused = true;
+    // }
+
+    // // continue function
+    // private void ContinueTheaterMode() {
+    //     theaterModePaused = false;
+    // }
+
+    
+
     // start the open theater procedure
-    public void TriggerTheaterMode() {
+    private void TriggerTheaterMode() {
         ResetTheaterMode();
         latestCoroutine = StartCoroutine(RemoveCeiling());
         // if paused, ResetTheaterMode will make sure to unpause
