@@ -13,6 +13,8 @@ public class TheaterModeManager : MonoBehaviour
         else Destroy(this);
     }
     // end singleton setup
+
+
     
 
     // private const float wallDropPercentage = 0.8f;
@@ -51,6 +53,9 @@ public class TheaterModeManager : MonoBehaviour
     [SerializeField] 
     private GameObject PassthroughCeilingMesh;
 
+
+    [SerializeField]
+    private GameObject OVRSceneManagerObj;
 
 
     void Start()
@@ -397,17 +402,15 @@ public class TheaterModeManager : MonoBehaviour
 
     public void CreateScenePlaneClones() {
 
-        SampleController.Instance.Log("RecreateScenePlaneClones was called");
+        SampleController.Instance.Log("CreateScenePlaneClones was called");
         
         // first, call destroy on all walls etc
-        SampleController.Instance.Log("calling DestroyScenePlaneClones from RecreateScenePlaneClones");
         DestroyScenePlaneClones();
 
         // if the scene manager is not enabled, then enable it, and AddScenePlane should be automatically called, so return
-        GameObject sceneManager = GameObject.Find("OVRSceneManager");
-        if (!sceneManager.activeSelf) {
+        if (!OVRSceneManagerObj.activeSelf) {
             SampleController.Instance.Log("setting OVRSceneManager to active to automatically create walls");
-            sceneManager.SetActive(true);
+            OVRSceneManagerObj.SetActive(true);
             return;
         }
 

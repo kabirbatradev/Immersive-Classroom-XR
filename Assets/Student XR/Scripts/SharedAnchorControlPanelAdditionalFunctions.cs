@@ -88,8 +88,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private GameObject seatMarkerPrefab;
 
 
-    [SerializeField]
-    private GameObject OVRSceneManagerObj;
+    // [SerializeField]
+    // private GameObject OVRSceneManagerObj;
     
 
 
