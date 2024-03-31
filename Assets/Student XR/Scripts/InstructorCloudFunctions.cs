@@ -144,10 +144,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         DeleteAllMainObjects();
 
 
-        // get all players:
-        // value collection (basically list) of PhotonRealtime.Player objects
-        // values because players are like a dictionary (we dont want the keys)
-        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+        // // get all players:
+        // // value collection (basically list) of PhotonRealtime.Player objects
+        // // values because players are like a dictionary (we dont want the keys)
+        // var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         // get max group number
         int maxGroupNumber = GetMaxGroupNumber(); 
