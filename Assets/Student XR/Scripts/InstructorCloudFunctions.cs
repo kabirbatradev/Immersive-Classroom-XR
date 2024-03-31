@@ -43,7 +43,8 @@ public class InstructorCloudFunctions : MonoBehaviour
     [SerializeField]
     private bool debugMode = false;
 
-    private const string groupModeKey = "GroupMode";
+    public const string groupModeKey = "GroupMode";
+    public const string laserLengthKey = "LaserLength";
 
     void Update() {
         if (debugMode) {
@@ -126,6 +127,11 @@ public class InstructorCloudFunctions : MonoBehaviour
         string groupMode = (string)GetRoomCustomProperty(groupModeKey);
         if (groupMode == "LectureMode") {
             CreateMainObjectsForLectureMode();
+        }
+        else if (groupMode == "IndividualMode") {
+            // not implemented yet, go to fallback
+            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            OLDCreateMainObjectContainerPerGroup();
         }
         else {
             // fallback
@@ -313,6 +319,7 @@ public class InstructorCloudFunctions : MonoBehaviour
     public void SetStudentsIntoIndividualGroups() {
 
         SetRoomCustomProperty(groupModeKey, "IndividualMode");
+        SetRoomCustomProperty(laserLengthKey, 0.5f);
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
@@ -398,6 +405,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // set room custom property of the current mode
         SetRoomCustomProperty(groupModeKey, "LectureMode");
+
+        // set laser length
+        SetRoomCustomProperty(laserLengthKey, 4.0f);
 
         // recreate main objects if they exist
         RecreateMainObjectsIfTheyExist();
