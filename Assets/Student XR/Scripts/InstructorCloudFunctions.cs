@@ -43,6 +43,8 @@ public class InstructorCloudFunctions : MonoBehaviour
     [SerializeField]
     private bool debugMode = false;
 
+    private const string groupModeKey = "GroupMode";
+
     void Update() {
         if (debugMode) {
             if (Input.GetKeyDown(KeyCode.P)) {
@@ -108,7 +110,33 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         return maxGroupNumber;
     }
+
+
+    // call the correct "create main object" function depending on which group mode is currently set
+    public void CreateMainObjectContainerPerGroup() {
+        
+        // get the custom property group mode 
+        bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
+
+        if (!groupModeIsSet) {
+            OLDCreateMainObjectContainerPerGroup();
+            return;
+        }
+
+        string groupMode = (string)GetRoomCustomProperty(groupModeKey);
+        if (groupMode == "LectureMode") {
+            CreateMainObjectsForLectureMode();
+        }
+        else {
+            // fallback
+            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            OLDCreateMainObjectContainerPerGroup();
+        }
+
+    }
     
+
+    // places main objectat the average position of all the students for each group
     public void OLDCreateMainObjectContainerPerGroup() {
 
 
@@ -240,9 +268,12 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     private void RecreateMainObjectsIfTheyExist() {
 
-        if (MainObjectsExist()) {
-            CreateMainObjectContainerPerGroup();
+        if (!MainObjectsExist()) {
+            return;
         }
+
+        CreateMainObjectContainerPerGroup();
+
     }
 
 
@@ -363,6 +394,10 @@ public class InstructorCloudFunctions : MonoBehaviour
             SetPlayerGroupNumber(player, 1);
         }
 
+        // set room custom property of the current mode
+        SetRoomCustomProperty(groupModeKey, "LectureMode");
+
+        // recreate main objects if they exist
         RecreateMainObjectsIfTheyExist();
         DestroyAllPanels();
         
@@ -375,6 +410,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // there is only one group, and the position of the main object is fixed: at the front of the room
     public void CreateMainObjectsForLectureMode() {
+
+        Debug.Log("CreateMainObjectsForLectureMode");
 
         // before creating new main objects, delete any preexisting objects
         DeleteAllMainObjects();
