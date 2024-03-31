@@ -379,15 +379,22 @@ public class InstructorCloudFunctions : MonoBehaviour
         // before creating new main objects, delete any preexisting objects
         DeleteAllMainObjects();
 
-        // instantiate a new main object at the front of the room with respect to the front most desk
-        Vector3 frontMostDeskPosition = new();
-        // find front most desk:
-        bool deskFound = false;
-        // fallback:
-        if (!deskFound) {
-            // get bounding box of all students, get position in front
-            MinMax boundingBox = new();
 
+        bool deskFound = GameObject.FindWithTag("AlignedTable") != null;
+
+        MinMax boundingBox = new();
+
+        // if desks exist, create bounding box around all desks and identify positon of front middle of desks
+        if (deskFound) {
+
+            GameObject[] tableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+            foreach (var table in tableObjects) {
+                boundingBox.AddPoint(table.transform.position);
+            }
+
+        }
+        // if desks dont exist, get bounding box of all students, get position in front
+        else {
             // get PlayerHead game objects instead of the players list so we know where they are too
             GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
             // foreach (Player player in GetAllStudents()) {
@@ -399,23 +406,32 @@ public class InstructorCloudFunctions : MonoBehaviour
                 }
                 boundingBox.AddPoint(playerHeadObject.transform.position);
             }
-
-            Vector3 max = boundingBox.max;
-            Vector3 min = boundingBox.min;
-            Vector3 center = (min + max) / 2;
-            
-            // x should be middle of bounding box
-            // y should be min of bounding box (lowest student head is first row)
-            // z should be max of bounding box (front of the room)
-            frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
-            
         }
 
-        Vector3 mainObjectPosition = new();
-        var mainObject = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
+        // get front middle position of bounding box
+        Vector3 max = boundingBox.max;
+        Vector3 min = boundingBox.min;
+        Vector3 center = (min + max) / 2;
+        
+        // x should be middle of bounding box
+        // y should be min of bounding box (lowest student head or desk is first row)
+        // z should be max of bounding box (front of the room)
+        Vector3 frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
+
+        // place main object in front and above this front desk position (5 meters up, 2 meters forward)
+        Vector3 mainObjectPosition = new Vector3(0, 5, 2) + frontMostDeskPosition;
+        var mainObjectContainer = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
         
         // set group number of main object
-        SetPhotonObjectGroupNumber(mainObject, 1);
+        SetPhotonObjectGroupNumber(mainObjectContainer, 1);
+
+        // set the scale of the object: must set the scale of all subobjects instead of the main object 
+        // container because this is what the instructor object streams through custom properties in CommunicationScript
+
+        foreach (Transform mainObjectTransform in mainObjectContainer.transform) {
+            mainObjectTransform.localScale = new Vector3(5, 5, 5);
+        }
+
     }
 
 
