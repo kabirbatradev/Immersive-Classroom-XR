@@ -48,7 +48,7 @@ public class TheaterRetract : MonoBehaviour
     {
         foreach (GameObject ceiling in ceilings)
         {
-            ceiling.transform.localPosition = new Vector3(50 * ceilingPercent,
+            ceiling.transform.localPosition = new Vector3(100 * ceilingPercent,
             50 + wallPercent * -100.0f,
             ceiling.transform.localPosition.z);
             ceiling.transform.localScale = new Vector3(1.0f - ceilingPercent, 1.0f - ceilingPercent, 1.0f - ceilingPercent);
