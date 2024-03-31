@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.Mathematics;
@@ -59,6 +60,28 @@ public class InstructorCloudFunctions : MonoBehaviour
     
 
 
+    public List<Player> GetAllPlayers() {
+
+        // dictionary values
+        var players = PhotonNetwork.CurrentRoom.Players.Values;
+        return players.ToList();
+    }
+
+    public bool PlayerIsStudent(Player player) {
+        // local player = instructor; group number 0 = admin
+        return !(
+            player.Equals(PhotonNetwork.LocalPlayer) || 
+            GetPlayerGroupNumber(player) == 0
+        );
+    }
+
+    // filtered players: no admin or instructor
+    public List<Player> GetAllStudents() {
+        var players = GetAllPlayers();
+        return players.Where(p => PlayerIsStudent(p)).ToList();
+    }
+
+
 
     // get player group number from player custom properties
     public int GetPlayerGroupNumber(PhotonRealtime.Player player) {
@@ -86,7 +109,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         return maxGroupNumber;
     }
     
-    public void CreateMainObjectContainerPerGroup() {
+    public void OLDCreateMainObjectContainerPerGroup() {
 
 
         // before creating new main objects, delete any preexisting objects
@@ -336,6 +359,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         foreach (PhotonRealtime.Player player in players) {
+            // does nothing for admins and instructor
             SetPlayerGroupNumber(player, 1);
         }
 
@@ -348,6 +372,60 @@ public class InstructorCloudFunctions : MonoBehaviour
     public void SetAllStudentsGroupOne() {
         LectureMode();
     }
+
+    // there is only one group, and the position of the main object is fixed: at the front of the room
+    public void CreateMainObjectsForLectureMode() {
+
+        // before creating new main objects, delete any preexisting objects
+        DeleteAllMainObjects();
+
+        // instantiate a new main object at the front of the room with respect to the front most desk
+        Vector3 frontMostDeskPosition = new();
+        // find front most desk:
+        bool deskFound = false;
+        // fallback:
+        if (!deskFound) {
+            // get bounding box of all students, get position in front
+            MinMax boundingBox = new();
+
+            // get PlayerHead game objects instead of the players list so we know where they are too
+            GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+            // foreach (Player player in GetAllStudents()) {
+            foreach (GameObject playerHeadObject in playerHeadObjects) {
+                Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
+
+                if (!PlayerIsStudent(player)) {
+                    continue;
+                }
+                boundingBox.AddPoint(playerHeadObject.transform.position);
+            }
+
+            Vector3 max = boundingBox.max;
+            Vector3 min = boundingBox.min;
+            Vector3 center = (min + max) / 2;
+            
+            // x should be middle of bounding box
+            // y should be min of bounding box (lowest student head is first row)
+            // z should be max of bounding box (front of the room)
+            frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
+            
+        }
+
+        Vector3 mainObjectPosition = new();
+        var mainObject = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
+        
+        // set group number of main object
+        SetPhotonObjectGroupNumber(mainObject, 1);
+    }
+
+
+
+
+
+
+
+
+
 
 
 
