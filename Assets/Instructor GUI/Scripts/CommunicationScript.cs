@@ -5,6 +5,7 @@ using ExitGames.Client.Photon;
 public class CommunicationScript : MonoBehaviour
 {
     public Camera mainCamera;
+    public GameObject mainCameraObj;
     public GameObject laserStartPoint;
     public bool laserFromCamera = true;
     private Vector3 StartPos;
@@ -34,7 +35,7 @@ public class CommunicationScript : MonoBehaviour
         }
         else
         {
-            StartPos = mainCamera.transform.position;
+            StartPos = mainCameraObj.transform.position;
         }
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
