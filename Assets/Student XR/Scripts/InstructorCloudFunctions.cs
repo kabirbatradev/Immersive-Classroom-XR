@@ -506,7 +506,8 @@ public class InstructorCloudFunctions : MonoBehaviour
         public Vector3 min;
         public Vector3 max;
 
-        public void InitializePointsArray() {
+        // since its a class and not a struct, we can have a constructor function
+        public MinMax() {
             points = new();
         }
 
@@ -514,9 +515,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             Debug.Log("AddPoint was called");
 
+            // if this is the first point, set min and max
             if (points.Count == 0) {
-                Debug.Log("points count was, setting min and max");
-                points = new();
+                Debug.Log("points count was 0, setting min and max");
                 points.Add(point);
 
                 min = point; max = point;
@@ -524,7 +525,7 @@ public class InstructorCloudFunctions : MonoBehaviour
                 return;
             }
 
-            // otherwise
+            // otherwise simply add the point and update min and max
             points.Add(point);
 
             // update min and max of bounding box
@@ -558,7 +559,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         // this list needs to be filled
         for (int i = 0; i < maxGroupNum+1; i++) {
             groupBounds.Add(new MinMax());
-            groupBounds[i].InitializePointsArray();
+            // groupBounds[i].InitializePointsArray();
         }
 
         // get PlayerHead game objects instead of the players list so we know where they are too
