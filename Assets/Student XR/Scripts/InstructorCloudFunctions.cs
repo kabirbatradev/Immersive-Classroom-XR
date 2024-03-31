@@ -329,35 +329,24 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-
-
-    public void SetAllStudentsGroupOne() {
+    // all students are in one group, main object is at the front of the room and very large, long laser length
+    public void LectureMode() {
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         foreach (PhotonRealtime.Player player in players) {
-            
-            // if the player is the current player, then skip
-            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
-            // skip players of group number 0 (admins)
-            if (GetPlayerGroupNumber(player) == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
-                continue;
-            }
-
-            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
-            // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
-            player.CustomProperties["groupNumber"] = 1;
-            SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
+            SetPlayerGroupNumber(player, 1);
         }
 
         RecreateMainObjectsIfTheyExist();
         DestroyAllPanels();
+        
+    }
 
+    // calls the LectureMode() function; only keeping this so the preexisting instructor button doesnt break
+    public void SetAllStudentsGroupOne() {
+        LectureMode();
     }
 
 
@@ -410,8 +399,10 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
-    // set single player's group number
-    // skips admins and local player
+    /// <summary>
+    /// set single player's group number; 
+    /// skips admins and local player automatically
+    /// </summary>
     private void SetPlayerGroupNumber(Player player, int groupNumber) {
 
         // if the player is the current player (the instructor), then skip
@@ -431,7 +422,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
         // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
         player.CustomProperties["groupNumber"] = groupNumber;
-        Debug.Log("Set player group of nickname: " + player.NickName);
+        Debug.Log($"Set player {player.NickName} to group number {groupNumber}");
 
     }
 
