@@ -220,7 +220,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-
+            // for groups of 4, we should not shift by 1 z
             // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
             averageVector += new Vector3(0, 0, 1);
 
@@ -458,7 +458,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         Vector3 frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
 
         // place main object in front and above this front desk position (few meters up, few meters forward)
-        Vector3 mainObjectPosition = new Vector3(0, 2, 2) + frontMostDeskPosition;
+        Vector3 mainObjectPosition = new Vector3(0, 2.5f, 2) + frontMostDeskPosition;
         var mainObjectContainer = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
         
         // set group number of main object
