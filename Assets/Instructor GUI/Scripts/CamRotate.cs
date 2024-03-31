@@ -33,7 +33,7 @@ public class CamRotate : MonoBehaviour
     {
         currentRotation = transform.eulerAngles;
         currentTarget = null;
-        distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
+        // distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
     }
 
     void Update()
