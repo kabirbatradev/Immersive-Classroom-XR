@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.Mathematics;
@@ -42,6 +43,9 @@ public class InstructorCloudFunctions : MonoBehaviour
     [SerializeField]
     private bool debugMode = false;
 
+    public const string groupModeKey = "GroupMode";
+    public const string laserLengthKey = "LaserLength";
+
     void Update() {
         if (debugMode) {
             if (Input.GetKeyDown(KeyCode.P)) {
@@ -57,6 +61,28 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     }
     
+
+
+    public List<Player> GetAllPlayers() {
+
+        // dictionary values
+        var players = PhotonNetwork.CurrentRoom.Players.Values;
+        return players.ToList();
+    }
+
+    public bool PlayerIsStudent(Player player) {
+        // local player = instructor; group number 0 = admin
+        return !(
+            player.Equals(PhotonNetwork.LocalPlayer) || 
+            GetPlayerGroupNumber(player) == 0
+        );
+    }
+
+    // filtered players: no admin or instructor
+    public List<Player> GetAllStudents() {
+        var players = GetAllPlayers();
+        return players.Where(p => PlayerIsStudent(p)).ToList();
+    }
 
 
 
@@ -85,18 +111,49 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         return maxGroupNumber;
     }
-    
+
+
+    // call the correct "create main object" function depending on which group mode is currently set
     public void CreateMainObjectContainerPerGroup() {
+        
+        // get the custom property group mode 
+        bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
+
+        if (!groupModeIsSet) {
+            OLDCreateMainObjectContainerPerGroup();
+            return;
+        }
+
+        string groupMode = (string)GetRoomCustomProperty(groupModeKey);
+        if (groupMode == "LectureMode") {
+            CreateMainObjectsForLectureMode();
+        }
+        else if (groupMode == "IndividualMode") {
+            // not implemented yet, go to fallback
+            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            OLDCreateMainObjectContainerPerGroup();
+        }
+        else {
+            // fallback
+            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            OLDCreateMainObjectContainerPerGroup();
+        }
+
+    }
+    
+
+    // places main objectat the average position of all the students for each group
+    public void OLDCreateMainObjectContainerPerGroup() {
 
 
         // before creating new main objects, delete any preexisting objects
         DeleteAllMainObjects();
 
 
-        // get all players:
-        // value collection (basically list) of PhotonRealtime.Player objects
-        // values because players are like a dictionary (we dont want the keys)
-        var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
+        // // get all players:
+        // // value collection (basically list) of PhotonRealtime.Player objects
+        // // values because players are like a dictionary (we dont want the keys)
+        // var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         // get max group number
         int maxGroupNumber = GetMaxGroupNumber(); 
@@ -169,7 +226,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-
+            // for groups of 4, we should not shift by 1 z
             // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
             averageVector += new Vector3(0, 0, 1);
 
@@ -217,9 +274,12 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     private void RecreateMainObjectsIfTheyExist() {
 
-        if (MainObjectsExist()) {
-            CreateMainObjectContainerPerGroup();
+        if (!MainObjectsExist()) {
+            return;
         }
+
+        CreateMainObjectContainerPerGroup();
+
     }
 
 
@@ -257,6 +317,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
     public void SetStudentsIntoIndividualGroups() {
+
+        SetRoomCustomProperty(groupModeKey, "IndividualMode");
+        SetRoomCustomProperty(laserLengthKey, 0.5f);
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
@@ -329,36 +392,105 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-
-
-    public void SetAllStudentsGroupOne() {
+    // all students are in one group, main object is at the front of the room and very large, long laser length
+    public void LectureMode() {
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
         foreach (PhotonRealtime.Player player in players) {
-            
-            // if the player is the current player, then skip
-            if (player.Equals(Photon.Pun.PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
-            // skip players of group number 0 (admins)
-            if (GetPlayerGroupNumber(player) == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
-                continue;
-            }
-
-            player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", 1 } });
-            // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
-            player.CustomProperties["groupNumber"] = 1;
-            SampleController.Instance.Log("Set player group of nickname: " + player.NickName);
+            // does nothing for admins and instructor
+            SetPlayerGroupNumber(player, 1);
         }
 
+        // set room custom property of the current mode
+        SetRoomCustomProperty(groupModeKey, "LectureMode");
+
+        // set laser length
+        SetRoomCustomProperty(laserLengthKey, 4.0f);
+
+        // recreate main objects if they exist
         RecreateMainObjectsIfTheyExist();
         DestroyAllPanels();
+        
+    }
+
+    // calls the LectureMode() function; only keeping this so the preexisting instructor button doesnt break
+    public void SetAllStudentsGroupOne() {
+        LectureMode();
+    }
+
+    // there is only one group, and the position of the main object is fixed: at the front of the room
+    public void CreateMainObjectsForLectureMode() {
+
+        Debug.Log("CreateMainObjectsForLectureMode");
+
+        // before creating new main objects, delete any preexisting objects
+        DeleteAllMainObjects();
+
+
+        bool deskFound = GameObject.FindWithTag("AlignedTable") != null;
+
+        MinMax boundingBox = new();
+
+        // if desks exist, create bounding box around all desks and identify positon of front middle of desks
+        if (deskFound) {
+
+            GameObject[] tableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+            foreach (var table in tableObjects) {
+                boundingBox.AddPoint(table.transform.position);
+            }
+
+        }
+        // if desks dont exist, get bounding box of all students, get position in front
+        else {
+            // get PlayerHead game objects instead of the players list so we know where they are too
+            GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+            // foreach (Player player in GetAllStudents()) {
+            foreach (GameObject playerHeadObject in playerHeadObjects) {
+                Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
+
+                if (!PlayerIsStudent(player)) {
+                    continue;
+                }
+                boundingBox.AddPoint(playerHeadObject.transform.position);
+            }
+        }
+
+        // get front middle position of bounding box
+        Vector3 max = boundingBox.max;
+        Vector3 min = boundingBox.min;
+        Vector3 center = (min + max) / 2;
+        
+        // x should be middle of bounding box
+        // y should be min of bounding box (lowest student head or desk is first row)
+        // z should be max of bounding box (front of the room)
+        Vector3 frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
+
+        // place main object in front and above this front desk position (few meters up, few meters forward)
+        Vector3 mainObjectPosition = new Vector3(0, 2.5f, 2) + frontMostDeskPosition;
+        var mainObjectContainer = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
+        
+        // set group number of main object
+        SetPhotonObjectGroupNumber(mainObjectContainer, 1);
+
+        // set the scale of the object: must set the scale of all subobjects instead of the main object 
+        // container because this is what the instructor object streams through custom properties in CommunicationScript
+
+        foreach (Transform mainObjectTransform in mainObjectContainer.transform) {
+            mainObjectTransform.localScale = new Vector3(5, 5, 5);
+        }
 
     }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -410,8 +542,10 @@ public class InstructorCloudFunctions : MonoBehaviour
     }
 
 
-    // set single player's group number
-    // skips admins and local player
+    /// <summary>
+    /// set single player's group number; 
+    /// skips admins and local player automatically
+    /// </summary>
     private void SetPlayerGroupNumber(Player player, int groupNumber) {
 
         // if the player is the current player (the instructor), then skip
@@ -431,7 +565,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
         // also set the local cache so recreating main object uses correct group number even if cloud hasnt updated yet
         player.CustomProperties["groupNumber"] = groupNumber;
-        Debug.Log("Set player group of nickname: " + player.NickName);
+        Debug.Log($"Set player {player.NickName} to group number {groupNumber}");
 
     }
 
@@ -506,7 +640,8 @@ public class InstructorCloudFunctions : MonoBehaviour
         public Vector3 min;
         public Vector3 max;
 
-        public void InitializePointsArray() {
+        // since its a class and not a struct, we can have a constructor function
+        public MinMax() {
             points = new();
         }
 
@@ -514,9 +649,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             Debug.Log("AddPoint was called");
 
+            // if this is the first point, set min and max
             if (points.Count == 0) {
-                Debug.Log("points count was, setting min and max");
-                points = new();
+                Debug.Log("points count was 0, setting min and max");
                 points.Add(point);
 
                 min = point; max = point;
@@ -524,7 +659,7 @@ public class InstructorCloudFunctions : MonoBehaviour
                 return;
             }
 
-            // otherwise
+            // otherwise simply add the point and update min and max
             points.Add(point);
 
             // update min and max of bounding box
@@ -558,7 +693,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         // this list needs to be filled
         for (int i = 0; i < maxGroupNum+1; i++) {
             groupBounds.Add(new MinMax());
-            groupBounds[i].InitializePointsArray();
+            // groupBounds[i].InitializePointsArray();
         }
 
         // get PlayerHead game objects instead of the players list so we know where they are too
