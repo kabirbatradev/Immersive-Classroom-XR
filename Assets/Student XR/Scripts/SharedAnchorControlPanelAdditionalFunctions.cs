@@ -240,37 +240,6 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
 
-
-
-        
-
-
-
-
-
-
-
-        /*
-        // if you press X, then print all spawned object's data
-        bool XPressed = OVRInput.GetDown(OVRInput.RawButton.X);
-        if (XPressed) {
-            foreach (ObjectData objectData in allNetworkObjectDatas) {
-                GameObject obj = objectData.gameObject;
-                // SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
-                SampleController.Instance.Log("object view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
-
-
-                // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-                // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
-
-                SampleController.Instance.Log("object group number: " + GetPhotonObjectGroupNumber(obj));
-                SampleController.Instance.Log("");
-            }
-        }
-        */
-
-
-
         /*
         // if there is an active "MainObjectContainer" in the scene
         // then change check the room custom properties to see which model should be active, and deactive the rest
