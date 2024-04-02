@@ -384,8 +384,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         if (laserGameObjects.Count > mainObjectContainers.Length) {
             int numberOfLasersToDestroy = laserGameObjects.Count - mainObjectContainers.Length;
 
+            for (int i = 0; i < numberOfLasersToDestroy; i++) {
+                int lastPosition = laserGameObjects.Count - 1;
+                GameObject laserToDestroy = laserGameObjects[lastPosition];
+                laserGameObjects.RemoveAt(lastPosition);
+
+                Destroy(laserToDestroy);
+
+            }
+
             // start from after the lasers we want to keep, destory all of the rest of the lasers
-            laserGameObjects.RemoveRange(mainObjectContainers.Length, numberOfLasersToDestroy);
+            // wait this only removes from the list, doesnt destroy the laser game objects
+            // laserGameObjects.RemoveRange(mainObjectContainers.Length, numberOfLasersToDestroy);
         }
 
 
