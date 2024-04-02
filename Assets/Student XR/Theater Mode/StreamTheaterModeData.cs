@@ -11,12 +11,35 @@ using System;
 public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 {
 
-
     // singleton structure for easy access
     public static StreamTheaterModeData Instance;
     private void Awake() {
         if (Instance == null) Instance = this;
         else Destroy(this);
+    }
+
+
+    // static functions to call the functions on the instance
+    // will also instantiate the instance as a new photon object if it doesnt already exist
+    public static void ToggleTheaterMode() {
+        if (Instance != null) {
+            Instance.ToggleTheaterModeOnInstance();
+        }
+        else {
+            GameObject newStreamerObject = PhotonNetwork.Instantiate("StreamTheaterModeData", Vector3.zero, Quaternion.identity);
+            newStreamerObject.GetComponent<StreamTheaterModeData>().ToggleTheaterModeOnInstance();
+        }
+
+    }
+
+    public static void ResetTheaterMode() {
+        if (Instance != null) {
+            Instance.ResetTheaterModeOnInstance();
+        }
+        else {
+            GameObject newStreamerObject = PhotonNetwork.Instantiate("StreamTheaterModeData", Vector3.zero, Quaternion.identity);
+            newStreamerObject.GetComponent<StreamTheaterModeData>().ToggleTheaterModeOnInstance();
+        }
     }
 
 
@@ -32,6 +55,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     public float ceilingRemovedPercentage = 0.0f;
 
     // ceilingVisible will be a custom server property since it doesn't have to be streamed constantly
+    [NonSerialized]
     public bool ceilingVisible = true;
 
 
@@ -43,7 +67,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     // functions for instructor gui to easily control the walls and ceiling dropping
     private bool hasBeenReset = true; // reset by default
-    public void ToggleTheaterMode() {
+    private void ToggleTheaterModeOnInstance() {
         TakeOwnershipOfStreamer();
         
         if (hasBeenReset) {
@@ -63,7 +87,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     }
 
     // reset function
-    public void ResetTheaterMode() {
+    private void ResetTheaterModeOnInstance() {
         TakeOwnershipOfStreamer();
 
         // stop the coroutines

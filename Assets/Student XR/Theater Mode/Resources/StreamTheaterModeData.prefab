@@ -68,4 +68,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d6ede5d90069ba4c948ce58a9754e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ceilingVisible: 1

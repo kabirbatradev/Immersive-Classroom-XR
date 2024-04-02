@@ -90,6 +90,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     // [SerializeField]
     // private GameObject OVRSceneManagerObj;
+
+    private enum DeviceModes {Admin, Student, Camera};
+    private DeviceModes deviceCurrentMode = DeviceModes.Student;
+
     
 
 
@@ -186,14 +190,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-        
-        // Object Group Filtering:
+        // Going through all photon objects:
 
         // every frame, scan through all objects that have a photon id (photon view)
-        // and enable or disable them based on if their group number matches the current 
-        // user's group number
+        // and enable or disable them based on if their group number matches the current user's group number
 
         // also disable passthrough wall meshes for instructor 
+
+        // also disable aligned tables and related objects for students
         
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
@@ -213,11 +217,46 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
 
 
-            // if is instructor and this object is a passthrough mesh, then disable
-            if (isInstructorGUIToggle && (obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh"))) {
+            // disable passthrough meshes (like walls) for the instructor gui:
+            bool isPassthroughMesh = obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh");
+            if (isInstructorGUIToggle && isPassthroughMesh) {
                 obj.SetActive(false);
             }
 
+            // disable the aligned tables and related objects for the students, enable for admin
+            bool isTable = obj.CompareTag("AlignedTable");
+            bool isMarker = obj.CompareTag("SeatMarker");
+            if (!isInstructorGUIToggle) {
+                // if admin, enable tables, enable table's anchor, enable markers' first child
+                // if student or camera, then disable tables, disable table's anchor, disable markers' first child
+                if (isTable) {
+                    if (deviceCurrentMode == DeviceModes.Admin) {
+                        obj.GetComponent<AlignedTable>().ShowThisAndAnchor();
+                        // obj.SetActive(true);
+                        // obj.GetComponent<AlignedTable>().ShowAnchor();
+                    }
+                    else {
+                        obj.GetComponent<AlignedTable>().HideThisAndAnchor();
+                        // obj.GetComponent<AlignedTable>().HideAnchor();
+                        // obj.SetActive(false);
+                    }
+                }
+
+                if (isMarker) {
+                    // the first child is the visual object; enable and disable that 
+                    if (deviceCurrentMode == DeviceModes.Admin) {
+                        obj.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                    else {
+                        obj.transform.GetChild(0).gameObject.SetActive(false);
+                    }
+                }
+                
+            }
+            // for instructor gui, the default visibility of the table and no markers or anchors is already good (the table is visible and nothing else)
+            
+
+            // filter by group number:
 
             // use photonView viewID as key to room custom properties and get group number
             // if no group number, then skip (some objects dont have group numbers)
@@ -236,176 +275,6 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
 
-
-
-        
-
-
-
-
-
-
-
-        /*
-        // if you press X, then print all spawned object's data
-        bool XPressed = OVRInput.GetDown(OVRInput.RawButton.X);
-        if (XPressed) {
-            foreach (ObjectData objectData in allNetworkObjectDatas) {
-                GameObject obj = objectData.gameObject;
-                // SampleController.Instance.Log("instance id: " + obj.GetInstanceID().ToString());
-                SampleController.Instance.Log("object view id: " + obj.GetComponent<PhotonPun.PhotonView>().ViewID.ToString());
-
-
-                // string key = "groupNum" + obj.GetComponent<PhotonPun.PhotonView>().ViewID;
-                // int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
-
-                SampleController.Instance.Log("object group number: " + GetPhotonObjectGroupNumber(obj));
-                SampleController.Instance.Log("");
-            }
-        }
-        */
-
-
-
-        /*
-        // if there is an active "MainObjectContainer" in the scene
-        // then change check the room custom properties to see which model should be active, and deactive the rest
-
-        // not recommended to use Find every frame (instead, we should cache the object)
-        // or use FindWithTag(tag) --> returns 1 active game object or null if dne
-        // tag is "MainObjectContainer"
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        GameObject currentActiveGameObject = null;
-        if (mainObjectContainer != null) {
-            if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-                
-                // for every potential model (child of container), disable unless name = currentActiveObject
-                foreach (Transform child in mainObjectContainer.transform) {
-                    GameObject potentialModel = child.gameObject;
-                    // if (potentialModel.name == currentActiveObject)
-                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
-                    // Debug.Log(potentialModel.name);
-                    if (potentialModel.name == currentActiveObjectName) {
-                        currentActiveGameObject = potentialModel;
-                    }
-                }
-            }
-
-        }
-        */
-
-
-
-
-
-
-
-        /*
-
-
-
-        // simply get the current active game object so it can be rotated by the instructor
-        GameObject currentActiveGameObject = null;
-        
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        // if the main object exists
-        if (mainObjectContainer != null) {
-            // iterate through all children
-            foreach (Transform child in mainObjectContainer.transform) {
-                // find the child that is active
-                GameObject potentialModel = child.gameObject;
-                if (potentialModel.activeSelf) {
-                    currentActiveGameObject = potentialModel;
-                    break;
-                }
-            }
-        }
-
-
-        // if main object exists, check if the professor wants to 
-        // rotate it
-        // scale it
-        // draw a laser
-
-        // ONLY DRAW THE LASER AND UPDATE ROTATION IF THIS IS A HEADSET (NOT INSTRUCTOR GUI)
-        if (mainObjectContainer != null && !isInstructorGUIToggle) {
-            bool isShootingExists = RoomHasCustomProperty("IsShooting");
-
-            // if (isShootingExists != isShootingExisted) {
-            //     isShootingExisted = isShootingExists;
-            //     SampleController.Instance.Log("isShootingExists is now: " + isShootingExists);
-
-            //     if (isShootingExists) {
-            //         bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
-            //         SampleController.Instance.Log("isShooting is: " + isShooting);
-            //     }
-            // }
-
-            
-            
-            bool objectRotationExists = RoomHasCustomProperty("ObjectRotation");
-            if (objectRotationExists) {
-
-
-
-                // get rotation from server side and rotate the main object
-                // bool objectRotationExist = RoomHasCustomProperty("ObjectRotation");
-                Quaternion objectRotation = (Quaternion)GetRoomCustomProperty("ObjectRotation");
-                // SampleController.Instance.Log("rotation is: " + objectRotation);
-                currentActiveGameObject.transform.rotation = objectRotation;
-
-
-
-
-                // if rotation exists, then scaling probably also exists
-                Vector3 objectScale = (Vector3)GetRoomCustomProperty("ObjectScale");
-                currentActiveGameObject.transform.localScale = objectScale;
-
-
-
-                // if the professor is shooting a laser, then we should see it
-                if (isShootingExists) {
-                    bool isShooting = (bool)GetRoomCustomProperty("IsShooting");
-                    // SampleController.Instance.Log("isShooting is: " + isShooting);
-                    if (isShooting) {
-                        // get camera position and hit position
-                        Vector3 cameraPosition = (Vector3)GetRoomCustomProperty("CameraPosition");
-                        Vector3 hitPosition = (Vector3)GetRoomCustomProperty("HitPosition");
-
-                        // lineRenderer is the line renderer
-                        // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
-                        // enable or disable the line renderer
-
-                        // draw the line with respect to the main object
-                            // rotation and position
-                        lineRenderer.enabled = true;
-                        lineRenderer.SetPosition(0, cameraPosition + currentActiveGameObject.transform.position);
-                        lineRenderer.SetPosition(1, hitPosition + currentActiveGameObject.transform.position);
-
-                    }
-                    else {
-                        lineRenderer.enabled = false;
-                    }
-                }
-            }
-
-            // // test if line renderer can render with respect to the main object (works)
-            // lineRenderer.enabled = true;
-            // lineRenderer.SetPosition(0, new Vector3(0, 0, 0) + currentActiveGameObject.transform.position);
-            // lineRenderer.SetPosition(1, new Vector3(1, 0, 0) + currentActiveGameObject.transform.position);
-
-        }
-
-        */
-
-
-        // GameObject laserGameObject = Instantiate(laserGameObjectPrefab);
-        // LineRenderer lineRenderer = laserGameObject.GetComponent<LineRenderer>();
-        // // test if line renderer is working (works)
-        // lineRenderer.enabled = true;
-        // lineRenderer.SetPosition(0, new Vector3(0, 0, 0));
-        // lineRenderer.SetPosition(1, new Vector3(1, 1, 1));
 
 
 
@@ -539,6 +408,20 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     }
+
+    // these functions are to be called by GUIManager every time the device user switches between student, admin, and camera modes
+    public void SetDeviceModeAdmin() {
+        deviceCurrentMode = DeviceModes.Admin;
+    }
+    public void SetDeviceModeStudent() {
+        deviceCurrentMode = DeviceModes.Student;
+    }
+    public void SetDeviceModeCamera() {
+        deviceCurrentMode = DeviceModes.Camera;
+    }
+    
+
+
 
     // this function is now redundant because of OnCreateWallsPressed()
     // public void OnAdminEnableSceneManager() {
@@ -732,12 +615,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // delete all desks and spatial anchors
         foreach (GameObject alignedTable in alignedTableObjects) {
+            alignedTable.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy tables
             alignedTable.GetComponent<AlignedTable>().DestroyThisAndAnchor();
         }
 
         // delete all markers
         GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
         foreach (GameObject seatMarker in seatMarkerObjects) {
+            seatMarker.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy markers
             // Destroy(seatMarkers);
             PhotonNetwork.Destroy(seatMarker); // cloud object; call cloud destroy
         }
