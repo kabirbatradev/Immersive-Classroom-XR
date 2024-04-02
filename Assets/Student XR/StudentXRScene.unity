@@ -13110,6 +13110,7 @@ MonoBehaviour:
   - {fileID: 278988132}
   studentViewButtonLabel: {fileID: 1931054114}
   colorsCanvas: {fileID: 863954771}
+  additionalFunctionsScript: {fileID: 8607079647158505906}
 --- !u!1 &2045627499
 GameObject:
   m_ObjectHideFlags: 0

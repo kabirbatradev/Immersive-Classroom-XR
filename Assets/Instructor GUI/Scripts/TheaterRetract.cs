@@ -1,26 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System;
 
 public class TheaterRetract : MonoBehaviour
 {
     public float ceilingPercent = 0.0f;
     public float wallPercent = 0.0f;
-    public GameObject[] wallsO;
-    public GameObject[] wallsF;
-    private Vector3 wallOStartHeight;
-    private Vector3 wallFStartHeight;
-    private Vector3 ceilingStartScale;
-    // how much should wallsO and wallsF move in the y direction
-    public float wallYChanges = -3.0f;
-    public GameObject ceilingO;
-    public GameObject ceilingF;
-    public float ceilingFullSize = 6.0f;
+    public GameObject[] ceilings;
+    public GameObject[] walls;
+    public Vector3[] originalCeilingPositions;
+    public Vector3[] originalWallPositions;
+    public Vector3[] originalCeilingScales;
     public void Start()
     {
-        wallOStartHeight = wallsO[0].transform.position;
-        wallFStartHeight = wallsF[0].transform.position;
-        ceilingStartScale = ceilingO.transform.localScale;
+        originalCeilingPositions = new Vector3[ceilings.Length];
+        originalWallPositions = new Vector3[walls.Length];
+        originalCeilingScales = new Vector3[ceilings.Length];
+        for (int i = 0; i < ceilings.Length; i++)
+        {
+            originalCeilingPositions[i] = ceilings[i].transform.localPosition;
+            originalCeilingScales[i] = ceilings[i].transform.localScale;
+        }
+        for (int i = 0; i < walls.Length; i++)
+        {
+            originalWallPositions[i] = walls[i].transform.localPosition;
+        }
     }
 
     public void Update()
@@ -35,31 +41,37 @@ public class TheaterRetract : MonoBehaviour
         }
         ceilingPercent = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
         wallPercent = StreamTheaterModeData.Instance.wallLoweredPercentage;
-        retractWalls();
-        retractCeiling();
+        retract(ceilingPercent, wallPercent);
     }
 
-    public void retractWalls()
+    public void retract(float ceilingPercent, float wallPercent)
     {
-        foreach (GameObject wall in wallsO)
+        foreach (GameObject ceiling in ceilings)
         {
-            wall.transform.position = new Vector3(wall.transform.position.x,
-            wallOStartHeight.y + wallPercent * wallYChanges,
-            wall.transform.position.z);
+            ceiling.transform.localPosition = new Vector3(100 * ceilingPercent,
+            50 + wallPercent * -100.0f,
+            ceiling.transform.localPosition.z);
+            ceiling.transform.localScale = new Vector3(1.0f - ceilingPercent, 1.0f - ceilingPercent, 1.0f - ceilingPercent);
         }
-        foreach (GameObject wall in wallsF)
+        foreach (GameObject wall in walls)
         {
-            wall.transform.position = new Vector3(wall.transform.position.x,
-            wallFStartHeight.y + wallPercent * wallYChanges,
-            wall.transform.position.z);
+            wall.transform.localPosition = new Vector3(
+                wall.transform.localPosition.x,
+                wallPercent * -100.0f,
+                wall.transform.localPosition.z);
         }
     }
 
-    public void retractCeiling()
+    public void reset()
     {
-        // change scale
-        ceilingF.transform.localScale = new Vector3(ceilingF.transform.localScale.x,
-        ceilingPercent * ceilingFullSize,
-        ceilingPercent * ceilingFullSize);
+        for (int i = 0; i < ceilings.Length; i++)
+        {
+            ceilings[i].transform.localPosition = originalCeilingPositions[i];
+            ceilings[i].transform.localScale = originalCeilingScales[i];
+        }
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i].transform.localPosition = originalWallPositions[i];
+        }
     }
 }

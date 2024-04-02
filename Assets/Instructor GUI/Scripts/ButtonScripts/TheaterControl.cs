@@ -29,10 +29,10 @@ public class TheaterControl : MonoBehaviour
         //     }
         // }
 
-        StreamTheaterModeData.Instance.ToggleTheaterMode();
+        StreamTheaterModeData.ToggleTheaterMode();
 
         GameObject[] streamObjects = GameObject.FindGameObjectsWithTag("StreamTheaterModeData");
-        Debug.Log("toggle debug log stream objects length: " + streamObjects.Length);
+        Debug.Log("toggle debug log stream objects length (should be 1): " + streamObjects.Length);
     }
 
     public void resetTheaterMode()
@@ -41,7 +41,22 @@ public class TheaterControl : MonoBehaviour
         // theaterStarted = false;
         // theaterGoing = false;
 
-        StreamTheaterModeData.Instance.ResetTheaterMode();
+        StreamTheaterModeData.ResetTheaterMode();
 
     }
+
+    // public void startTheaterMode()
+    // {
+    //     StreamTheaterModeData.Instance.TriggerTheaterMode();
+    // }
+
+    // public void pauseTheaterMode()
+    // {
+    //     StreamTheaterModeData.Instance.PauseTheaterMode();
+    // }
+
+    // public void continueTheaterMode()
+    // {
+    //     StreamTheaterModeData.Instance.ContinueTheaterMode();
+    // }
 }

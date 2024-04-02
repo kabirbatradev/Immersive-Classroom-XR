@@ -7,6 +7,7 @@ public class Laser : MonoBehaviour
     public float lineSize = 0.02f;
     private bool isShooting = false;
     public Camera mainCamera;
+    public GameObject mainCameraObj;
     public GameObject laserStartPoint;
     public Material laserMaterial;
     public bool laserFromCamera = true;
@@ -75,7 +76,7 @@ public class Laser : MonoBehaviour
         }
         else
         {
-            lineRenderer.SetPosition(0, mainCamera.transform.position);
+            lineRenderer.SetPosition(0, mainCameraObj.transform.position);
         }
 
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);

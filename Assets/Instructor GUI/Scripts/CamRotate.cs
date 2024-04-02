@@ -9,8 +9,8 @@ public class CamRotate : MonoBehaviour
     public Transform currentTarget;
     public float rotationSpeed = 300f;
     public float zoomSpeed = 0.5f;
-    public float minZoomDistance = 0.2f;
-    public float maxZoomDistance = 5f;
+    public float minZoomDistance = 0.02f;
+    public float maxZoomDistance = 1f;
     private float distanceFromTarget;
     private Vector3 currentRotation;
     public bool lockOn = true;
@@ -33,7 +33,7 @@ public class CamRotate : MonoBehaviour
     {
         currentRotation = transform.eulerAngles;
         currentTarget = null;
-        distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
+        // distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
     }
 
     void Update()
