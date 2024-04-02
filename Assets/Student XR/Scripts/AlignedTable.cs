@@ -48,4 +48,27 @@ public class AlignedTable : MonoBehaviour
         // Destroy(gameObject);
         PhotonNetwork.Destroy(gameObject); // cloud object; call cloud destroy
     }
+
+    public void HideThisAndAnchor() {
+
+        if (photonView.IsMine) {
+            // visual axis and panel are both children of the anchor object
+            foreach (Transform visual in tableAnchor.transform) {
+                visual.gameObject.SetActive(false);
+            }
+        }
+
+        gameObject.SetActive(false);
+
+    }
+    public void ShowThisAndAnchor() {
+        if (photonView.IsMine) {
+            // visual axis and panel are both children of the anchor object
+            foreach (Transform visual in tableAnchor.transform) {
+                visual.gameObject.SetActive(true);
+            }
+        }
+
+        gameObject.SetActive(true);
+    }
 }

@@ -190,14 +190,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-        
-        // Object Group Filtering:
+        // Going through all photon objects:
 
         // every frame, scan through all objects that have a photon id (photon view)
-        // and enable or disable them based on if their group number matches the current 
-        // user's group number
+        // and enable or disable them based on if their group number matches the current user's group number
 
         // also disable passthrough wall meshes for instructor 
+
+        // also disable aligned tables and related objects for students
         
         
         int currentUserGroupNumber = GetCurrentGroupNumber(); // gets group number from local player's custom propreties
@@ -217,11 +217,46 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             }
 
 
-            // if is instructor and this object is a passthrough mesh, then disable
-            if (isInstructorGUIToggle && (obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh"))) {
+            // disable passthrough meshes (like walls) for the instructor gui:
+            bool isPassthroughMesh = obj.CompareTag("WallMesh") || obj.CompareTag("CeilingMesh");
+            if (isInstructorGUIToggle && isPassthroughMesh) {
                 obj.SetActive(false);
             }
 
+            // disable the aligned tables and related objects for the students, enable for admin
+            bool isTable = obj.CompareTag("AlignedTable");
+            bool isMarker = obj.CompareTag("SeatMarker");
+            if (!isInstructorGUIToggle) {
+                // if admin, enable tables, enable table's anchor, enable markers' first child
+                // if student or camera, then disable tables, disable table's anchor, disable markers' first child
+                if (isTable) {
+                    if (deviceCurrentMode == DeviceModes.Admin) {
+                        obj.GetComponent<AlignedTable>().ShowThisAndAnchor();
+                        // obj.SetActive(true);
+                        // obj.GetComponent<AlignedTable>().ShowAnchor();
+                    }
+                    else {
+                        obj.GetComponent<AlignedTable>().HideThisAndAnchor();
+                        // obj.GetComponent<AlignedTable>().HideAnchor();
+                        // obj.SetActive(false);
+                    }
+                }
+
+                if (isMarker) {
+                    // the first child is the visual object; enable and disable that 
+                    if (deviceCurrentMode == DeviceModes.Admin) {
+                        obj.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                    else {
+                        obj.transform.GetChild(0).gameObject.SetActive(false);
+                    }
+                }
+                
+            }
+            // for instructor gui, the default visibility of the table and no markers or anchors is already good (the table is visible and nothing else)
+            
+
+            // filter by group number:
 
             // use photonView viewID as key to room custom properties and get group number
             // if no group number, then skip (some objects dont have group numbers)
