@@ -40,6 +40,10 @@ public class GUIManager : MonoBehaviour
     [SerializeField]
     private GameObject colorsCanvas;
 
+    // needed to call functions SetDeviceMode...
+    [SerializeField]
+    private SharedAnchorControlPanelAdditionalFunctions additionalFunctionsScript;
+
 
 
     // we need the instance so that we can default to StudentMode from StreamlineManager when a room is joined
@@ -92,9 +96,9 @@ public class GUIManager : MonoBehaviour
         int currentGroupNumber = GetCurrentGroupNumber();
         if (currentGroupNumber <= 0) SetGroupNumber(1);
 
-        
-
         roomInfoPanel.SetActive(false);
+
+        additionalFunctionsScript.SetDeviceModeStudent();
     }
 
     public void OnAdminMode() {
@@ -108,6 +112,8 @@ public class GUIManager : MonoBehaviour
         // SetGroupNumber(1);
 
         roomInfoPanel.SetActive(true);
+
+        additionalFunctionsScript.SetDeviceModeAdmin();
     }
 
     public void OnCameraMode() {
@@ -121,6 +127,8 @@ public class GUIManager : MonoBehaviour
         SetGroupNumber(0);
 
         roomInfoPanel.SetActive(false);
+
+        additionalFunctionsScript.SetDeviceModeCamera();
     }
 
     private void SetStudentButtonsActive(bool active) {

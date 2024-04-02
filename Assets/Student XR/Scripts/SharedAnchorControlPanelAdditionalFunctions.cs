@@ -90,6 +90,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     // [SerializeField]
     // private GameObject OVRSceneManagerObj;
+
+    private enum DeviceModes {Admin, Student, Camera};
+    private DeviceModes deviceCurrentMode = DeviceModes.Student;
+
     
 
 
@@ -539,6 +543,20 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     }
+
+    // these functions are to be called by GUIManager every time the device user switches between student, admin, and camera modes
+    public void SetDeviceModeAdmin() {
+        deviceCurrentMode = DeviceModes.Admin;
+    }
+    public void SetDeviceModeStudent() {
+        deviceCurrentMode = DeviceModes.Student;
+    }
+    public void SetDeviceModeCamera() {
+        deviceCurrentMode = DeviceModes.Camera;
+    }
+    
+
+
 
     // this function is now redundant because of OnCreateWallsPressed()
     // public void OnAdminEnableSceneManager() {
