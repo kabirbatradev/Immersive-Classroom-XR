@@ -240,36 +240,6 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         }
 
 
-        /*
-        // if there is an active "MainObjectContainer" in the scene
-        // then change check the room custom properties to see which model should be active, and deactive the rest
-
-        // not recommended to use Find every frame (instead, we should cache the object)
-        // or use FindWithTag(tag) --> returns 1 active game object or null if dne
-        // tag is "MainObjectContainer"
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        GameObject currentActiveGameObject = null;
-        if (mainObjectContainer != null) {
-            if (RoomHasCustomProperty("mainObjectCurrentModelName")) {
-                string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-                
-                // for every potential model (child of container), disable unless name = currentActiveObject
-                foreach (Transform child in mainObjectContainer.transform) {
-                    GameObject potentialModel = child.gameObject;
-                    // if (potentialModel.name == currentActiveObject)
-                    potentialModel.SetActive(potentialModel.name == currentActiveObjectName);
-                    // Debug.Log(potentialModel.name);
-                    if (potentialModel.name == currentActiveObjectName) {
-                        currentActiveGameObject = potentialModel;
-                    }
-                }
-            }
-
-        }
-        */
-
-
-
 
 
 
