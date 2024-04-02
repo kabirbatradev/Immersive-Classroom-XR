@@ -148,7 +148,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
         else if (currentGroupMode == GroupMode.SmallGroupsMode) {
             Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
-            OLDCreateMainObjectContainerPerGroup();
+            CreateMainObjectsForSmallGroupsMode();
         }
         else {
             // fallback
@@ -718,6 +718,111 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         AssignEachStudentToSpecificGroupNumber(playerArray, groupNumbers);
     }
+
+
+
+    public void CreateMainObjectsForSmallGroupsMode() {
+
+        DeleteAllMainObjects();
+
+        // get max group number
+        int maxGroupNumber = GetMaxGroupNumber(); 
+
+        // create headPositionsPerGroup array: stores list of player positions for each group
+        // array of list ints
+        List<Vector3>[] headPositionsPerGroup = new List<Vector3>[maxGroupNumber+1];
+            // +1 because we should be able to access the array at the max group number index
+        
+        // initialize all of the lists to empty lists
+        for (int i = 1; i <= maxGroupNumber; i++) {
+            headPositionsPerGroup[i] = new List<Vector3>();
+        }
+
+        // get every MyPhotonUserHeadTracker 
+        var allHeadTrackerObjects = FindObjectsByType<PhotonUserHeadTrackerCommunication>(FindObjectsSortMode.None);
+
+        // populate the headPositionsPerGroup array
+        foreach (PhotonUserHeadTrackerCommunication headTrackerScript in allHeadTrackerObjects) {
+            // get the head tracker object
+            GameObject headTrackerObject = headTrackerScript.gameObject;
+
+            // get photon view
+            var photonView = headTrackerObject.GetComponent<PhotonPun.PhotonView>();
+
+            // get player owner 
+            PhotonRealtime.Player player = photonView.Owner;
+
+            // get player's group number
+            int groupNumber = GetPlayerGroupNumber(player);
+            // skip if group number is 0 (admin)
+            if (groupNumber == 0) {
+                continue;
+            }
+
+            // get the vector 3 associated with this player's head
+            Vector3 position;
+            // if local head: (this only happens if this function was called by a admin headset and not a laptop)
+            if (photonView.IsMine) {
+                position = UserHeadPositionTrackerManager.Instance.localHeadTransform.position;
+            }
+            else {
+                // not local head
+                position = headTrackerObject.transform.position;
+            }
+
+            // append to array
+            headPositionsPerGroup[groupNumber].Add(position);
+        }
+
+        // now we have all of the vector3 in a list for each group (done)
+
+        // for each group, get the average position of the group members
+        // and instantiate a Main Object Container at that position
+        for (int i = 1; i <= maxGroupNumber; i++) {
+            List<Vector3> headPositions = headPositionsPerGroup[i];
+
+            // if list is empty, then skip
+            if (headPositions.Count == 0) {
+                continue;
+            }
+
+            // get the average of all transforms of this group
+
+            Vector3 averageVector = Vector3.zero;
+            foreach(Vector3 position in headPositions) {
+                averageVector += position;
+            }
+            averageVector /= headPositions.Count;
+
+
+
+            // for groups of 4, we should not shift by 1 z
+            // adjust this averageVector spawn point by an offset: instantiate the object in front of the group
+            // averageVector += new Vector3(0, 0, 1);
+            // dont shift the position for the small groups mode; instead, place it in the middle of everyone
+
+
+            // now, instantiate the Main Object container at this position and for this group
+
+            // instantiate
+            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, averageVector, mainObjectContainerPrefab.transform.rotation);
+            // set group number
+            SetPhotonObjectGroupNumber(mainObjectContainerInstance, i);
+
+            // set the scale
+            foreach (Transform mainObjectTransform in mainObjectContainerInstance.transform) {
+                mainObjectTransform.localScale = new Vector3(smallGroupsModeObjectScale, smallGroupsModeObjectScale, smallGroupsModeObjectScale);
+            }
+
+        }
+
+    }
+
+
+
+
+
+
 
 
 
