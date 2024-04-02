@@ -46,6 +46,9 @@ public class InstructorCloudFunctions : MonoBehaviour
     public const string groupModeKey = "GroupMode";
     public const string laserLengthKey = "LaserLength";
 
+    public const int lectureModeMainObjectScale = 5;
+    public const int individualModeObjectScale = 1;
+
     void Update() {
         if (debugMode) {
             if (Input.GetKeyDown(KeyCode.P)) {
@@ -125,13 +128,13 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         string groupMode = (string)GetRoomCustomProperty(groupModeKey);
-        if (groupMode == "LectureMode") {
+        if (groupMode == "LargeLectureMode") {
             CreateMainObjectsForLectureMode();
         }
         else if (groupMode == "IndividualMode") {
             // not implemented yet, go to fallback
-            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
-            OLDCreateMainObjectContainerPerGroup();
+            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            CreateMainObjectsForIndividualMode();
         }
         else {
             // fallback
@@ -315,9 +318,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
+    public void IndividualMode() {
 
-    public void SetStudentsIntoIndividualGroups() {
-
+        
         SetRoomCustomProperty(groupModeKey, "IndividualMode");
         SetRoomCustomProperty(laserLengthKey, 0.5f);
 
@@ -348,12 +351,66 @@ public class InstructorCloudFunctions : MonoBehaviour
         RecreateMainObjectsIfTheyExist();
         DestroyAllPanels();
 
+
+    }
+
+    public void SetStudentsIntoIndividualGroups() {
+        IndividualMode();
+    }
+
+    public void CreateMainObjectsForIndividualMode() {
+        
+        Debug.Log("Individual Mode called");
+
+        // before creating new main objects, delete any preexisting objects
+        DeleteAllMainObjects();
+
+        // for individual mode, create a new object per player, and set the group number respectively
+        
+
+        GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+        foreach (GameObject playerHeadObj in playerHeadObjects) {
+            PhotonView photonView = playerHeadObj.GetPhotonView();
+            Player player = photonView.Owner;
+
+            int groupNumber = GetPlayerGroupNumber(player);
+
+            // skip if group number is 0 or if instructor (local)
+            if (groupNumber == 0 || PhotonNetwork.LocalPlayer == player) {
+                continue;
+            }
+
+            // get the vector 3 associated with this player's head
+            Vector3 mainObjectSpawnPosition;
+            // if local head: (this only happens if this function was called by a admin headset and not a laptop)
+            if (photonView.IsMine) {
+                mainObjectSpawnPosition = UserHeadPositionTrackerManager.Instance.localHeadTransform.position;
+            }
+            else {
+                // not local head
+                mainObjectSpawnPosition = playerHeadObj.transform.position;
+            }
+
+            // create the main object for this player:
+
+            // shift the spawn position forward by 1 meter (in front of the player)
+            mainObjectSpawnPosition += new Vector3(0, 0, 1);
+            var mainObjectContainerInstance = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectSpawnPosition, mainObjectContainerPrefab.transform.rotation);
+            // set group number
+            SetPhotonObjectGroupNumber(mainObjectContainerInstance, groupNumber);
+
+            // set scale
+            foreach (Transform mainObjectTransform in mainObjectContainerInstance.transform) {
+                mainObjectTransform.localScale = new Vector3(individualModeObjectScale, individualModeObjectScale, individualModeObjectScale);
+            }
+        }
+
     }
 
 
 
 
-
+    // dont plan to use this in the actual demo
     public void SetStudentsIntoGroupsOfTwo() {
 
         // value collection (basically list) of PhotonRealtime.Player objects
@@ -393,7 +450,9 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
     // all students are in one group, main object is at the front of the room and very large, long laser length
-    public void LectureMode() {
+    public void LargeLectureMode() {
+
+        Debug.Log("Large Lecture Mode called");
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
@@ -404,7 +463,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         // set room custom property of the current mode
-        SetRoomCustomProperty(groupModeKey, "LectureMode");
+        SetRoomCustomProperty(groupModeKey, "LargeLectureMode");
 
         // set laser length
         SetRoomCustomProperty(laserLengthKey, 4.0f);
@@ -417,7 +476,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // calls the LectureMode() function; only keeping this so the preexisting instructor button doesnt break
     public void SetAllStudentsGroupOne() {
-        LectureMode();
+        LargeLectureMode();
     }
 
     // there is only one group, and the position of the main object is fixed: at the front of the room
@@ -478,7 +537,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         // container because this is what the instructor object streams through custom properties in CommunicationScript
 
         foreach (Transform mainObjectTransform in mainObjectContainer.transform) {
-            mainObjectTransform.localScale = new Vector3(5, 5, 5);
+            mainObjectTransform.localScale = new Vector3(lectureModeMainObjectScale, lectureModeMainObjectScale, lectureModeMainObjectScale);
         }
 
     }
