@@ -52,6 +52,7 @@ public class InstructorCloudFunctions : MonoBehaviour
     public const string laserLengthKey = "LaserLength";
     private const float individualModeLaserLength = 0.5f;
     private const float largeLectureModeLaserLength = 4.0f;
+    private const float smallGroupsModeLaserLength = 1.0f;
 
     private const int largeLectureModeMainObjectScale = 5;
     private const float individualModeObjectScale = 1;
@@ -662,6 +663,18 @@ public class InstructorCloudFunctions : MonoBehaviour
     // also automatically creates new main objects if they should currently be displayed
     // helper function to be used in AssignEachPlayerHeadToSpecificGroupNumber
     public void AssignEachStudentToSpecificGroupNumber(Player[] playerArray, int[] groupNumbers) {
+
+        SmallGroupsMode(playerArray, groupNumbers);
+
+    }
+
+    public void SmallGroupsMode(Player[] playerArray, int[] groupNumbers) {
+
+        // set current group mode and laser length
+        currentGroupMode = GroupMode.SmallGroupsMode;
+        SetRoomCustomProperty(laserLengthKey, smallGroupsModeLaserLength);
+
+
         if (playerArray.Length != groupNumbers.Length) {
             Debug.Log("Error: playerArray and groupNumbers length mismatch");
             return;
@@ -675,6 +688,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         RecreateMainObjectsIfTheyExist();
         DestroyAllPanels();
         CreatePanelPerGroup(); // in this case we do need panels per group
+
     }
 
 
@@ -700,8 +714,8 @@ public class InstructorCloudFunctions : MonoBehaviour
                 Debug.Log("Since one of the player head objects is does not have the PlayerHead tag, we will not assign group numbers");
                 return;
             }
-        }        
-        
+        }     
+
         AssignEachStudentToSpecificGroupNumber(playerArray, groupNumbers);
     }
 
