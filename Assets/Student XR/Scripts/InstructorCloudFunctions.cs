@@ -43,11 +43,19 @@ public class InstructorCloudFunctions : MonoBehaviour
     [SerializeField]
     private bool debugMode = false;
 
-    public const string groupModeKey = "GroupMode";
-    public const string laserLengthKey = "LaserLength";
+    // we need room custom properties for laser length so other scripts can use that laser length, but we dont need it for the group mode
+    // public const string groupModeKey = "GroupMode";
 
-    public const int lectureModeMainObjectScale = 5;
-    public const int individualModeObjectScale = 1;
+    // small groups is usually groups of 4
+    enum GroupMode {LargeLectureMode, IndividualMode, SmallGroupsMode, Fallback};
+    private GroupMode currentGroupMode = GroupMode.Fallback;
+    public const string laserLengthKey = "LaserLength";
+    private const float individualModeLaserLength = 0.5f;
+    private const float largeLectureModeLaserLength = 4.0f;
+
+    private const int largeLectureModeMainObjectScale = 5;
+    private const float individualModeObjectScale = 1;
+    private const float smallGroupsModeObjectScale = 1.5f;
 
     void Update() {
         if (debugMode) {
@@ -120,21 +128,26 @@ public class InstructorCloudFunctions : MonoBehaviour
     public void CreateMainObjectContainerPerGroup() {
         
         // get the custom property group mode 
-        bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
+        // bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
+        // GroupMode mode = currentGroupMode;
 
-        if (!groupModeIsSet) {
+        if (currentGroupMode == GroupMode.Fallback) {
             OLDCreateMainObjectContainerPerGroup();
             return;
         }
 
-        string groupMode = (string)GetRoomCustomProperty(groupModeKey);
-        if (groupMode == "LargeLectureMode") {
+        // string groupMode = (string)GetRoomCustomProperty(groupModeKey);
+        if (currentGroupMode == GroupMode.LargeLectureMode) {
             CreateMainObjectsForLectureMode();
         }
-        else if (groupMode == "IndividualMode") {
+        else if (currentGroupMode == GroupMode.IndividualMode) {
             // not implemented yet, go to fallback
             // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForIndividualMode();
+        }
+        else if (currentGroupMode == GroupMode.SmallGroupsMode) {
+            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            OLDCreateMainObjectContainerPerGroup();
         }
         else {
             // fallback
@@ -321,8 +334,9 @@ public class InstructorCloudFunctions : MonoBehaviour
     public void IndividualMode() {
 
         
-        SetRoomCustomProperty(groupModeKey, "IndividualMode");
-        SetRoomCustomProperty(laserLengthKey, 0.5f);
+        // SetRoomCustomProperty(groupModeKey, "IndividualMode");
+        currentGroupMode = GroupMode.IndividualMode;
+        SetRoomCustomProperty(laserLengthKey, individualModeLaserLength);
 
         // value collection (basically list) of PhotonRealtime.Player objects
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
@@ -463,10 +477,11 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
 
         // set room custom property of the current mode
-        SetRoomCustomProperty(groupModeKey, "LargeLectureMode");
+        currentGroupMode = GroupMode.LargeLectureMode;
+        // SetRoomCustomProperty(groupModeKey, "LargeLectureMode");
 
         // set laser length
-        SetRoomCustomProperty(laserLengthKey, 4.0f);
+        SetRoomCustomProperty(laserLengthKey, largeLectureModeLaserLength);
 
         // recreate main objects if they exist
         RecreateMainObjectsIfTheyExist();
@@ -537,7 +552,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         // container because this is what the instructor object streams through custom properties in CommunicationScript
 
         foreach (Transform mainObjectTransform in mainObjectContainer.transform) {
-            mainObjectTransform.localScale = new Vector3(lectureModeMainObjectScale, lectureModeMainObjectScale, lectureModeMainObjectScale);
+            mainObjectTransform.localScale = new Vector3(largeLectureModeMainObjectScale, largeLectureModeMainObjectScale, largeLectureModeMainObjectScale);
         }
 
     }
