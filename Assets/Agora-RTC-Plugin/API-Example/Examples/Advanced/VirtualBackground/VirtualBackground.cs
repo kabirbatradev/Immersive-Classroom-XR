@@ -633,7 +633,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
         public override void OnUserJoined(RtcConnection connection, uint uid, int elapsed)
         {
             // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
-            VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
+            // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
             _sample.globalUID = uid;
             
         }
