@@ -8,6 +8,7 @@ using io.agora.rtc.demo;
 using UnityEngine.Networking;
 using System;
 
+// to make the permission helper work
 using Agora_RTC_Plugin.API_Example;
 
 public class AgoraManager : MonoBehaviour
@@ -72,11 +73,14 @@ public class AgoraManager : MonoBehaviour
         // PermissionHelper.RequestMicrophontPermission();
         // PermissionHelper.RequestCameraPermission();
 
-        if (Input.GetKeyDown("space"))
-        {
-            Debug.Log("space key was pressed");
-            CreateNewPlane(globalUID, GetChannelName());
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+
+        // quick test: press x to create panel at 0, 0, 0
+        // if (OVRInput.GetDown(OVRInput.RawButton.X))
+        // {
+        //     Debug.Log("space key was pressed");
+        //     CreateNewPlane(globalUID, GetChannelName());
+        // }
     }
 
     //Show data in AgoraBasicProfile
