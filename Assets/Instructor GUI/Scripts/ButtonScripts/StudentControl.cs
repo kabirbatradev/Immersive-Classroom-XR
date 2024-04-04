@@ -105,7 +105,7 @@ public class StudentnControl : MonoBehaviour
             }
 
             // Adjust groupNumber for next set of rows
-            groupNumber += maxPairs;
+            groupNumber += maxPairs + 1;
         }
 
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
