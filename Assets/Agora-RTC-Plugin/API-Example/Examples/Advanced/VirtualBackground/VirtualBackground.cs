@@ -447,12 +447,17 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
             
             var mesh = plane.GetComponent<MeshRenderer>();
             if (mesh != null) {
-                mesh.material = new Material(Shader.Find("Unlit/Texture")); // important
+                mesh.material = new Material(Shader.Find("Unlit/Texture")); // important; this must be breaking 
             }
 
             // configure videoSurface
             var videoSurface = plane.AddComponent<VideoSurface>(); // important
-
+            if (ReferenceEquals(videoSurface, null)) {
+                Debug.Log("Kabir: in CreateNewPlane, videoSurface is null");
+                return;
+            }
+            Debug.Log("Kabir: video surface is not null so calling SetForUser");
+            
             videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
 
             videoSurface.SetEnable(true);
@@ -634,9 +639,14 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
         {
             // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
             // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
+            
             _sample.globalUID = uid;
 
+            Debug.Log("Kabir: OnUserJoined was called; calling create new plane");
+
             VirtualBackground.CreateNewPlane(uid, _sample.GetChannelName());
+
+            Debug.Log("Kabir: CreateNewPlane finished");
             
         }
 
