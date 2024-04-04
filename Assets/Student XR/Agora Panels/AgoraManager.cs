@@ -76,11 +76,11 @@ public class AgoraManager : MonoBehaviour
         // if (Input.GetKeyDown(KeyCode.Space))
 
         // quick test: press x to create panel at 0, 0, 0
-        // if (OVRInput.GetDown(OVRInput.RawButton.X))
-        // {
-        //     Debug.Log("space key was pressed");
-        //     CreateNewPlane(globalUID, GetChannelName());
-        // }
+        if (OVRInput.GetDown(OVRInput.RawButton.X))
+        {
+            Debug.Log("space key was pressed");
+            CreateNewPlane(globalUID, GetChannelName());
+        }
     }
 
     //Show data in AgoraBasicProfile
@@ -236,6 +236,8 @@ public class AgoraManager : MonoBehaviour
     // my custom test function that creates a new place and puts the agora video on it
     public static void CreateNewPlane(uint uid, string channelId = "") {
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        plane.transform.localScale = new Vector3(0.1f,0.1f,0.1f); // shrink the plane
+        plane.transform.Rotate(-90f, 0, 0); // rotate about x axis by 90 degrees
         
         var mesh = plane.GetComponent<MeshRenderer>();
         if (mesh != null) {
