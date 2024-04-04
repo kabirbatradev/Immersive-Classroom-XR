@@ -10,26 +10,26 @@ using System;
 
 using Agora_RTC_Plugin.API_Example;
 
-public class VirtualBackgroundCopy : MonoBehaviour
+public class AgoraManager : MonoBehaviour
 {
     [FormerlySerializedAs("appIdInput")]
     [SerializeField]
     private AppIdInput _appIdInput;
 
-    [Header("_____________Basic Configuration_____________")]
-    [FormerlySerializedAs("APP_ID")]
-    [SerializeField]
+    // [Header("_____________Basic Configuration_____________")]
+    // [FormerlySerializedAs("APP_ID")]
+    // [SerializeField]
     private string _appID = "";
 
-    [FormerlySerializedAs("TOKEN")]
-    [SerializeField]
+    // [FormerlySerializedAs("TOKEN")]
+    // [SerializeField]
     private string _token = "";
 
-    [FormerlySerializedAs("CHANNEL_NAME")]
-    [SerializeField]
+    // [FormerlySerializedAs("CHANNEL_NAME")]
+    // [SerializeField]
     private string _channelName = "";
 
-    public Text LogText;
+    // public Text LogText;
     // internal Logger Log;
     internal IRtcEngine RtcEngine = null;
 
@@ -377,9 +377,9 @@ public class VirtualBackgroundCopy : MonoBehaviour
 
 internal class UserEventHandler : IRtcEngineEventHandler
 {
-    private readonly VirtualBackgroundCopy _sample;
+    private readonly AgoraManager _sample;
 
-    internal UserEventHandler(VirtualBackgroundCopy sample)
+    internal UserEventHandler(AgoraManager sample)
     {
         _sample = sample;
     }
@@ -430,7 +430,7 @@ internal class UserEventHandler : IRtcEngineEventHandler
     {
         // _sample.Log.UpdateLog(string.Format("OnUserOffLine uid: ${0}, reason: ${1}", uid,
         //     (int)reason));
-        VirtualBackgroundCopy.DestroyVideoView(uid);
+        AgoraManager.DestroyVideoView(uid);
     }
 }
 
