@@ -441,7 +441,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
         #region -- Video Render UI Logic ---
 
 
-
+        // my custom test function that creates a new place and puts the agora video on it
         public static void CreateNewPlane(uint uid, string channelId = "") {
             GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
             
