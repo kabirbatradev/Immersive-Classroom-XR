@@ -102,7 +102,7 @@ public class AgoraManager : MonoBehaviour
     private void InitEngine()
     {
         RtcEngine = Agora.Rtc.RtcEngine.CreateAgoraRtcEngine();
-        UserEventHandler handler = new UserEventHandler(this);
+        UserEventCallbackHandler handler = new UserEventCallbackHandler(this);
         RtcEngineContext context = new RtcEngineContext();
         context.appId = _appID;
         context.channelProfile = CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
@@ -381,11 +381,11 @@ public class AgoraManager : MonoBehaviour
 
 #region -- Agora Event ---
 
-internal class UserEventHandler : IRtcEngineEventHandler
+internal class UserEventCallbackHandler : IRtcEngineEventHandler
 {
     private readonly AgoraManager _sample;
 
-    internal UserEventHandler(AgoraManager sample)
+    internal UserEventCallbackHandler(AgoraManager sample)
     {
         _sample = sample;
     }
