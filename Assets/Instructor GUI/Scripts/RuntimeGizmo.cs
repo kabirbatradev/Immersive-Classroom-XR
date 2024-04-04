@@ -12,12 +12,14 @@ public class RuntimeGizmo : MonoBehaviour
 {
     private ObjectTransformGizmo objectRotateGizmo;
     private ObjectTransformGizmo objectScaleGizmo;
+    private ObjectTransformGizmo objectMoveGizmo;
     private ObjectTransformGizmo laserMoveGizmo;
     private GameObject targetObject;
     public bool isGizmoActive = false;
     private bool forceCenter = false;
     // 0 -> Rotate
     // 1 -> Scale
+    // 2 -> Move
     private int gizmoOption = 0;
     public GameObject laserStartPoint;
 
@@ -25,15 +27,15 @@ public class RuntimeGizmo : MonoBehaviour
     {
         objectRotateGizmo = RTGizmosEngine.Get.CreateObjectRotationGizmo();
         objectScaleGizmo = RTGizmosEngine.Get.CreateObjectScaleGizmo();
+        objectMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
         laserMoveGizmo = RTGizmosEngine.Get.CreateObjectMoveGizmo();
     }
 
     private void Update()
     {
-        // Toggle the gizmo active state when 'T' key is pressed
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            isGizmoActive = !isGizmoActive;
+            gizmoOption = 2;
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -66,13 +68,22 @@ public class RuntimeGizmo : MonoBehaviour
             {
                 objectRotateGizmo.Gizmo.SetEnabled(true);
                 objectScaleGizmo.Gizmo.SetEnabled(false);
+                objectMoveGizmo.Gizmo.SetEnabled(false);
                 objectRotateGizmo.SetTargetObject(targetObject);
             }
             else if (gizmoOption == 1)
             {
                 objectScaleGizmo.Gizmo.SetEnabled(true);
                 objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectMoveGizmo.Gizmo.SetEnabled(false);
                 objectScaleGizmo.SetTargetObject(targetObject);
+            }
+            else if (gizmoOption == 2)
+            {
+                objectMoveGizmo.Gizmo.SetEnabled(true);
+                objectRotateGizmo.Gizmo.SetEnabled(false);
+                objectScaleGizmo.Gizmo.SetEnabled(false);
+                objectMoveGizmo.SetTargetObject(targetObject);
             }
             // Laser
             laserMoveGizmo.Gizmo.SetEnabled(true);

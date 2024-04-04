@@ -44,6 +44,7 @@ public class CommunicationScript : MonoBehaviour
         // CamRotate does this for us already, and its saved in "currentTarget"
         ObjRot = CurObj.transform.rotation;
         ObjScale = CurObj.transform.localScale;
+        ObjPos = CurObj.transform.position;
 
         CurObj.transform.position = new Vector3(0, 0, 0);
 
