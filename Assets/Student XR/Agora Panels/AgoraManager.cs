@@ -429,6 +429,9 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
         _sample.globalUID = uid;
+
+        // create the panel automatically after joining for testing 
+        AgoraManager.CreateNewPlane(uid, _sample.GetChannelName());
         
     }
 
