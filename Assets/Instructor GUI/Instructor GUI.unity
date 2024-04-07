@@ -10127,8 +10127,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 659787771}
-        m_TargetAssemblyTypeName: SplitStudentController, Assembly-CSharp
-        m_MethodName: splitPair
+        m_TargetAssemblyTypeName: StudentnControl, Assembly-CSharp
+        m_MethodName: SplitFour
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

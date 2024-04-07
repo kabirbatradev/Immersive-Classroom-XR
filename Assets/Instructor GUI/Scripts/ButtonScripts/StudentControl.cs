@@ -61,51 +61,29 @@ public class StudentnControl : MonoBehaviour
         studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
         int[] groupAssignment = new int[studentsHeads.Length];
 
-        // Assuming 6 rows, pre-define the maximum number of rows
-        int maxRow = 5; // 0-based indexing, so row 6 is index 5
+        List<int[]> HARDCODED = new List<int[]>();
+        HARDCODED.Add(new int[] { 1, 1, 2, 2, 3, 3 });
+        HARDCODED.Add(new int[] { 200, 200, 1, 1, 2, 2, 3, 3, 200 });
+        HARDCODED.Add(new int[] { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 300 });
+        HARDCODED.Add(new int[] { 400, 400, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 400, 400, 400 });
 
-        // Sort students into a list based on their row and column for easier processing
-        List<(GameObject student, int row, int col)> sortedStudents = new List<(GameObject student, int row, int col)>();
-
+        int index = 0;
         foreach (GameObject student in studentsHeads)
         {
             int row = findRow(student);
             int col = findCol(student);
-            sortedStudents.Add((student, row, col));
+            groupAssignment[index] = HARDCODED[row - 1][col - 1];
+            index++;
         }
 
-        // Sort students by row and then by column to process in order
-        sortedStudents.Sort((a, b) => a.row == b.row ? a.col.CompareTo(b.col) : a.row.CompareTo(b.row));
-
-        int groupNumber = 1; // Start with group 1
-
-        // We'll group students by taking two from one row and two from the next row
-        for (int row = 0; row < maxRow; row += 2) // Iterate through rows in pairs
+        // printout the hardcoded
+        print("HARDCODED: ");
+        foreach (int[] row in HARDCODED)
         {
-            var currentRowStudents = sortedStudents.Where(s => s.row == row).ToList();
-            var nextRowStudents = sortedStudents.Where(s => s.row == row + 1).ToList();
-
-            int pairsInCurrentRow = currentRowStudents.Count / 2;
-            int pairsInNextRow = nextRowStudents.Count / 2;
-            int maxPairs = Math.Min(pairsInCurrentRow, pairsInNextRow);
-
-            for (int i = 0; i < maxPairs * 2; i++)
+            foreach (int col in row)
             {
-                if (i < currentRowStudents.Count)
-                {
-                    int studentIndex = Array.IndexOf(studentsHeads, currentRowStudents[i].student);
-                    groupAssignment[studentIndex] = groupNumber + (i / 2);
-                }
-
-                if (i < nextRowStudents.Count)
-                {
-                    int studentIndex = Array.IndexOf(studentsHeads, nextRowStudents[i].student);
-                    groupAssignment[studentIndex] = groupNumber + (i / 2);
-                }
+                print(col);
             }
-
-            // Adjust groupNumber for next set of rows
-            groupNumber += maxPairs + 1;
         }
 
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
