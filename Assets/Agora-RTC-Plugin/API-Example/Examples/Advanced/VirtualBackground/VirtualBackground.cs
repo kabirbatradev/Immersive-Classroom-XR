@@ -247,6 +247,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
 
         [NonSerialized]
         public uint globalUID;
+        public GameObject agoraPanelPrefab;
 
 
         // Use this for initialization
@@ -442,13 +443,14 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
 
 
         // my custom test function that creates a new place and puts the agora video on it
-        public static void CreateNewPlane(uint uid, string channelId = "") {
-            GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        public void CreateNewPlane(uint uid, string channelId = "") {
+            // GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            GameObject plane = Instantiate(agoraPanelPrefab);
             
-            var mesh = plane.GetComponent<MeshRenderer>();
-            if (mesh != null) {
-                mesh.material = new Material(Shader.Find("Unlit/Texture")); // important; this must be breaking 
-            }
+            // var mesh = plane.GetComponent<MeshRenderer>();
+            // if (mesh != null) {
+            //     mesh.material = new Material(Shader.Find("Unlit/Texture")); // important; this must be breaking 
+            // }
 
             // configure videoSurface
             var videoSurface = plane.AddComponent<VideoSurface>(); // important
@@ -644,7 +646,7 @@ namespace Agora_RTC_Plugin.API_Example.Examples.Advanced.VirtualBackground
 
             Debug.Log("Kabir: OnUserJoined was called; calling create new plane");
 
-            VirtualBackground.CreateNewPlane(uid, _sample.GetChannelName());
+            _sample.CreateNewPlane(uid, _sample.GetChannelName());
 
             Debug.Log("Kabir: CreateNewPlane finished");
             
