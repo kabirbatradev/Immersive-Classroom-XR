@@ -46,7 +46,7 @@ public class CommunicationScript : MonoBehaviour
         ObjScale = CurObj.transform.localScale;
         ObjPos = CurObj.transform.position;
 
-        CurObj.transform.position = new Vector3(0, 0, 0);
+        // CurObj.transform.position = new Vector3(0, 0, 0);
 
         if (Physics.Raycast(ray, out hit) && Input.GetMouseButton(0) && serverLaser)
         {

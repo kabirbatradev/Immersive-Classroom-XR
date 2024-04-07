@@ -50,6 +50,7 @@ public class RuntimeGizmo : MonoBehaviour
         {
             objectRotateGizmo.Gizmo.SetEnabled(false);
             objectScaleGizmo.Gizmo.SetEnabled(false);
+            objectMoveGizmo.Gizmo.SetEnabled(false);
             laserMoveGizmo.Gizmo.SetEnabled(false);
             return;
         }
