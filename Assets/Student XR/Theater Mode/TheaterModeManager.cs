@@ -83,10 +83,14 @@ public class TheaterModeManager : MonoBehaviour
         // }
 
 
+
+
         // update values for these from cloud
         float currentWallLoweredPercentage = 0.0f;
         float currentCeilingRemovedPercentage = 0.0f;
         bool ceilingClonesActive = true;
+        // skybox current skybox:
+        Material currentSkyboxMaterial = null;
 
         if (StreamTheaterModeData.Instance == null) {
             // do nothing, just use default values
@@ -95,6 +99,13 @@ public class TheaterModeManager : MonoBehaviour
             currentWallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
             currentCeilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
             ceilingClonesActive = StreamTheaterModeData.Instance.ceilingVisible;
+            currentSkyboxMaterial = StreamTheaterModeData.GetSkyboxMaterial();
+        }
+
+
+        // set skybox material
+        if (currentSkyboxMaterial != null) {
+            RenderSettings.skybox = currentSkyboxMaterial;
         }
 
         
