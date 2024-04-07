@@ -12509,7 +12509,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appIdInput: {fileID: 11400000, guid: 8304baef667150447bd80d28ef3a3a5b, type: 2}
-  agoraPanelPrefab: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
 --- !u!1 &1963412559
 GameObject:
   m_ObjectHideFlags: 0
@@ -13597,12 +13596,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071098694}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fca2f2e3e5e7d9458833ba9419f2c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   testPrefab: {fileID: 7802215343730013057, guid: 5172ecfba4fb21149ae1cc7dbc3c38b6, type: 3}
+  testPrefab2: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
   rightHandTransform: {fileID: 7079690333416302228}
   leftHandTransform: {fileID: 2982998299393685466}
 --- !u!4 &2071098696

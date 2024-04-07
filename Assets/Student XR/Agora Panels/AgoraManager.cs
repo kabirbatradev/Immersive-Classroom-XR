@@ -35,8 +35,19 @@ public class AgoraManager : MonoBehaviour
     internal IRtcEngine RtcEngine = null;
 
     [NonSerialized]
-    public uint globalUID;
+    public uint globalUID = 0;
+
+    [NonSerialized]
     public GameObject agoraPanelPrefab;
+
+
+
+    // make this class a singleton:
+    public static AgoraManager Instance;
+    private void Awake() {
+        if (Instance == null) Instance = this;
+        else Destroy(this);
+    }
 
 
     // Use this for initialization
@@ -80,7 +91,7 @@ public class AgoraManager : MonoBehaviour
         if (OVRInput.GetDown(OVRInput.RawButton.X))
         {
             Debug.Log("space key was pressed");
-            CreateNewPlane(globalUID, GetChannelName());
+            TestCreateNewAgoraPanel(globalUID, GetChannelName());
         }
     }
 
@@ -92,6 +103,7 @@ public class AgoraManager : MonoBehaviour
         _appID = _appIdInput.appID;
         _token = _appIdInput.token;
         _channelName = _appIdInput.channelName;
+
     }
 
     // private bool CheckAppId()
@@ -235,7 +247,7 @@ public class AgoraManager : MonoBehaviour
 
 
     // my custom test function that creates a new place and puts the agora video on it
-    public void CreateNewPlane(uint uid, string channelId = "") {
+    public void TestCreateNewAgoraPanel(uint uid, string channelId = "") {
         // GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         GameObject plane = Instantiate(agoraPanelPrefab);
         // plane.transform.localScale = new Vector3(0.1f,0.1f,0.1f); // shrink the plane
@@ -246,12 +258,12 @@ public class AgoraManager : MonoBehaviour
         //     mesh.material = new Material(Shader.Find("Unlit/Texture")); // important
         // }
 
-        // configure videoSurface
-        var videoSurface = plane.AddComponent<VideoSurface>(); // important
+        // configure videoSurface (should be automatic now)
+        // var videoSurface = plane.AddComponent<VideoSurface>(); // important
 
-        videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
+        // videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
 
-        videoSurface.SetEnable(true);
+        // videoSurface.SetEnable(true);
     }
 
     internal static void MakeVideoView(uint uid, string channelId = "")
@@ -432,7 +444,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
         _sample.globalUID = uid;
-        _sample.CreateNewPlane(uid, _sample.GetChannelName());
+        _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
     }
 
     public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)

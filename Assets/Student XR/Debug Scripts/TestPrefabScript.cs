@@ -6,6 +6,8 @@ public class TestPrefabScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject testPrefab;
+    [SerializeField]
+    private GameObject testPrefab2;
 
     [SerializeField]
     private Transform rightHandTransform, leftHandTransform;
@@ -18,6 +20,14 @@ public class TestPrefabScript : MonoBehaviour
             Vector3 position = leftHandTransform.position;
             Quaternion rotation = Quaternion.identity;
             Instantiate(testPrefab, position, rotation);
+        }
+
+
+
+        if (OVRInput.GetDown(OVRInput.RawButton.Y)) {
+            Vector3 position = leftHandTransform.position;
+            Quaternion rotation = Quaternion.identity;
+            Instantiate(testPrefab2, position, rotation);
         }
     }
 }
