@@ -45,6 +45,11 @@ public class TheaterControl : MonoBehaviour
 
     }
 
+    public void changeSkybox()
+    {
+        StreamTheaterModeData.ChangeSkybox();
+    }
+
     // public void startTheaterMode()
     // {
     //     StreamTheaterModeData.Instance.TriggerTheaterMode();
