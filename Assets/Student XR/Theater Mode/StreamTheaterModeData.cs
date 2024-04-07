@@ -30,13 +30,6 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
         Debug.Log("changing skybox");
         Instance.currentSkyboxIndex++;
         if (Instance.currentSkyboxIndex >= Instance.skyboxList.Count) Instance.currentSkyboxIndex = 0;
-
-        string key = "currentSkyboxIndex";
-        int value = Instance.currentSkyboxIndex;
-
-        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
-        PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
-        PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key] = value;
     }
 
     public static Material GetSkyboxMaterial() {
@@ -238,6 +231,8 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
         // }
 
+
+        // update the custom property based variables (read and write)
         if (photonView.IsMine) {
             // this is the instructor, so update the bool value
 
@@ -250,6 +245,15 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
             // update locally because server will update local cached hashmap with delay
             PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key] = value;
+
+
+            
+            key = "currentSkyboxIndex";
+            int valueInt = currentSkyboxIndex;
+
+            newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, valueInt } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+            PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key] = valueInt;
         }
         else {
             // this is a student, so read the bool value
@@ -261,6 +265,16 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             }
             else {
                 ceilingVisible = true;
+            }
+
+
+            key = "currentSkyboxIndex";
+            // if the custom property doesnt exist, then assume 0
+            if (PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key)) {
+                currentSkyboxIndex = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
+            }
+            else {
+                currentSkyboxIndex = 0;
             }
 
         }
