@@ -19,6 +19,12 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     }
 
 
+
+    public static void ChangeSkybox() {
+        Debug.Log("changing skybox");
+    }
+
+
     // static functions to call the functions on the instance
     // will also instantiate the instance as a new photon object if it doesnt already exist
     public static void ToggleTheaterMode() {
