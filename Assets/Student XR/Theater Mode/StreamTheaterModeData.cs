@@ -19,9 +19,34 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     }
 
 
+    
+
+    [NonSerialized]
+    public int currentSkyboxIndex = 0;
+
+    public List<Material> skyboxList = new List<Material>();
 
     public static void ChangeSkybox() {
         Debug.Log("changing skybox");
+        Instance.currentSkyboxIndex++;
+        if (Instance.currentSkyboxIndex >= Instance.skyboxList.Count) Instance.currentSkyboxIndex = 0;
+
+        string key = "currentSkyboxIndex";
+        int value = Instance.currentSkyboxIndex;
+
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+        PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key] = value;
+    }
+
+    public static Material GetSkyboxMaterial() {
+        if (Instance.skyboxList.Count == 0) {
+            Debug.Log("ERROR: skyboxList is empty!");
+            return null;
+        }
+        else {
+            return Instance.skyboxList[Instance.currentSkyboxIndex];
+        }
     }
 
 
