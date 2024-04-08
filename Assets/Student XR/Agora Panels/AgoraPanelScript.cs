@@ -6,6 +6,11 @@ using Agora.Rtc;
 
 public class AgoraPanelScript : MonoBehaviour
 {
+
+    public const string instructorPanelCurrentGroupKey = "InstructorPanelCurrentGroup";
+    private bool panelIsVisible;
+    private MeshRenderer renderer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +24,41 @@ public class AgoraPanelScript : MonoBehaviour
         var videoSurface = gameObject.AddComponent<VideoSurface>(); // important
         videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
         videoSurface.SetEnable(true);
+
+        renderer = GetComponent<MeshRenderer>();
     }
 
     void Update() {
         // check room custom property: InstructorPanelCurrentGroup
+
+        panelIsVisible = true;
+
+        if (CloudFunctions.RoomHasCustomProperty(instructorPanelCurrentGroupKey)) {
+            int instructorGroupNumber = (int)CloudFunctions.GetRoomCustomProperty(instructorPanelCurrentGroupKey);
+
+            int thisPanelGroupNumber = GetThisPanelGroupNumber();
+
+            if (instructorGroupNumber != 0 && instructorGroupNumber != thisPanelGroupNumber) {
+                panelIsVisible = false;
+            }
+        }
+        else {
+            // the instructor hasn't even joined, so dont show the panel..? but then its not even possible to create a panel, so just show it for debugging purposes
+            // panelIsVisible = false;
+        }
+
+        // to show or not to show the panel, that is the question.
+        // do not disable the object itself: this script will stop updating
+        // instead, disable the renderer
+        renderer.enabled = panelIsVisible;
+    }
+
+    private int GetThisPanelGroupNumber() {
+        // get parent panel object
+        // get the photon view
+        // get photon object group number
+        // otherwise, assume it is 1
+        return 1;
     }
 
 }
