@@ -21,4 +21,8 @@ public class AgoraPanelScript : MonoBehaviour
         videoSurface.SetEnable(true);
     }
 
+    void Update() {
+        // check room custom property: InstructorPanelCurrentGroup
+    }
+
 }
