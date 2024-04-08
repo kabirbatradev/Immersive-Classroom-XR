@@ -64,12 +64,12 @@ public class CloudFunctions : MonoBehaviour
     }
 
     public static bool PhotonObjectHasGroupNumber(GameObject photonObject) {
-        string key = "groupNum" + photonObject.GetComponent<PhotonView>().ViewID;
+        string key = "groupNum" + photonObject.GetPhotonView().ViewID;
         return RoomHasCustomProperty(key);
     }
 
     public static int GetPhotonObjectGroupNumber(GameObject photonObject) {
-        string key = "groupNum" + photonObject.GetComponent<PhotonView>().ViewID;
+        string key = "groupNum" + photonObject.GetPhotonView().ViewID;
         return (int)GetRoomCustomProperty(key);
     }
 

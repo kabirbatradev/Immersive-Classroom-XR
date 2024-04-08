@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Agora.Rtc;
+using Photon.Pun;
 
 public class AgoraPanelScript : MonoBehaviour
 {
@@ -55,9 +56,20 @@ public class AgoraPanelScript : MonoBehaviour
 
     private int GetThisPanelGroupNumber() {
         // get parent panel object
-        // get the photon view
+        if (gameObject.transform.parent == null) {
+            Debug.Log("agora panel has no parent");
+            return 1;
+        }
+        GameObject parentPanel = gameObject.transform.parent.gameObject;
+        // // get the photon view
+        // PhotonView parentPhotonView = parentPanel.GetPhotonView();
         // get photon object group number
+        if (CloudFunctions.PhotonObjectHasGroupNumber(parentPanel)) {
+            int panelGroupNumber = CloudFunctions.GetPhotonObjectGroupNumber(parentPanel);
+            return panelGroupNumber;
+        }
         // otherwise, assume it is 1
+        Debug.Log("panel does not have a group number");
         return 1;
     }
 
