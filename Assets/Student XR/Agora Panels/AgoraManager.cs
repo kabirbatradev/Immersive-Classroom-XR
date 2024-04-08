@@ -56,8 +56,8 @@ public class AgoraManager : MonoBehaviour
         InitEngine();
         JoinChannel();
 
-        PermissionHelper.RequestMicrophontPermission();
-        PermissionHelper.RequestCameraPermission();
+        // PermissionHelper.RequestMicrophontPermission();
+        // PermissionHelper.RequestCameraPermission();
 //             LoadAssetData();
 //             if (CheckAppId())
 //             {
