@@ -87,11 +87,11 @@ public class AgoraManager : MonoBehaviour
 
         // if (Input.GetKeyDown(KeyCode.Space))
         // quick test: press x to create panel at 0, 0, 0
-        if (OVRInput.GetDown(OVRInput.RawButton.X))
-        {
-            Debug.Log("space key was pressed");
-            TestCreateNewAgoraPanel(globalUID, GetChannelName());
-        }
+        // if (OVRInput.GetDown(OVRInput.RawButton.X))
+        // {
+        //     Debug.Log("space key was pressed");
+        //     TestCreateNewAgoraPanel(globalUID, GetChannelName());
+        // }
     }
 
     //Show data in AgoraBasicProfile
@@ -443,7 +443,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
         _sample.globalUID = uid;
-        _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
+        // _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
     }
 
     public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)
