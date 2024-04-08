@@ -12509,6 +12509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appIdInput: {fileID: 11400000, guid: 8304baef667150447bd80d28ef3a3a5b, type: 2}
+  agoraPanelPrefab: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
 --- !u!1 &1963412559
 GameObject:
   m_ObjectHideFlags: 0
