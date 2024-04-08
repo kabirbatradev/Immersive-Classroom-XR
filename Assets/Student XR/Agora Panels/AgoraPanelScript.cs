@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Agora.Rtc;
 
-public class AgoraPanelSetupVideoSurface : MonoBehaviour
+public class AgoraPanelScript : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

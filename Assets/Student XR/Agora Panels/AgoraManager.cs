@@ -37,7 +37,6 @@ public class AgoraManager : MonoBehaviour
     [NonSerialized]
     public uint globalUID = 0;
 
-    [NonSerialized]
     public GameObject agoraPanelPrefab;
 
 
