@@ -338,7 +338,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                     currentActiveModel.transform.localScale = objectScale;
 
                     Vector3 objectPosition = (Vector3)GetRoomCustomProperty("ObjectLocalPosition");
-                    currentActiveModel.transform.position = objectPosition;
+                    currentActiveModel.transform.localPosition = objectPosition;
 
                     // create a new laser instance if it doesnt already exist
                     if (mainObjectIndex >= laserGameObjects.Count) {
