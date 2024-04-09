@@ -46,7 +46,7 @@ public class GUIManager : MonoBehaviour
 
 
     [SerializeField]
-    private GameObject RequestInstructorForHelpButton;
+    private TextMeshProUGUI requestInstructorForHelpButtonLabel;
 
 
 
@@ -213,6 +213,9 @@ public class GUIManager : MonoBehaviour
         if (CloudFunctions.RoomHasCustomProperty(key)) {
             currentlyRequestingForHelp = (bool)CloudFunctions.GetRoomCustomProperty(key);
         }
+
+        requestInstructorForHelpButtonLabel.text = studentViewEnabled ? "Disable Student View" : "Enable Student View";
+
 
 
         if (currentlyRequestingForHelp) {
