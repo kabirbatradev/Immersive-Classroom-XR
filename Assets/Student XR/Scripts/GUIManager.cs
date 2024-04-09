@@ -45,6 +45,10 @@ public class GUIManager : MonoBehaviour
     private SharedAnchorControlPanelAdditionalFunctions additionalFunctionsScript;
 
 
+    [SerializeField]
+    private GameObject RequestInstructorForHelpButton;
+
+
 
     // we need the instance so that we can default to StudentMode from StreamlineManager when a room is joined
     public static GUIManager Instance;
@@ -171,6 +175,9 @@ public class GUIManager : MonoBehaviour
 
 
 
+
+
+
     public void OnRequestInstructorForHelpPressed() {
         SampleController.Instance.Log("OnRequestInstructorForHelpPressed");
 
@@ -190,6 +197,33 @@ public class GUIManager : MonoBehaviour
 
         SampleController.Instance.Log("setting request instructor help to " + updatedValue);
         CloudFunctions.SetRoomCustomProperty(key, updatedValue);
+
+    }
+
+
+    void Update() {
+        // RequestInstructorForHelpButton
+        // update the color and text of this button with respect to room custom property
+        int groupNumber = CloudFunctions.GetCurrentGroupNumber();
+        string key = "RequestHelpGroup" + groupNumber;
+
+        // assume false
+        bool currentlyRequestingForHelp = false;
+
+        if (CloudFunctions.RoomHasCustomProperty(key)) {
+            currentlyRequestingForHelp = (bool)CloudFunctions.GetRoomCustomProperty(key);
+        }
+
+
+        if (currentlyRequestingForHelp) {
+            // set the text to "Request to instructor sent"
+            // set the font color to yellow
+        }
+        else {
+            // set the text to "Request Instructor For Help"
+            // set the font color back to white
+        }
+
 
     }
 
