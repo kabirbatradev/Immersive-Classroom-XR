@@ -170,4 +170,28 @@ public class GUIManager : MonoBehaviour
     }
 
 
+
+    public void OnRequestInstructorForHelpPressed() {
+        SampleController.Instance.Log("OnRequestInstructorForHelpPressed");
+
+        int groupNumber = CloudFunctions.GetCurrentGroupNumber();
+        string key = "RequestHelpGroup" + groupNumber;
+
+        bool updatedValue = true;
+        // if the custom property already exists, then just toggle it
+        if (CloudFunctions.RoomHasCustomProperty(key)) {
+            updatedValue = !(bool)CloudFunctions.GetRoomCustomProperty(key);
+            // CloudFunctions.SetRoomCustomProperty(key, );
+        }
+        // if it doesnt exist, then set it to true
+        // else {
+        //     CloudFunctions.SetRoomCustomProperty(key, true);
+        // }
+
+        SampleController.Instance.Log("setting request instructor help to " + updatedValue);
+        CloudFunctions.SetRoomCustomProperty(key, updatedValue);
+
+    }
+
+
 }
