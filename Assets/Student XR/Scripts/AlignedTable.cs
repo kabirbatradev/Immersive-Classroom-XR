@@ -14,7 +14,7 @@ public class AlignedTable : MonoBehaviour
     private SharedAnchor tableAnchor;
 
     private MeshRenderer tableMeshRenderer;
-    private List<GameObject> anchorVisuals;
+    private List<GameObject> anchorVisuals = new();
 
     // Start is called before the first frame update
     void Start()
