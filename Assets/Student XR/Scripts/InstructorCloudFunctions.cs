@@ -110,6 +110,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
     public int GetMaxGroupNumber() {
+        if (PhotonNetwork.CurrentRoom == null) return 0;
 
         var players = PhotonPun.PhotonNetwork.CurrentRoom.Players.Values;
 
