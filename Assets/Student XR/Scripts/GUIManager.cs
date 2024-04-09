@@ -214,17 +214,18 @@ public class GUIManager : MonoBehaviour
             currentlyRequestingForHelp = (bool)CloudFunctions.GetRoomCustomProperty(key);
         }
 
-        requestInstructorForHelpButtonLabel.text = studentViewEnabled ? "Disable Student View" : "Enable Student View";
-
-
 
         if (currentlyRequestingForHelp) {
             // set the text to "Request to instructor sent"
             // set the font color to yellow
+            requestInstructorForHelpButtonLabel.text = "Request to instructor sent";
+            requestInstructorForHelpButtonLabel.color = Color.yellow;
         }
         else {
             // set the text to "Request Instructor For Help"
             // set the font color back to white
+            requestInstructorForHelpButtonLabel.text = "Request Instructor For Help";
+            requestInstructorForHelpButtonLabel.color = Color.white;
         }
 
 
