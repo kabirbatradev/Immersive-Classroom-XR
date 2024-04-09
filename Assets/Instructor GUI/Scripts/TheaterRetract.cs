@@ -39,6 +39,10 @@ public class TheaterRetract : MonoBehaviour
         {
             wallPercent = 1.0f;
         }
+        if (StreamTheaterModeData.Instance == null) {
+            // hasnt joined room yet; return so no error every frame
+            return;
+        }
         ceilingPercent = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
         wallPercent = StreamTheaterModeData.Instance.wallLoweredPercentage;
         retract(ceilingPercent, wallPercent);
