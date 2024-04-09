@@ -40,6 +40,7 @@ public class CloudFunctions : MonoBehaviour
 
     // room custom properties
     public static bool RoomHasCustomProperty(string key) {
+        if (PhotonNetwork.CurrentRoom == null) return false;
         return PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
     }
 
