@@ -19,7 +19,7 @@ public class TestPrefabScript : MonoBehaviour
         if (buttonPressed) {
             Vector3 position = leftHandTransform.position;
             Quaternion rotation = Quaternion.identity;
-            Instantiate(testPrefab, position, rotation);
+            Instantiate(testPrefab, position + new Vector3(0, 0.5f, 0), rotation);
         }
 
 
