@@ -543,7 +543,8 @@ public class InstructorCloudFunctions : MonoBehaviour
         Vector3 frontMostDeskPosition = new Vector3(center.x, min.y, max.z);
 
         // place main object in front and above this front desk position (few meters up, few meters forward)
-        Vector3 mainObjectPosition = new Vector3(0, 2.5f, 2) + frontMostDeskPosition;
+        // 2.5 up is too high; reduce that to 1.75 or 2
+        Vector3 mainObjectPosition = new Vector3(0, 2.0f, 2) + frontMostDeskPosition;
         var mainObjectContainer = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
         
         // set group number of main object
