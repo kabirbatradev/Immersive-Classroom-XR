@@ -1,52 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using TMPro;
 
 public class StudentHelp : MonoBehaviour
 {
     public TMP_Dropdown dropdown;
+    private List<int> currentGroupNumbers = new List<int>();
 
     void Start()
     {
-        dropdown.onValueChanged.AddListener(delegate { OnDropdownChanged(dropdown.value); });
+        dropdown.onValueChanged.AddListener(OnDropdownChanged);
+        UpdateDropdownOptions();
     }
+
     void Update()
     {
-
-        // Debug.Log(InstructorCloudFunctions.Instance.GetMaxGroupNumber());
-        // maxGroup = 
-        dropdown.ClearOptions();
-        List<string> options = new List<string>();
-        // add none option
-        options.Add("None");
-        List<int> groupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
-        for (int i = 0; i < groupNumbers.Count; i++)
+        var newGroupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
+        if (!Enumerable.SequenceEqual(newGroupNumbers, currentGroupNumbers))
         {
-            // Debug.Log("Group " + groupNumbers[i]);
-            options.Add("Group " + groupNumbers[i]);
+            UpdateDropdownOptions();
+        }
+    }
+
+    void UpdateDropdownOptions()
+    {
+        currentGroupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
+        dropdown.ClearOptions();
+        List<string> options = new List<string> { "None" };
+        foreach (var groupNumber in currentGroupNumbers)
+        {
+            options.Add($"Group {groupNumber}");
         }
         dropdown.AddOptions(options);
     }
 
     void OnDropdownChanged(int index)
     {
-        switch (index)
+        // "None" option selected
+        if (index == 0)
         {
-            case 0:
-                InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(-1);
-                break;
-            default:
-                InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(index);
-                break;
+            Debug.Log("Setting current group to -1");
+            InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(-1);
+        }
+        else
+        {
+            int actualGroupNumber = currentGroupNumbers[index - 1];
+            Debug.Log($"Setting current group to {actualGroupNumber}");
+            InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(actualGroupNumber);
         }
     }
 
     void OnDestroy()
     {
-        if (dropdown != null)
-        {
-            dropdown.onValueChanged.RemoveListener(delegate { OnDropdownChanged(dropdown.value); });
-        }
+        dropdown.onValueChanged.RemoveListener(OnDropdownChanged);
     }
 }
