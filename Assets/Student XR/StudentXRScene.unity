@@ -8137,7 +8137,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1298837697}
-  - component: {fileID: 1298837698}
   - component: {fileID: 1298837699}
   m_Layer: 0
   m_Name: TheaterManager
@@ -8162,23 +8161,6 @@ Transform:
   - {fileID: 1563339207}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1298837698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1298837696}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b249d003db3ff64fb7d91e738ee1dca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skyboxMats:
-  - {fileID: 2100000, guid: dc246bc93d3c844b198a9d888daf4548, type: 2}
-  - {fileID: 2100000, guid: f3bc3bb148f484d1b951d05c106526c2, type: 2}
-  controllerAnchor: {fileID: 7079690333416302228}
-  lineMaxLength: 50
 --- !u!114 &1298837699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14189,7 +14171,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071098694}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3fca2f2e3e5e7d9458833ba9419f2c0d, type: 3}
   m_Name: 
