@@ -289,7 +289,7 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
     // streaming happens many times per second (very fast)
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
-        Debug.Log("Stream Theater Mode Data's OnPhotonSerializeView");
+        // Debug.Log("Stream Theater Mode Data's OnPhotonSerializeView");
 
         // if writing, then this object was instantiated locally (it is the local head)
         if (stream.IsWriting) {
@@ -309,8 +309,8 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
             stream.SendNext(wallLoweredPercentage);
             stream.SendNext(ceilingRemovedPercentage);
 
-            Debug.Log($"writing wallLoweredPercentage: {wallLoweredPercentage}");
-            Debug.Log($"writing ceilingRemovedPercentage: {ceilingRemovedPercentage}");
+            // Debug.Log($"writing wallLoweredPercentage: {wallLoweredPercentage}");
+            // Debug.Log($"writing ceilingRemovedPercentage: {ceilingRemovedPercentage}");
 
         }
 
