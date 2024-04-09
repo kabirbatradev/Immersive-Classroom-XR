@@ -13,7 +13,9 @@ public class StudentHelp : MonoBehaviour
     }
     void Update()
     {
-        //maxGroup = InstructorCloudFunctions.Instance.GetMaxGroupNumber();
+
+        // Debug.Log(InstructorCloudFunctions.Instance.GetMaxGroupNumber());
+        // maxGroup = 
         dropdown.ClearOptions();
         List<string> options = new List<string>();
         // add none option
@@ -21,6 +23,7 @@ public class StudentHelp : MonoBehaviour
         List<int> groupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
         for (int i = 0; i < groupNumbers.Count; i++)
         {
+            // Debug.Log("Group " + groupNumbers[i]);
             options.Add("Group " + groupNumbers[i]);
         }
         dropdown.AddOptions(options);
