@@ -89,9 +89,9 @@ public class AlignedTable : MonoBehaviour
     public void ShowThisAndAnchor() {
 
         foreach (GameObject visual in anchorVisuals) {
-            visual.SetActive(false);
+            visual.SetActive(true);
         }
-        tableMeshRenderer.enabled = false;
+        tableMeshRenderer.enabled = true;
 
         // foreach (MeshRenderer renderer in allMeshRenderers) {
         //     renderer.enabled = true;
