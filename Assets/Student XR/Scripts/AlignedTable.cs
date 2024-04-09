@@ -13,7 +13,7 @@ public class AlignedTable : MonoBehaviour
 
     private SharedAnchor tableAnchor;
 
-    private List<MeshRenderer> allMeshRenderers;
+    private List<MeshRenderer> allMeshRenderers = new();
 
     // Start is called before the first frame update
     void Start()
