@@ -971,4 +971,21 @@ public class InstructorCloudFunctions : MonoBehaviour
         SetRoomCustomProperty("InstructorPanelCurrentGroup", groupNumber);
     }
 
+    // returns a list of integers: all the groups requesting for help
+    public List<int> GetGroupsRequestingHelp() {
+
+        List<int> groupsRequestingHelp = new();
+
+        for (int i = 0; i < GetMaxGroupNumber(); i++) {
+
+            string key = "RequestHelpGroup" + i;
+            if (RoomHasCustomProperty(key) && (bool)GetRoomCustomProperty(key)) {
+                groupsRequestingHelp.Add(i);
+            }
+            
+        }
+
+        return groupsRequestingHelp;
+    }
+
 }
