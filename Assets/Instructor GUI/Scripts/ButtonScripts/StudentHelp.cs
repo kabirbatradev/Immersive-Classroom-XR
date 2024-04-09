@@ -6,7 +6,6 @@ using TMPro;
 public class StudentHelp : MonoBehaviour
 {
     public TMP_Dropdown dropdown;
-    public int maxGroup = 40;
 
     void Start()
     {
@@ -17,9 +16,12 @@ public class StudentHelp : MonoBehaviour
         //maxGroup = InstructorCloudFunctions.Instance.GetMaxGroupNumber();
         dropdown.ClearOptions();
         List<string> options = new List<string>();
-        for (int i = 1; i <= maxGroup; i++)
+        // add none option
+        options.Add("None");
+        List<int> groupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
+        for (int i = 0; i < groupNumbers.Count; i++)
         {
-            options.Add("Group: " + i.ToString());
+            options.Add("Group " + groupNumbers[i]);
         }
         dropdown.AddOptions(options);
     }
@@ -29,16 +31,10 @@ public class StudentHelp : MonoBehaviour
         switch (index)
         {
             case 0:
-                Debug.Log("Option 1 selected");
-                break;
-            case 1:
-                Debug.Log("Option 2 selected");
-                break;
-            case 2:
-                Debug.Log("Option 3 selected");
+                InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(-1);
                 break;
             default:
-                Debug.Log("Unknown option");
+                InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(index);
                 break;
         }
     }
