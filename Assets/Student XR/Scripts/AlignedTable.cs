@@ -13,7 +13,8 @@ public class AlignedTable : MonoBehaviour
 
     private SharedAnchor tableAnchor;
 
-    private List<MeshRenderer> allMeshRenderers = new();
+    private MeshRenderer tableMeshRenderer;
+    private List<GameObject> anchorVisuals;
 
     // Start is called before the first frame update
     void Start()
@@ -32,11 +33,11 @@ public class AlignedTable : MonoBehaviour
 
             // allMeshRenderers
             foreach (Transform visual in tableAnchor.transform) {
-                allMeshRenderers.Add(visual.gameObject.GetComponent<MeshRenderer>());
+                anchorVisuals.Add(visual.gameObject);
             }
         }
 
-        allMeshRenderers.Add(GetComponent<MeshRenderer>());
+        tableMeshRenderer = GetComponent<MeshRenderer>();
 
         
     }
@@ -66,9 +67,14 @@ public class AlignedTable : MonoBehaviour
     // when hiding and showing anchor, do not enable and disable the objects; the table cloud object will not be positioned correctly
     public void HideThisAndAnchor() {
 
-        foreach (MeshRenderer renderer in allMeshRenderers) {
-            renderer.enabled = false;
+        foreach (GameObject visual in anchorVisuals) {
+            visual.SetActive(false);
         }
+        tableMeshRenderer.enabled = false;
+
+        // foreach (MeshRenderer renderer in allMeshRenderers) {
+        //     renderer.enabled = false;
+        // }
 
         // if (photonView.IsMine) {
         //     // visual axis and panel are both children of the anchor object
@@ -82,9 +88,14 @@ public class AlignedTable : MonoBehaviour
     }
     public void ShowThisAndAnchor() {
 
-        foreach (MeshRenderer renderer in allMeshRenderers) {
-            renderer.enabled = true;
+        foreach (GameObject visual in anchorVisuals) {
+            visual.SetActive(false);
         }
+        tableMeshRenderer.enabled = false;
+
+        // foreach (MeshRenderer renderer in allMeshRenderers) {
+        //     renderer.enabled = true;
+        // }
 
         // if (photonView.IsMine) {
         //     // visual axis and panel are both children of the anchor object
