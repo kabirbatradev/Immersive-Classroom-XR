@@ -982,9 +982,9 @@ public class InstructorCloudFunctions : MonoBehaviour
         for (int i = 1; i <= GetMaxGroupNumber(); i++) {
 
             string key = "RequestHelpGroup" + i;
-            Debug.Log($"has key: {key}; {RoomHasCustomProperty(key)}");
+            // Debug.Log($"has key: {key}; {RoomHasCustomProperty(key)}");
             if (RoomHasCustomProperty(key) && (bool)GetRoomCustomProperty(key)) {
-                Debug.Log($"key value: {key}; {(bool)GetRoomCustomProperty(key)}");
+                // Debug.Log($"key value: {key}; {(bool)GetRoomCustomProperty(key)}");
                 groupsRequestingHelp.Add(i);
             }
             
