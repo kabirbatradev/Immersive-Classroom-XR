@@ -964,4 +964,11 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     }
 
+
+    // 0 means all groups
+    // -1 means no group selected
+    public void SetInstructorPanelCurrentGroup(int groupNumber) {
+        SetRoomCustomProperty("InstructorPanelCurrentGroup", groupNumber);
+    }
+
 }
