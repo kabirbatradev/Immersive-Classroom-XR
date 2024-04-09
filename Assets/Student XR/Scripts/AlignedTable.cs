@@ -13,6 +13,8 @@ public class AlignedTable : MonoBehaviour
 
     private SharedAnchor tableAnchor;
 
+    private List<MeshRenderer> allMeshRenderers;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,18 @@ public class AlignedTable : MonoBehaviour
 
             // create a new anchor at the position of this table
             tableAnchor = Instantiate(anchorPrefab, transform.position, transform.rotation).GetComponent<SharedAnchor>();
+
+
+
+            // allMeshRenderers
+            foreach (Transform visual in tableAnchor.transform) {
+                allMeshRenderers.Add(visual.gameObject.GetComponent<MeshRenderer>());
+            }
         }
+
+        allMeshRenderers.Add(GetComponent<MeshRenderer>());
+
+        
     }
 
     // Update is called once per frame
@@ -49,26 +62,37 @@ public class AlignedTable : MonoBehaviour
         PhotonNetwork.Destroy(gameObject); // cloud object; call cloud destroy
     }
 
+    
+    // when hiding and showing anchor, do not enable and disable the objects; the table cloud object will not be positioned correctly
     public void HideThisAndAnchor() {
 
-        if (photonView.IsMine) {
-            // visual axis and panel are both children of the anchor object
-            foreach (Transform visual in tableAnchor.transform) {
-                visual.gameObject.SetActive(false);
-            }
+        foreach (MeshRenderer renderer in allMeshRenderers) {
+            renderer.enabled = false;
         }
 
-        gameObject.SetActive(false);
+        // if (photonView.IsMine) {
+        //     // visual axis and panel are both children of the anchor object
+        //     foreach (Transform visual in tableAnchor.transform) {
+        //         visual.gameObject.SetActive(false);
+        //     }
+        // }
+
+        // gameObject.SetActive(false);
 
     }
     public void ShowThisAndAnchor() {
-        if (photonView.IsMine) {
-            // visual axis and panel are both children of the anchor object
-            foreach (Transform visual in tableAnchor.transform) {
-                visual.gameObject.SetActive(true);
-            }
+
+        foreach (MeshRenderer renderer in allMeshRenderers) {
+            renderer.enabled = true;
         }
 
-        gameObject.SetActive(true);
+        // if (photonView.IsMine) {
+        //     // visual axis and panel are both children of the anchor object
+        //     foreach (Transform visual in tableAnchor.transform) {
+        //         visual.gameObject.SetActive(true);
+        //     }
+        // }
+
+        // gameObject.SetActive(true);
     }
 }
