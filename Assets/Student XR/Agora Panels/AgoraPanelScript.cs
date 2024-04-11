@@ -21,6 +21,10 @@ public class AgoraPanelScript : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+
+        int thisPanelGroupNumber = GetThisPanelGroupNumber();
+        SampleController.Instance.Log("Initializing an Agora Panel of group number " + thisPanelGroupNumber);
+        
         uint uid = AgoraManager.Instance.globalUID;
         string channelId = AgoraManager.Instance.GetChannelName();
         var videoSurface = gameObject.AddComponent<VideoSurface>(); // important
