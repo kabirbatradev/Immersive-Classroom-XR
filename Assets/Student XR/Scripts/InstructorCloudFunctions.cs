@@ -148,7 +148,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             CreateMainObjectsForIndividualMode();
         }
         else if (currentGroupMode == GroupMode.SmallGroupsMode) {
-            Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
+            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForSmallGroupsMode();
         }
         else {
