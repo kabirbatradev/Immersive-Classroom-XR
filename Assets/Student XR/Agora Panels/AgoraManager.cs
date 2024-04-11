@@ -448,13 +448,13 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // if not, then set it and this variable
         // if it does exist, then use that instead
         _sample.globalUID = uid;
-        // if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
-        //     uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
-        //     _sample.globalUID = cloudUID;
-        // }
-        // else {
-        //     CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
-        // }
+        if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
+            uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
+            _sample.globalUID = cloudUID;
+        }
+        else {
+            CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
+        }
 
 
 
