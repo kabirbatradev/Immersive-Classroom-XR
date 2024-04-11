@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3147686327972225332}
   - component: {fileID: 5949147081992920934}
   - component: {fileID: 7035595451779999314}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MyPhotonUserHeadTracker
   m_TagString: PlayerHead
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 3786041643926150863}
   - component: {fileID: 6807791113244862632}
   - component: {fileID: 2569307987993058588}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 7446955967590557535}
   - component: {fileID: 1159991796854518102}
   - component: {fileID: 2683631413945700494}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -25,6 +25,9 @@ public class ObjRotate : MonoBehaviour
 
     void Update()
     {
+        minZoomDistance = (float)GetRoomCustomProperty("LaserLength");
+        maxZoomDistance = (float)GetRoomCustomProperty("LaserLength");
+
         GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
         if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
         {
