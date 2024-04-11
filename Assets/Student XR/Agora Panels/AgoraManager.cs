@@ -441,6 +441,9 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnUserJoined(RtcConnection connection, uint uid, int elapsed)
     {
+
+        SampleController.Instance.Log("on user joined");
+
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
 
