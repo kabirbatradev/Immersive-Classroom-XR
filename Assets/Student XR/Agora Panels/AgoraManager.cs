@@ -448,13 +448,17 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // first check if there is already a custom room property with the agora uid
         // if not, then set it and this variable
         // if it does exist, then use that instead
-        _sample.globalUID = uid;
         if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
             uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
             _sample.globalUID = cloudUID;
+
+            SampleController.Instance.Log("user joined; room has custom property AgoraUID, setting uid to cloud value: " + cloudUID);
         }
         else {
             CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
+            _sample.globalUID = uid;
+
+            SampleController.Instance.Log("user joined; room does not have custom property AgoraUID, setting cloud value: " + uid);
         }
 
 
