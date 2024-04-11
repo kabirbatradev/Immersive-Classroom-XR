@@ -442,7 +442,23 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
     {
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
+
+
+        // first check if there is already a custom room property with the agora uid
+        // if not, then set it and this variable
+        // if it does exist, then use that instead
         _sample.globalUID = uid;
+        if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
+            uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
+            _sample.globalUID = cloudUID;
+        }
+        else {
+            CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
+        }
+
+
+
+
         // _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
     }
 
