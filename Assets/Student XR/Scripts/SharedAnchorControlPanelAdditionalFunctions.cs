@@ -226,11 +226,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // disable the aligned tables and related objects for the students, enable for admin
             bool isTable = obj.CompareTag("AlignedTable");
             bool isMarker = obj.CompareTag("SeatMarker");
-            if (!isInstructorGUIToggle) {
+            // if (!isInstructorGUIToggle) {
                 // if admin, enable tables, enable table's anchor, enable markers' first child
                 // if student or camera, then disable tables, disable table's anchor, disable markers' first child
                 if (isTable) {
-                    if (deviceCurrentMode == DeviceModes.Admin) {
+                    // instructor should see tables
+                    if (deviceCurrentMode == DeviceModes.Admin || isInstructorGUIToggle) {
                         obj.GetComponent<AlignedTable>().ShowThisAndAnchor();
                         // obj.SetActive(true);
                         // obj.GetComponent<AlignedTable>().ShowAnchor();
@@ -244,6 +245,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
                 if (isMarker) {
                     // the first child is the visual object; enable and disable that 
+                    // instructor should not see markers
                     if (deviceCurrentMode == DeviceModes.Admin) {
                         obj.transform.GetChild(0).gameObject.SetActive(true);
                     }
@@ -252,9 +254,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                     }
                 }
                 
-            }
+            // }
             // for instructor gui, the default visibility of the table and no markers or anchors is already good (the table is visible and nothing else)
-            
+                // jk its not default i guess
 
             // filter by group number:
 
