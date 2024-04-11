@@ -52,6 +52,7 @@ public class AgoraManager : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        SampleController.Instance.Log("starting Agora Manager after photon connects");
         LoadAssetData();
         InitEngine();
         JoinChannel();
