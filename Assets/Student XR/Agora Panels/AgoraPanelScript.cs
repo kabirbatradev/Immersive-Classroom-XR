@@ -19,6 +19,7 @@ public class AgoraPanelScript : MonoBehaviour
             // Agora is not ready yet (not connected)
             SampleController.Instance.Log("ERROR: failed to initialize agora panel (agora might not be connected yet)");
             gameObject.SetActive(false);
+            return;
         }
         uint uid = AgoraManager.Instance.globalUID;
         string channelId = AgoraManager.Instance.GetChannelName();
