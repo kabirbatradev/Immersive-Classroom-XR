@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skyboxList:
+  - {fileID: 2100000, guid: 425194497baa35b4191e01e8740fb03c, type: 2}
   - {fileID: 2100000, guid: dc246bc93d3c844b198a9d888daf4548, type: 2}
   - {fileID: 2100000, guid: 09bed373b62ae5d42b27f357273358c3, type: 2}
   - {fileID: 2100000, guid: ca8f7637bab4d56418c3fecd4c2cfecc, type: 2}
