@@ -75,4 +75,9 @@ public class CloudFunctions : MonoBehaviour
     }
 
 
+    public static bool HasJoinedPhotonRoom() {
+        return PhotonNetwork.CurrentRoom == null;
+    }
+
+
 }
