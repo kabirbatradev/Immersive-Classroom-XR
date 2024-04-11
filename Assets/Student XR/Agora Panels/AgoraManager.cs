@@ -458,6 +458,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
             SampleController.Instance.Log("user joined; room has custom property AgoraUID, setting uid to cloud value: " + cloudUID);
         }
         else {
+            // failed because the room doesnt exist yet?
             CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
             _sample.globalUID = uid;
 
