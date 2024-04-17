@@ -979,6 +979,11 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         List<int> groupsRequestingHelp = new();
 
+        // also add -1 to give an option to give help to no group (-1 means no group selected)
+        groupsRequestingHelp.Add(-1);
+        // also add 0 to give an option to give help to all groups
+        groupsRequestingHelp.Add(0);
+
         for (int i = 1; i <= GetMaxGroupNumber(); i++) {
 
             string key = "RequestHelpGroup" + i;
@@ -987,7 +992,7 @@ public class InstructorCloudFunctions : MonoBehaviour
                 // Debug.Log($"key value: {key}; {(bool)GetRoomCustomProperty(key)}");
                 groupsRequestingHelp.Add(i);
             }
-            
+
         }
 
         return groupsRequestingHelp;
