@@ -26,10 +26,18 @@ public class StreamTheaterModeData : MonoBehaviour, IPunObservable
 
     public List<Material> skyboxList = new List<Material>();
 
+    // go to next skybox
     public static void ChangeSkybox() {
-        Debug.Log("changing skybox");
+        Debug.Log("going to next");
         Instance.currentSkyboxIndex++;
         if (Instance.currentSkyboxIndex >= Instance.skyboxList.Count) Instance.currentSkyboxIndex = 0;
+    }
+
+    // go to previous skybox
+    public static void PreviousSkybox() {
+        Debug.Log("going to previous skybox");
+        Instance.currentSkyboxIndex--;
+        if (Instance.currentSkyboxIndex < 0) Instance.currentSkyboxIndex = Instance.skyboxList.Count-1;
     }
 
     public static Material GetSkyboxMaterial() {
