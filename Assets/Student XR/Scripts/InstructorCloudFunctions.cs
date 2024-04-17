@@ -685,6 +685,12 @@ public class InstructorCloudFunctions : MonoBehaviour
             Player player = playerArray[i];
             int groupNumber = groupNumbers[i];
 
+            if (groupNumber == 0) {
+                groupNumber = 999;
+                Debug.Log("Error: attempted to set group number to 0; setting to 999 as error message");
+            }
+
+            // skips admin and local player (instructor) automatically
             SetPlayerGroupNumber(player, groupNumber);
         }
         RecreateMainObjectsIfTheyExist();
