@@ -35,7 +35,7 @@ public class AgoraManager : MonoBehaviour
     internal IRtcEngine RtcEngine = null;
 
     [NonSerialized]
-    public uint globalUID = 0;
+    public int globalUID = 0;
 
     public GameObject agoraPanelPrefab;
 
@@ -452,15 +452,15 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // if not, then set it and this variable
         // if it does exist, then use that instead
         if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
-            uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
-            _sample.globalUID = cloudUID;
+            int cloudUID = (int)CloudFunctions.GetRoomCustomProperty("AgoraUID");
+            _sample.globalUID = (int)cloudUID;
 
             SampleController.Instance.Log("user joined; room has custom property AgoraUID, setting uid to cloud value: " + cloudUID);
         }
         else {
             // failed because the room doesnt exist yet?
-            CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
-            _sample.globalUID = uid;
+            CloudFunctions.SetRoomCustomProperty("AgoraUID", (int)uid);
+            _sample.globalUID = (int)uid;
 
             SampleController.Instance.Log("user joined; room does not have custom property AgoraUID, setting cloud value: " + uid);
         }
