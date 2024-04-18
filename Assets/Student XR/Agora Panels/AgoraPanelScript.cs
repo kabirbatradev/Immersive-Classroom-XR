@@ -62,6 +62,10 @@ public class AgoraPanelScript : MonoBehaviour
         // do not disable the object itself: this script will stop updating
         // instead, disable the renderer
         renderer.enabled = panelIsVisible;
+
+        // if the panel is visible, then also hear professor audio
+        uint professorUid = (uint)AgoraManager.Instance.globalUID;
+        AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(professorUid, !panelIsVisible);
     }
 
     private int GetThisPanelGroupNumber() {
