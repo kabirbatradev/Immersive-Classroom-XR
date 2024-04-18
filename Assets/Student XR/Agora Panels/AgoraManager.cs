@@ -136,7 +136,10 @@ public class AgoraManager : MonoBehaviour
     private void JoinChannel()
     {
         RtcEngine.EnableAudio();
-        RtcEngine.EnableVideo();
+        // RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist
+
+        RtcEngine.MuteLocalAudioStream();
+        
         RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
         RtcEngine.JoinChannel(_token, _channelName, "", 0);
     }
