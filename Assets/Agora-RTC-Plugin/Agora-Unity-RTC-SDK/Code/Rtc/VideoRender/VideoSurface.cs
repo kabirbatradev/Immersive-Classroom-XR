@@ -133,9 +133,9 @@ namespace Agora.Rtc
             }
             else
             {
-#if UNITY_EDITOR
-                UpdateShader();
-#endif
+// #if UNITY_EDITOR
+//                 UpdateShader();
+// #endif
             }
         }
 
