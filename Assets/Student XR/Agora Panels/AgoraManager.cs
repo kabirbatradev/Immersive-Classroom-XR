@@ -35,7 +35,7 @@ public class AgoraManager : MonoBehaviour
     internal IRtcEngine RtcEngine = null;
 
     [NonSerialized]
-    public uint globalUID = 0;
+    public int globalUID = 0;
 
     public GameObject agoraPanelPrefab;
 
@@ -441,6 +441,9 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnUserJoined(RtcConnection connection, uint uid, int elapsed)
     {
+
+        SampleController.Instance.Log("on user joined");
+
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
 
@@ -448,13 +451,18 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // first check if there is already a custom room property with the agora uid
         // if not, then set it and this variable
         // if it does exist, then use that instead
-        _sample.globalUID = uid;
         if (CloudFunctions.RoomHasCustomProperty("AgoraUID")) {
-            uint cloudUID = (uint)CloudFunctions.GetRoomCustomProperty("AgoraUID");
-            _sample.globalUID = cloudUID;
+            int cloudUID = (int)CloudFunctions.GetRoomCustomProperty("AgoraUID");
+            _sample.globalUID = (int)cloudUID;
+
+            SampleController.Instance.Log("user joined; room has custom property AgoraUID, setting uid to cloud value: " + cloudUID);
         }
         else {
-            CloudFunctions.SetRoomCustomProperty("AgoraUID", uid);
+            // failed because the room doesnt exist yet?
+            CloudFunctions.SetRoomCustomProperty("AgoraUID", (int)uid);
+            _sample.globalUID = (int)uid;
+
+            SampleController.Instance.Log("user joined; room does not have custom property AgoraUID, setting cloud value: " + uid);
         }
 
 

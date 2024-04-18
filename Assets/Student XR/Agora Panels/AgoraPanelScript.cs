@@ -15,9 +15,14 @@ public class AgoraPanelScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (AgoraManager.Instance == null || AgoraManager.Instance.globalUID == 0) {
+        if (AgoraManager.Instance == null) {
+            SampleController.Instance.Log("ERROR: AgoraManager.Instance is null");
+            gameObject.SetActive(false);
+            return;
+        }
+        if (AgoraManager.Instance.globalUID == 0) {
             // Agora is not ready yet (not connected)
-            SampleController.Instance.Log("ERROR: failed to initialize agora panel (agora might not be connected yet)");
+            SampleController.Instance.Log("ERROR: agora is not connected yet because global uid is 0");
             gameObject.SetActive(false);
             return;
         }
@@ -25,7 +30,7 @@ public class AgoraPanelScript : MonoBehaviour
         int thisPanelGroupNumber = GetThisPanelGroupNumber();
         SampleController.Instance.Log("Initializing an Agora Panel of group number " + thisPanelGroupNumber);
         
-        uint uid = AgoraManager.Instance.globalUID;
+        uint uid = (uint)AgoraManager.Instance.globalUID;
         string channelId = AgoraManager.Instance.GetChannelName();
         var videoSurface = gameObject.AddComponent<VideoSurface>(); // important
         videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
