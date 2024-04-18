@@ -796,12 +796,23 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             // get the average of all transforms of this group
 
-            Vector3 averageVector = Vector3.zero;
-            foreach(Vector3 position in headPositions) {
-                averageVector += position;
-            }
-            averageVector /= headPositions.Count;
+            // Vector3 averageVector = Vector3.zero;
+            // foreach(Vector3 position in headPositions) {
+            //     averageVector += position;
+            // }
+            // averageVector /= headPositions.Count;
 
+            MinMax boundingBox = new();
+            foreach(Vector3 position in headPositions) {
+                boundingBox.AddPoint(position);
+            }
+            // instead of using average position of students, use the center of the bounding box
+            Vector3 max = boundingBox.max;
+            Vector3 min = boundingBox.min;
+            Vector3 center = (min + max) / 2;
+
+            // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z); // this is where the panel is (to the right, up a bit)
+            Vector3 mainObjectPosition = new Vector3(max.x, center.y, center.z);
 
 
             // for groups of 4, we should not shift by 1 z
@@ -813,7 +824,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             // now, instantiate the Main Object container at this position and for this group
 
             // instantiate
-            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, averageVector, mainObjectContainerPrefab.transform.rotation);
+            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
             // set group number
             SetPhotonObjectGroupNumber(mainObjectContainerInstance, i);
 
