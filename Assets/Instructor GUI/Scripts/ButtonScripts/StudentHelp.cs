@@ -28,7 +28,8 @@ public class StudentHelp : MonoBehaviour
     {
         currentGroupNumbers = InstructorCloudFunctions.Instance.GetGroupsRequestingHelp();
         dropdown.ClearOptions();
-        List<string> options = new List<string> { "None" };
+        List<string> options = new List<string> { "No Group" };
+        options.Add("All Groups");
         foreach (var groupNumber in currentGroupNumbers)
         {
             options.Add($"Group {groupNumber}");
@@ -43,6 +44,11 @@ public class StudentHelp : MonoBehaviour
         {
             Debug.Log("Setting current group to -1");
             InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(-1);
+        }
+        else if (index == 1)
+        {
+            Debug.Log("Setting current group to 0");
+            InstructorCloudFunctions.Instance.SetInstructorPanelCurrentGroup(0);
         }
         else
         {
