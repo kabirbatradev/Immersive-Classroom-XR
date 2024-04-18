@@ -32,7 +32,11 @@ public class AgoraManager : MonoBehaviour
 
     // public Text LogText;
     // internal Logger Log;
-    internal IRtcEngine RtcEngine = null;
+
+    
+    // make the RtcEngine accessable from other scripts
+    [NonSerialized]
+    public IRtcEngine RtcEngine = null;
 
     [NonSerialized]
     public int globalUID = 0;
@@ -138,7 +142,7 @@ public class AgoraManager : MonoBehaviour
         RtcEngine.EnableAudio();
         // RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist
 
-        RtcEngine.MuteLocalAudioStream();
+        RtcEngine.MuteLocalAudioStream(true); // mute the audio of the student
         
         RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
         RtcEngine.JoinChannel(_token, _channelName, "", 0);
