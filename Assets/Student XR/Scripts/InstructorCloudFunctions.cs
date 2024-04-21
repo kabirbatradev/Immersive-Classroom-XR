@@ -814,7 +814,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             Vector3 center = (min + max) / 2;
 
             // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z); // this is where the panel is (to the right, up a bit)
-            Vector3 mainObjectPosition = new Vector3(max.x, center.y, center.z);
+            Vector3 mainObjectPosition = new Vector3(center.x, center.y, center.z);
 
 
             // for groups of 4, we should not shift by 1 z
