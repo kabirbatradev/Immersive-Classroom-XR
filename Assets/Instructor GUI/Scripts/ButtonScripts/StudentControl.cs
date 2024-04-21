@@ -46,8 +46,8 @@ public class StudentnControl : MonoBehaviour
         int index = 0;
         foreach (GameObject student in studentsHeads)
         {
-            int row = findRow(student);
-            int group = row / 2;
+            int row = findRow(student) - 1;
+            int group = (row / 2) + 1;
             groupAssignment[index] = group;
             index++;
         }
