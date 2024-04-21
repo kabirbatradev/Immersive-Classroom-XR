@@ -140,7 +140,7 @@ public class AgoraManager : MonoBehaviour
     private void JoinChannel()
     {
         RtcEngine.EnableAudio();
-        RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist
+        RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist? i think this broke things
 
         RtcEngine.MuteLocalAudioStream(true); // mute the audio of the student
         
