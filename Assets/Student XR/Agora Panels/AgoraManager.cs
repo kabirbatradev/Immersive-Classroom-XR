@@ -143,7 +143,7 @@ public class AgoraManager : MonoBehaviour
         RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist? i think this broke things
 
         RtcEngine.MuteLocalAudioStream(true); // mute the audio of the student
-        
+
         RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
         RtcEngine.JoinChannel(_token, _channelName, "", 0);
     }
@@ -451,6 +451,12 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
         SampleController.Instance.Log("on user joined");
 
+        if (_sample.globalUID != 0) {
+            // if its not 0, then its already set so dont change anything
+            SampleController.Instance.Log("uid is not 0 so it is not 0 so will not change uid");
+        }
+
+
         // _sample.Log.UpdateLog(string.Format("OnUserJoined uid: ${0} elapsed: ${1}", uid, elapsed));
         // VirtualBackground.MakeVideoView(uid, _sample.GetChannelName());
 
@@ -472,6 +478,8 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
             SampleController.Instance.Log("user joined; room does not have custom property AgoraUID, setting cloud value: " + uid);
         }
 
+        // also mute the instructor using their uid (we can unmute it automatically in update function of panel
+        AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(uid, true);
 
 
 
