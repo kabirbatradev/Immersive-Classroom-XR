@@ -1023,4 +1023,27 @@ public class InstructorCloudFunctions : MonoBehaviour
         SetRoomCustomProperty(key, false);
     }
 
+
+    public void DestroyTablesAndMarkers() {
+
+        // copied from additional functions
+
+
+        // get all desks
+        GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+
+        // delete all desks and spatial anchors
+        foreach (GameObject alignedTable in alignedTableObjects) {
+            alignedTable.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy tables
+            alignedTable.GetComponent<AlignedTable>().DestroyThisAndAnchor();
+        }
+
+        // delete all markers
+        GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
+        foreach (GameObject seatMarker in seatMarkerObjects) {
+            seatMarker.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy markers
+            // Destroy(seatMarkers);
+            PhotonNetwork.Destroy(seatMarker); // cloud object; call cloud destroy
+        }
+    }
 }
