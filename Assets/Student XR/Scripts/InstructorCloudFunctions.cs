@@ -412,7 +412,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             // create the main object for this player:
 
             // shift the spawn position forward by 1 meter (in front of the player); actually 0.5 might be better
-            mainObjectSpawnPosition += new Vector3(0, 0, 0.5f);
+            mainObjectSpawnPosition += new Vector3(0, 0, 1.0f);
             var mainObjectContainerInstance = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectSpawnPosition, mainObjectContainerPrefab.transform.rotation);
             // set group number
             SetPhotonObjectGroupNumber(mainObjectContainerInstance, groupNumber);
