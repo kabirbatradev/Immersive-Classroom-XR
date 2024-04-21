@@ -48,8 +48,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // small groups is usually groups of 4
     enum GroupMode {LargeLectureMode, IndividualMode, SmallGroupsMode, Fallback};
-    // private GroupMode currentGroupMode = GroupMode.Fallback;
-    private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
+    private GroupMode currentGroupMode = GroupMode.Fallback;
+    // private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
     public const string laserLengthKey = "LaserLength";
     private const float individualModeLaserLength = 0.5f;
     private const float largeLectureModeLaserLength = 4.0f;
@@ -134,10 +134,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         // bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
         // GroupMode mode = currentGroupMode;
 
-        // if (currentGroupMode == GroupMode.Fallback) {
-        //     OLDCreateMainObjectContainerPerGroup();
-        //     return;
-        // }
+        if (currentGroupMode == GroupMode.Fallback) {
+            Debug.Log("group mode not set; calling large lecture mode");
+            LargeLectureMode();
+        }
 
         // string groupMode = (string)GetRoomCustomProperty(groupModeKey);
         if (currentGroupMode == GroupMode.LargeLectureMode) {
@@ -814,7 +814,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             Vector3 center = (min + max) / 2;
 
             // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z); // this is where the panel is (to the right, up a bit)
-            Vector3 mainObjectPosition = new Vector3(max.x, center.y, center.z);
+            Vector3 mainObjectPosition = new Vector3(center.x, center.y, center.z);
 
 
             // for groups of 4, we should not shift by 1 z
