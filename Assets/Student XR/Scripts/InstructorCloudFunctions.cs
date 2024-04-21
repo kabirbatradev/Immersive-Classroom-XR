@@ -48,8 +48,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // small groups is usually groups of 4
     enum GroupMode {LargeLectureMode, IndividualMode, SmallGroupsMode, Fallback};
-    // private GroupMode currentGroupMode = GroupMode.Fallback;
-    private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
+    private GroupMode currentGroupMode = GroupMode.Fallback;
+    // private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
     public const string laserLengthKey = "LaserLength";
     private const float individualModeLaserLength = 0.5f;
     private const float largeLectureModeLaserLength = 4.0f;
@@ -134,10 +134,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         // bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
         // GroupMode mode = currentGroupMode;
 
-        // if (currentGroupMode == GroupMode.Fallback) {
-        //     OLDCreateMainObjectContainerPerGroup();
-        //     return;
-        // }
+        if (currentGroupMode == GroupMode.Fallback) {
+            Debug.Log("group mode not set; calling large lecture mode");
+            LargeLectureMode();
+        }
 
         // string groupMode = (string)GetRoomCustomProperty(groupModeKey);
         if (currentGroupMode == GroupMode.LargeLectureMode) {
