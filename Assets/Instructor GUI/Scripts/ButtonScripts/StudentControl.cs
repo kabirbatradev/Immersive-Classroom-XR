@@ -66,6 +66,8 @@ public class StudentnControl : MonoBehaviour
         HARDCODED.Add(new int[] { 200, 200, 1, 1, 2, 2, 3, 3, 200 });
         HARDCODED.Add(new int[] { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 300 });
         HARDCODED.Add(new int[] { 400, 400, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 400, 400, 400 });
+        HARDCODED.Add(new int[] { 500, 500, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 500, 500, 500 });
+        HARDCODED.Add(new int[] { 600, 600, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 600, 600, 600 });
 
         int index = 0;
         foreach (GameObject student in studentsHeads)
