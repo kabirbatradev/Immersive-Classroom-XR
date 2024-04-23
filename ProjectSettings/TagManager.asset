@@ -12,6 +12,7 @@ TagManager:
   - SidePanel
   - WallMesh
   - StreamTheaterModeData
+  - VisibleToInstructor
   layers:
   - Default
   - TransparentFX

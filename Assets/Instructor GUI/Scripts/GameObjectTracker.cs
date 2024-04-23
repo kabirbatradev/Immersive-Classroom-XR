@@ -5,24 +5,43 @@ using System;
 using System.IO;
 using Photon.Pun;
 using Photon.Realtime;
-
 [Serializable]
 public class GameObjectData
 {
-    public List<string> names = new List<string>();
-    public List<string> tags = new List<string>();
-    public List<Vector3> positions = new List<Vector3>();
-    public List<Quaternion> rotations = new List<Quaternion>();
+    public string name;
+    public string tag;
+    public Vector3 position;
+    public Quaternion rotation;
+}
+
+[Serializable]
+public class FrameData
+{
+    public int frameNumber;
+    public List<GameObjectData> gameObjects = new List<GameObjectData>();
+}
+
+[Serializable]
+public class TrackedData
+{
+    public List<FrameData> frames = new List<FrameData>();
 }
 
 public class GameObjectTracker : MonoBehaviour
 {
     public List<GameObject> gameObjectsToTrack = new List<GameObject>();
-    private Dictionary<GameObject, GameObjectData> trackedData = new Dictionary<GameObject, GameObjectData>();
+    private TrackedData trackedData = new TrackedData();
     public float recordFrequency = 1.0f;
+    private string path;
 
     private void Start()
     {
+        string time = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        path = Application.dataPath + "/TrackedData/TrackedData" + time + ".json";
+        if (!Directory.Exists(Application.dataPath + "/TrackedData"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/TrackedData");
+        }
         StartCoroutine(RecordData());
     }
 
@@ -30,42 +49,44 @@ public class GameObjectTracker : MonoBehaviour
     {
         while (true)
         {
+            FrameData frameData = new FrameData();
+            frameData.frameNumber = Time.frameCount;
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
             GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
-            for (int i = 0; i < studentsHeads.Length; i++)
+            foreach (GameObject student in studentsHeads)
             {
-                AddGameObject(studentsHeads[i]);
+                AddGameObject(student);
             }
-            for (int i = 0; i < mainObjects.Length; i++)
+            foreach (GameObject mainObject in mainObjects)
             {
-                AddGameObject(mainObjects[i]);
+                AddGameObject(mainObject);
             }
             foreach (GameObject obj in gameObjectsToTrack)
             {
-                if (!trackedData.ContainsKey(obj))
+                if (obj != null)
                 {
-                    trackedData[obj] = new GameObjectData();
+                    GameObjectData data = new GameObjectData
+                    {
+                        name = obj.name,
+                        tag = obj.tag,
+                        position = obj.transform.position,
+                        rotation = obj.transform.rotation
+                    };
+                    frameData.gameObjects.Add(data);
                 }
-
-                trackedData[obj].names.Add(obj.name);
-                trackedData[obj].tags.Add(obj.tag);
-                trackedData[obj].positions.Add(obj.transform.position);
-                trackedData[obj].rotations.Add(obj.transform.rotation);
             }
-            ExportDataToJson();
+            trackedData.frames.Add(frameData);
+            ExportDataToJson();  // Consider moving this outside the loop if only needed at end of session
             yield return new WaitForSeconds(1f / recordFrequency);
         }
     }
 
     public void AddGameObject(GameObject obj)
     {
-        if (!gameObjectsToTrack.Contains(obj))
+        if (obj != null && !gameObjectsToTrack.Contains(obj))
         {
             gameObjectsToTrack.Add(obj);
-            if (!trackedData.ContainsKey(obj))
-            {
-                trackedData[obj] = new GameObjectData();
-            }
+            Debug.Log("Added GameObject: " + obj.name);
         }
     }
 
@@ -74,14 +95,13 @@ public class GameObjectTracker : MonoBehaviour
         if (gameObjectsToTrack.Contains(obj))
         {
             gameObjectsToTrack.Remove(obj);
-            trackedData.Remove(obj);
         }
     }
 
     public void ExportDataToJson()
     {
-        string json = JsonUtility.ToJson(trackedData);
-        File.WriteAllText(Application.dataPath + "/TrackedData/TrackedData.json", json);
-        Debug.Log("Data exported to JSON file at: " + Application.dataPath + "/TrackedData/TrackedData.json");
+        string json = JsonUtility.ToJson(trackedData, true);
+        File.WriteAllText(path, json);
+        Debug.Log("Data exported to JSON file at: " + path);
     }
 }

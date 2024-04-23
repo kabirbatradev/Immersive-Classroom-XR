@@ -61,7 +61,8 @@ public class CommunicationScript : MonoBehaviour
             SetVariableOnServer("IsShooting", IsShooting);
         }
 
-        SetVariableOnServer("CameraPosition", StartPos);
+        // SetVariableOnServer("CameraPosition", StartPos);
+        SetVariableOnServer("CameraPosition", StartPos - CurObj.transform.position);
         SetVariableOnServer("ObjectRotation", ObjRot);
         SetVariableOnServer("ObjectLocalPosition", ObjPos);
         SetVariableOnServer("ObjectScale", ObjScale);
