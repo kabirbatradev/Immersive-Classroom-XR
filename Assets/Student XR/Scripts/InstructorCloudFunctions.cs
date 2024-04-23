@@ -48,8 +48,8 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     // small groups is usually groups of 4
     enum GroupMode {LargeLectureMode, IndividualMode, SmallGroupsMode, Fallback};
-    // private GroupMode currentGroupMode = GroupMode.Fallback;
-    private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
+    private GroupMode currentGroupMode = GroupMode.Fallback;
+    // private GroupMode currentGroupMode = GroupMode.LargeLectureMode;
     public const string laserLengthKey = "LaserLength";
     private const float individualModeLaserLength = 0.5f;
     private const float largeLectureModeLaserLength = 4.0f;
@@ -134,10 +134,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         // bool groupModeIsSet = RoomHasCustomProperty(groupModeKey);
         // GroupMode mode = currentGroupMode;
 
-        // if (currentGroupMode == GroupMode.Fallback) {
-        //     OLDCreateMainObjectContainerPerGroup();
-        //     return;
-        // }
+        if (currentGroupMode == GroupMode.Fallback) {
+            Debug.Log("group mode not set; calling large lecture mode");
+            LargeLectureMode();
+        }
 
         // string groupMode = (string)GetRoomCustomProperty(groupModeKey);
         if (currentGroupMode == GroupMode.LargeLectureMode) {
@@ -412,7 +412,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             // create the main object for this player:
 
             // shift the spawn position forward by 1 meter (in front of the player); actually 0.5 might be better
-            mainObjectSpawnPosition += new Vector3(0, 0, 0.5f);
+            mainObjectSpawnPosition += new Vector3(0, 0, 1.0f);
             var mainObjectContainerInstance = PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectSpawnPosition, mainObjectContainerPrefab.transform.rotation);
             // set group number
             SetPhotonObjectGroupNumber(mainObjectContainerInstance, groupNumber);
@@ -814,7 +814,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             Vector3 center = (min + max) / 2;
 
             // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z); // this is where the panel is (to the right, up a bit)
-            Vector3 mainObjectPosition = new Vector3(max.x, center.y, center.z);
+            Vector3 mainObjectPosition = new Vector3(center.x, center.y, center.z);
 
 
             // for groups of 4, we should not shift by 1 z
@@ -1023,4 +1023,27 @@ public class InstructorCloudFunctions : MonoBehaviour
         SetRoomCustomProperty(key, false);
     }
 
+
+    public void DestroyTablesAndMarkers() {
+
+        // copied from additional functions
+
+
+        // get all desks
+        GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
+
+        // delete all desks and spatial anchors
+        foreach (GameObject alignedTable in alignedTableObjects) {
+            alignedTable.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy tables
+            alignedTable.GetComponent<AlignedTable>().DestroyThisAndAnchor();
+        }
+
+        // delete all markers
+        GameObject[] seatMarkerObjects = GameObject.FindGameObjectsWithTag("SeatMarker");
+        foreach (GameObject seatMarker in seatMarkerObjects) {
+            seatMarker.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy markers
+            // Destroy(seatMarkers);
+            PhotonNetwork.Destroy(seatMarker); // cloud object; call cloud destroy
+        }
+    }
 }

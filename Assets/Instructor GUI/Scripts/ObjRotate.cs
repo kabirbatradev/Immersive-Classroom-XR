@@ -28,20 +28,22 @@ public class ObjRotate : MonoBehaviour
         minZoomDistance = (float)GetRoomCustomProperty("LaserLength");
         maxZoomDistance = (float)GetRoomCustomProperty("LaserLength");
 
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
-        if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
-        {
-            string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-            Transform foundTarget = FindTargetByName(currentActiveObjectName);
-            if (foundTarget != null)
-            {
-                currentTarget = foundTarget;
-            }
-        }
-        else
-        {
-            return;
-        }
+        // GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
+        // if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
+        // {
+        //     string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+        //     Transform foundTarget = FindTargetByName(currentActiveObjectName);
+        //     if (foundTarget != null)
+        //     {
+        //         currentTarget = foundTarget;
+        //     }
+        // }
+        // else
+        // {
+        //     return;
+        // }
+
+        currentTarget = CamRotate.Instance.currentTarget;
 
         // if (Input.GetKeyDown(KeyCode.L))
         // {
