@@ -13,6 +13,9 @@ TagManager:
   - WallMesh
   - StreamTheaterModeData
   - VisibleToInstructor
+  - Marker
+  - FakeStudent
+  - QuizOption
   layers:
   - Default
   - TransparentFX
