@@ -5,9 +5,9 @@ using UnityEngine;
 public class TestPrefabScript : MonoBehaviour
 {
     [SerializeField]
-    private GameObject testPrefab;
+    private GameObject pressXPrefab;
     [SerializeField]
-    private GameObject testPrefab2;
+    private GameObject pressYPrefab;
 
     [SerializeField]
     private Transform rightHandTransform, leftHandTransform;
@@ -19,7 +19,7 @@ public class TestPrefabScript : MonoBehaviour
         if (buttonPressed) {
             Vector3 position = leftHandTransform.position;
             Quaternion rotation = Quaternion.identity;
-            Instantiate(testPrefab, position + new Vector3(0, 0.5f, 0), rotation);
+            Instantiate(pressXPrefab, position + new Vector3(0, 0.5f, 0), rotation);
         }
 
 
@@ -27,7 +27,7 @@ public class TestPrefabScript : MonoBehaviour
         if (OVRInput.GetDown(OVRInput.RawButton.Y)) {
             Vector3 position = leftHandTransform.position;
             Quaternion rotation = Quaternion.identity;
-            Instantiate(testPrefab2, position, rotation);
+            Instantiate(pressYPrefab, position, rotation);
         }
     }
 }
