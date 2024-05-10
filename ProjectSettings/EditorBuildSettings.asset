@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Student XR/StudentXRScene.unity
     guid: 2362e9c3da4f10f4fa79a2e5220b9cb0
-  - enabled: 1
+  - enabled: 0
     path: Assets/InteractivePanel/TestPanelScene.unity
     guid: 3105c0010cef31242b412e604f74bd61
   m_configObjects:
