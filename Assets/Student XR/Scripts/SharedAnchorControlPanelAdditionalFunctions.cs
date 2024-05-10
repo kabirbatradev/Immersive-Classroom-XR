@@ -226,6 +226,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // disable the aligned tables and related objects for the students, enable for admin
             bool isTable = obj.CompareTag("AlignedTable");
             bool isMarker = obj.CompareTag("SeatMarker");
+            bool isMainObjectContainer = obj.CompareTag("MainObjectContainer");
             // if (!isInstructorGUIToggle) {
                 // if admin, enable tables, enable table's anchor, enable markers' first child
                 // if student or camera, then disable tables, disable table's anchor, disable markers' first child
@@ -243,7 +244,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                     }
                 }
 
-                if (isMarker) {
+                else if (isMarker) {
                     // the first child is the visual object; enable and disable that 
                     // instructor should not see markers
                     if (deviceCurrentMode == DeviceModes.Admin) {
@@ -257,6 +258,16 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // }
             // for instructor gui, the default visibility of the table and no markers or anchors is already good (the table is visible and nothing else)
                 // jk its not default i guess
+
+
+            else if (isMainObjectContainer && isInstructorGUIToggle) {
+                // if this object is the main object container, then instructor should not see it, but should still be able to access the photon view
+                // therefore, we will deactivate the subobjects of the container
+
+                foreach (GameObject mainObj in obj.transform) {
+                    mainObj.gameObject.SetActive(false);
+                }
+            }
 
             // filter by group number:
 
