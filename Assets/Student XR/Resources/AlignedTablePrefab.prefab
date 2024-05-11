@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5996070529342617998}
   - component: {fileID: 2704544782355471999}
   - component: {fileID: 1883913160679115705}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: AlignedTablePrefab
   m_TagString: AlignedTable
   m_Icon: {fileID: 0}

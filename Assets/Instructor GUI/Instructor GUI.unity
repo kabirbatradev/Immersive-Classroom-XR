@@ -1529,7 +1529,7 @@ GameObject:
   - component: {fileID: 106997023}
   - component: {fileID: 106997022}
   - component: {fileID: 106997021}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Wall1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5858,7 +5858,7 @@ GameObject:
   - component: {fileID: 333164372}
   - component: {fileID: 333164371}
   - component: {fileID: 333164370}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13507,7 +13507,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827388327}
   - component: {fileID: 827388328}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15811,7 +15811,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 256
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -21905,7 +21905,7 @@ GameObject:
   - component: {fileID: 1208951401}
   - component: {fileID: 1208951400}
   - component: {fileID: 1208951399}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Wall2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22139,7 +22139,7 @@ GameObject:
   - component: {fileID: 1214183670}
   - component: {fileID: 1214183669}
   - component: {fileID: 1214183668}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Wall4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24180,7 +24180,7 @@ GameObject:
   - component: {fileID: 1290759125}
   - component: {fileID: 1290759124}
   - component: {fileID: 1290759123}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Ceiling1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38986,7 +38986,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853474385}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7b19f4e3075b35409287f30d7898417, type: 3}
   m_Name: 
@@ -43434,7 +43434,7 @@ GameObject:
   - component: {fileID: 2117463458}
   - component: {fileID: 2117463457}
   - component: {fileID: 2117463456}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Wall3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
