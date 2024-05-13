@@ -10,6 +10,7 @@ public class CreateModel : MonoBehaviour
     public RuntimeGizmo gizmo;
 
     static private int modelIndex = -1;
+    public GameObject mainObjectContainer;
 
     // call back func for creating model
     public void createModel()
@@ -21,6 +22,21 @@ public class CreateModel : MonoBehaviour
 
         modelIndex = 1;
         InstructorCloudFunctions.Instance.SetActiveModelNumber(modelIndex);
+
+        if (mainObjectContainer != null)
+        {
+            for (int i = 0; i < mainObjectContainer.transform.childCount; i++)
+            {
+                if (i == modelIndex - 1)
+                {
+                    mainObjectContainer.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                else
+                {
+                    mainObjectContainer.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     // call back func for changing model
@@ -38,6 +54,21 @@ public class CreateModel : MonoBehaviour
         Debug.Log("Change model button pressed");
         // call the function from instructor cloud functions
         InstructorCloudFunctions.Instance.SetActiveModelNumber(modelIndex);
+
+        if (mainObjectContainer != null)
+        {
+            for (int i = 0; i < mainObjectContainer.transform.childCount; i++)
+            {
+                if (i == modelIndex - 1)
+                {
+                    mainObjectContainer.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                else
+                {
+                    mainObjectContainer.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
 
@@ -51,6 +82,14 @@ public class CreateModel : MonoBehaviour
 
         // The following code changes the placeholder text
         modelIndex = -1;
+
+        if (mainObjectContainer != null)
+        {
+            for (int i = 0; i < mainObjectContainer.transform.childCount; i++)
+            {
+                mainObjectContainer.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
     }
 
     public void toggleGizmo()

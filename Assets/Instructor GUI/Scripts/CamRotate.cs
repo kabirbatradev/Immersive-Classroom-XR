@@ -14,6 +14,7 @@ public class CamRotate : MonoBehaviour
     private float distanceFromTarget;
     private Vector3 currentRotation;
     public bool lockOn = true;
+    public GameObject mainObjectContainer;
 
     public static CamRotate Instance;
     private void Awake()
@@ -38,7 +39,6 @@ public class CamRotate : MonoBehaviour
 
     void Update()
     {
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
         if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
         {
             string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
@@ -53,10 +53,6 @@ public class CamRotate : MonoBehaviour
             return;
         }
 
-        // if (Input.GetKeyDown(KeyCode.L))
-        // {
-        //     lockOn = !lockOn;
-        // }
 
         if (currentTarget != null && lockOn)
         {

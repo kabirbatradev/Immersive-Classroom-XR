@@ -282,19 +282,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
                 foreach (Transform mainObj in obj.transform)
                 {
-                    if (mainObj.GetComponent<MeshRenderer>() != null)
-                    {
-                        mainObj.gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        // if the object has children, then disable all of the children
-                        foreach (Transform child in mainObj)
-                        {
-                            child.gameObject.SetActive(false);
-                        }
-                    }
+                    mainObj.gameObject.SetActive(false);
                 }
+
+                return;
             }
 
             // filter by group number:
