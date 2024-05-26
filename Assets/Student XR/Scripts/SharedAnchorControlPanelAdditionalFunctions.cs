@@ -401,17 +401,21 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                             // Debug.Log("camera position " + cameraPosition);
                             // Debug.Log("hit position " + hitPosition);
 
-                            // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
                             // enable or disable the line renderer
 
-                            // draw the line with respect to the main object
                             lineRenderer.enabled = true;
+                            laserInstance.SetActive(true); // make sure the laser instance is also active
+
+                            // draw the line with respect to the main object
+                            // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
                             lineRenderer.SetPosition(0, cameraPosition + currentActiveModel.transform.position);
                             lineRenderer.SetPosition(1, hitPosition + currentActiveModel.transform.position);
+
 
                         }
                         else {
                             lineRenderer.enabled = false;
+                            laserInstance.SetActive(false); // deactivate the entire object so any additional objects are not visible
                         }
                     }
                 }
