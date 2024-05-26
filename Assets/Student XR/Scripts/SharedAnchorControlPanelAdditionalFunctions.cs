@@ -404,7 +404,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                             // enable or disable the line renderer
 
                             lineRenderer.enabled = true;
-                            laserInstance.SetActive(true); // make sure the laser instance is also active
+                            // laserInstance.SetActive(true); // make sure the laser instance is also active
 
                             // draw the line with respect to the main object
                             // use lineRenderer.SetPosition(index, vector3); for index 0 and 1
@@ -415,7 +415,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                         }
                         else {
                             lineRenderer.enabled = false;
-                            laserInstance.SetActive(false); // deactivate the entire object so any additional objects are not visible
+                            // laserInstance.SetActive(false); // deactivate the entire object so any additional objects are not visible
                         }
                     }
                 }
