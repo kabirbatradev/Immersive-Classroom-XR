@@ -25,6 +25,7 @@ public class CreateModel : MonoBehaviour
 
         if (mainObjectContainer != null)
         {
+            mainObjectContainer.transform.position = new Vector3(0, 0, 0);
             for (int i = 0; i < mainObjectContainer.transform.childCount; i++)
             {
                 if (i == modelIndex - 1)

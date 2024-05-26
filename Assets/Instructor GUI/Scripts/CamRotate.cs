@@ -39,20 +39,17 @@ public class CamRotate : MonoBehaviour
 
     void Update()
     {
-        if (mainObjectContainer != null && RoomHasCustomProperty("mainObjectCurrentModelName"))
+        string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
+        for (int i = 0; i < mainObjectContainer.transform.childCount; i++)
         {
-            string currentActiveObjectName = (string)GetRoomCustomProperty("mainObjectCurrentModelName");
-            Transform foundTarget = FindTargetByName(currentActiveObjectName);
-            if (foundTarget != null)
+            if (mainObjectContainer.transform.GetChild(i).gameObject.activeSelf)
             {
-                currentTarget = foundTarget;
+                if (mainObjectContainer.transform.GetChild(i).name == currentActiveObjectName)
+                {
+                    currentTarget = mainObjectContainer.transform.GetChild(i);
+                }
             }
         }
-        else
-        {
-            return;
-        }
-
 
         if (currentTarget != null && lockOn)
         {
@@ -76,7 +73,6 @@ public class CamRotate : MonoBehaviour
     private Transform FindTargetByName(string targetName)
     {
         // find it in the main object container
-        GameObject mainObjectContainer = GameObject.FindWithTag("MainObjectContainer");
         if (mainObjectContainer != null)
         {
             foreach (Transform child in mainObjectContainer.transform)
