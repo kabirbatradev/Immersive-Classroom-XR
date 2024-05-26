@@ -292,7 +292,31 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
+        DrawMainObjectAndLaser();
 
+
+
+
+
+
+        // update the group number text at the top of the control panel (for devices)
+
+        // if device (not instructor)
+        if (!isInstructorGUIToggle) {
+
+            // get the text component from groupNumberTextObject
+            TextMeshProUGUI textbox = groupNumberTextObject.GetComponent<TextMeshProUGUI>();
+
+            // write the current group number using currentUserGroupNumber
+            textbox.text = "Group Number: " + currentUserGroupNumber;
+            
+        }
+
+
+    }
+
+    private void DrawMainObjectAndLaser() {
+        
         // iterate through all main object instances, only show the correct subobject, 
         // draw the instructor laser pointer, and update rotation and scaling of the object
 
@@ -413,27 +437,15 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // wait this only removes from the list, doesnt destroy the laser game objects
             // laserGameObjects.RemoveRange(mainObjectContainers.Length, numberOfLasersToDestroy);
         }
-
-
-
-
-
-
-        // update the group number text at the top of the control panel (for devices)
-
-        // if device (not instructor)
-        if (!isInstructorGUIToggle) {
-
-            // get the text component from groupNumberTextObject
-            TextMeshProUGUI textbox = groupNumberTextObject.GetComponent<TextMeshProUGUI>();
-
-            // write the current group number using currentUserGroupNumber
-            textbox.text = "Group Number: " + currentUserGroupNumber;
-            
-        }
-
-
     }
+
+
+
+
+
+
+
+
 
     // these functions are to be called by GUIManager every time the device user switches between student, admin, and camera modes
     public void SetDeviceModeAdmin() {
