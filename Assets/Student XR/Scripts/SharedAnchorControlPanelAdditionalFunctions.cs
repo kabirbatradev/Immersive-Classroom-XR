@@ -667,6 +667,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private void DestroyAndResetAlignedTables() {
         // reset next row number
         nextDeskRowNumber = 1;
+        panelMarkerCounter = 1;
 
         // get all desks
         GameObject[] alignedTableObjects = GameObject.FindGameObjectsWithTag("AlignedTable");
@@ -685,6 +686,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             PhotonNetwork.Destroy(seatMarker); // cloud object; call cloud destroy
         }
 
+
+        GameObject[] panelMarkerObjects = GameObject.FindGameObjectsWithTag("PanelMarker");
+        foreach (GameObject panelMarker in panelMarkerObjects) {
+            panelMarker.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer); // first transfer ownership so that a second admin can destroy markers
+            // Destroy(seatMarkers);
+            PhotonNetwork.Destroy(panelMarker); // cloud object; call cloud destroy
+        }
     }
 
 
