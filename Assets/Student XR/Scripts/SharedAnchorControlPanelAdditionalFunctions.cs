@@ -83,9 +83,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
     private int nextDeskRowNumber = 1;
+    private int panelMarkerCounter = 1;
 
     [SerializeField]
     private GameObject seatMarkerPrefab;
+
+    [SerializeField]
+    private GameObject panelMarkerPrefab;
 
 
     // [SerializeField]
@@ -624,6 +628,18 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             // enable the visual component of the marker for debugging purposes
             newMarkerObject.transform.GetChild(0).gameObject.SetActive(true);
+
+
+
+
+            // next to each seat marker, we can place a PANEL marker
+            markerX += 1; // right of the seat marker
+            markerY += 1; // above the table a bit
+            markerZ = tableBounds.center.z; // at the table, not behind it
+            GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
+            
+            SetRoomCustomProperty("panelMarker" + newPanelMarker.GetPhotonView().ViewID, panelMarkerCounter);
+            panelMarkerCounter++;
         }
 
 
