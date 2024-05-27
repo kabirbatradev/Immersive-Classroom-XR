@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: -3562977886112673303}
   m_Layer: 0
   m_Name: PanelMarkerPrefab
-  m_TagString: SeatMarker
+  m_TagString: PanelMarker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
