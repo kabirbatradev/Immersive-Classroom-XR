@@ -639,6 +639,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             markerZ = tableBounds.center.z; // at the table, not behind it
             Debug.Log("Instantiating panelMarkerPrefab");
             GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
+            newPanelMarker.transform.SetParent(tableObject.transform);
             
             SetRoomCustomProperty("panelMarker" + newPanelMarker.GetPhotonView().ViewID, panelMarkerCounter);
             panelMarkerCounter++;
