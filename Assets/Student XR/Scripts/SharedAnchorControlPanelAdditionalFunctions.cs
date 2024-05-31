@@ -633,16 +633,24 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
 
-            // next to each seat marker, we can place a PANEL marker
-            markerX += 0.3f; // right of the seat marker
-            markerY += 0.3f; // above the table a bit
-            markerZ = tableBounds.center.z; // at the table, not behind it
-            Debug.Log("Instantiating panelMarkerPrefab");
-            GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
-            newPanelMarker.transform.SetParent(tableObject.transform);
+            // only create panel markers on even numbered rows
+            if (rowNumber % 2 == 0) {
+
+                // next to each seat marker, we can place a PANEL marker
+                markerX += 0.3f; // right of the seat marker
+                markerY += 0.3f; // above the table a bit
+                markerZ = tableBounds.center.z; // at the table, not behind it
+                Debug.Log("Instantiating panelMarkerPrefab");
+                GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
+                newPanelMarker.transform.SetParent(tableObject.transform);
+                
+
+                // honestly i might not use this panel number thing, but the original idea was to give the panel a number to make it easier to know which one it is
+                SetRoomCustomProperty("panelMarker" + newPanelMarker.GetPhotonView().ViewID, panelMarkerCounter);
+                panelMarkerCounter++;
+            }
             
-            SetRoomCustomProperty("panelMarker" + newPanelMarker.GetPhotonView().ViewID, panelMarkerCounter);
-            panelMarkerCounter++;
+            // end of for loop going through each seat on the current row            
         }
 
 
