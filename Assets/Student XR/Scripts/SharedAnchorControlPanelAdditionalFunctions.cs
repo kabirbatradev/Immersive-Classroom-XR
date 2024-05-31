@@ -634,8 +634,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
             // next to each seat marker, we can place a PANEL marker
-            markerX += 1; // right of the seat marker
-            markerY += 1; // above the table a bit
+            markerX += 0.3f; // right of the seat marker
+            markerY += 0.3f; // above the table a bit
             markerZ = tableBounds.center.z; // at the table, not behind it
             Debug.Log("Instantiating panelMarkerPrefab");
             GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
