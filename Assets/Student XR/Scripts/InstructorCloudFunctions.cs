@@ -60,17 +60,17 @@ public class InstructorCloudFunctions : MonoBehaviour
     private const float smallGroupsModeObjectScale = 1.5f;
 
     void Update() {
-        if (debugMode) {
-            if (Input.GetKeyDown(KeyCode.P)) {
-                // p for spawning panels
-                CreatePanelPerGroup();
-            }
+        // if (debugMode) {
+        //     if (Input.GetKeyDown(KeyCode.P)) {
+        //         // p for spawning panels
+        //         CreatePanelPerGroup();
+        //     }
 
-            if (Input.GetKeyDown(KeyCode.X)) {
-                // p for spawning panels
-                // DestroyAllPanels();
-            }
-        }
+        //     if (Input.GetKeyDown(KeyCode.X)) {
+        //         // p for spawning panels
+        //         // DestroyAllPanels();
+        //     }
+        // }
 
     }
     
