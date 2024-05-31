@@ -1003,12 +1003,13 @@ public class InstructorCloudFunctions : MonoBehaviour
             // if the strictly right one is not too far (lets say less than 1.5 meter farther than the closest one), then use that instead
                 // dont want to go too far bc then we might place the panel on a different row
             Vector3 panelPos;
-            // if the difference is small, then use the strictly right panel marker
-            if (bestDistanceStrictlyRight - bestDistance < 1.5f) {
-                panelPos = bestPanelMarkerObjectStrictlyRight.transform.position;
-            }
-            else {
+            // if the difference is big, then use the closest
+            if (bestPanelMarkerObjectStrictlyRight == null || bestDistanceStrictlyRight - bestDistance >= 1.5f) {
                 panelPos = bestPanelMarkerObject.transform.position;
+            }
+            // if difference is small, then use the strictly right one
+            else {
+                panelPos = bestPanelMarkerObjectStrictlyRight.transform.position;
             }
 
 
