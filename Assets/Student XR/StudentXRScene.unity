@@ -16273,6 +16273,7 @@ MonoBehaviour:
   laserGameObjectPrefab: {fileID: 5974225422595571798, guid: 140b7d11df0757d4eb0e753a32f3de31, type: 3}
   groupNumberTextObject: {fileID: 935712103}
   seatMarkerPrefab: {fileID: 3226519048542732199, guid: f05482441d888844f81aaa6364c11f47, type: 3}
+  panelMarkerPrefab: {fileID: 3226519048542732199, guid: ea43e13eb01277c47952971a1910ee95, type: 3}
 --- !u!224 &8607079647158505907 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8607079647650679341, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
