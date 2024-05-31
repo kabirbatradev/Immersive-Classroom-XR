@@ -608,6 +608,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             float markerY = tableBounds.center.y;
 
+            Debug.Log("Instantiating seatMarkerPrefab");
             GameObject newMarkerObject = PhotonNetwork.Instantiate(seatMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
             newMarkerObject.transform.SetParent(tableObject.transform);
             // set the parent to the table object before rotation so that,
@@ -636,6 +637,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             markerX += 1; // right of the seat marker
             markerY += 1; // above the table a bit
             markerZ = tableBounds.center.z; // at the table, not behind it
+            Debug.Log("Instantiating panelMarkerPrefab");
             GameObject newPanelMarker = PhotonNetwork.Instantiate(panelMarkerPrefab.name, new Vector3(markerX, markerY, markerZ), Quaternion.identity);
             
             SetRoomCustomProperty("panelMarker" + newPanelMarker.GetPhotonView().ViewID, panelMarkerCounter);
