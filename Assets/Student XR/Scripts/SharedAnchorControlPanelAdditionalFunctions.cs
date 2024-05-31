@@ -229,7 +229,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             // disable the aligned tables and related objects for the students, enable for admin
             bool isTable = obj.CompareTag("AlignedTable");
-            bool isMarker = obj.CompareTag("SeatMarker");
+            bool isMarker = obj.CompareTag("SeatMarker") || obj.CompareTag("PanelMarker");
             bool isMainObjectContainer = obj.CompareTag("MainObjectContainer");
             // if (!isInstructorGUIToggle) {
                 // if admin, enable tables, enable table's anchor, enable markers' first child
