@@ -887,8 +887,89 @@ public class InstructorCloudFunctions : MonoBehaviour
         }
     }
 
-    
+
+
+
+    // the new algorithm must place a panel at a panel marker which exist at specific positions on top of even numbered desks.
+    // this algorithm picks the closest panel marker that is also to the right of the bounding box of students in the group.
     public void CreatePanelPerGroup() {
+        Debug.Log("CreatePanelPerGroup called");
+        if (panelPrefab == null) {
+            Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
+        }
+
+
+        int maxGroupNum = GetMaxGroupNumber();
+        if (maxGroupNum == 0) {
+            // all players are admins
+            Debug.Log("all players are admins; not creating any panels");
+            return;
+        }
+
+        // for each group, keep track of min max of each student position to position the table
+        List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
+        // this list needs to be filled
+        for (int i = 0; i < maxGroupNum+1; i++) {
+            groupBounds.Add(new MinMax());
+            // groupBounds[i].InitializePointsArray();
+        }
+
+        // get PlayerHead game objects instead of the players list so we know where they are too
+        GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+        Debug.Log(playerHeadObjects.Length);
+
+        // var players = PhotonNetwork.CurrentRoom.Players.Values;
+        // foreach (Player player in players) {
+        foreach (GameObject playerHeadObject in playerHeadObjects) {
+            Debug.Log(playerHeadObject);
+            Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
+            int groupNumber = GetPlayerGroupNumber(player);
+
+            // if the player is the current player, then skip
+            if (player.Equals(PhotonNetwork.LocalPlayer)) {
+                Debug.Log("(skipping current player)");
+                continue;
+            }
+            // skip players of group number 0 (admins)
+            if (groupNumber == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            // where are the players? they are at the position of the playerHeadObject
+            // after filtering, build bounds list depending on group number
+            groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
+        }
+
+        // now that we have all of the group bounding boxes, for each group, create a panel
+        for (int i = 1; i < groupBounds.Count; i++) {
+            if (groupBounds[i].points.Count == 0) {
+                Debug.Log("there are no students in group " + i + ", skipping creation of panel");
+                continue;
+            }
+            
+            Vector3 max = groupBounds[i].max;
+            Vector3 min = groupBounds[i].min;
+            Vector3 center = (min + max) / 2;
+
+            // TODO: place the panel at the position of one of the panel markers
+
+            // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
+            // GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+
+            // give the panel a group number!
+            SetPhotonObjectGroupNumber(panelObject, i);
+        }
+
+    }
+
+
+
+
+
+
+    // the old algorithm approximated the position of the desks and placed the panels to the right of the bounding box of students
+    public void OLDCreatePanelPerGroup() {
         Debug.Log("CreatePanelPerGroup called");
         if (panelPrefab == null) {
             Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
