@@ -916,7 +916,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         // get PlayerHead game objects instead of the players list so we know where they are too
         GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
-        Debug.Log(playerHeadObjects.Length);
+        // Debug.Log(playerHeadObjects.Length);
 
         // var players = PhotonNetwork.CurrentRoom.Players.Values;
         // foreach (Player player in players) {
@@ -941,6 +941,13 @@ public class InstructorCloudFunctions : MonoBehaviour
             groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
         }
 
+
+
+        // get a list of all panel markers
+        GameObject[] allPanelMarkerObjects = GameObject.FindGameObjectsWithTag("PanelMarker");
+
+
+
         // now that we have all of the group bounding boxes, for each group, create a panel
         for (int i = 1; i < groupBounds.Count; i++) {
             if (groupBounds[i].points.Count == 0) {
@@ -952,10 +959,62 @@ public class InstructorCloudFunctions : MonoBehaviour
             Vector3 min = groupBounds[i].min;
             Vector3 center = (min + max) / 2;
 
-            // TODO: place the panel at the position of one of the panel markers
+            // now we have to place the panel at the position of one of the panel markers
 
-            // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
-            // GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+
+            // go through all panel markers and find the closest ones; keep track of whether they are strictly right of the bounding box as well
+            float bestDistance = -1;
+            GameObject bestPanelMarkerObject = null;
+            float bestDistanceStrictlyRight = -1;
+            GameObject bestPanelMarkerObjectStrictlyRight = null;
+            foreach (GameObject panelMarkerObject in allPanelMarkerObjects) {
+                Vector3 panelMarkerPosition = panelMarkerObject.transform.position;
+
+                float distance = Vector3.Distance(center, panelMarkerPosition);
+
+                // if to the right of the bounding box, then strictly right is true
+                bool strictlyRight = panelMarkerPosition.x > max.x;
+
+                // update closest marker
+                if (bestPanelMarkerObject == null) {
+                    bestPanelMarkerObject = panelMarkerObject;
+                    bestDistance = distance;
+                }
+                else if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestPanelMarkerObject = panelMarkerObject;
+                }
+
+                // also update marker strictly right 
+                if (strictlyRight) {
+                    if (bestPanelMarkerObjectStrictlyRight == null) {
+                        bestPanelMarkerObjectStrictlyRight = panelMarkerObject;
+                        bestDistanceStrictlyRight = distance;
+                    }
+                    else if (distance < bestDistanceStrictlyRight) {
+                        bestDistanceStrictlyRight = distance;
+                        bestPanelMarkerObjectStrictlyRight = panelMarkerObject;
+                    }
+                }
+
+            }
+
+            // now we have a bestPanelMarkerObject and a bestPanelMarkerObjectStrictlyRight (along with their distances)
+            // if the strictly right one is not too far (lets say less than 1.5 meter farther than the closest one), then use that instead
+                // dont want to go too far bc then we might place the panel on a different row
+            Vector3 panelPos;
+            // if the difference is small, then use the strictly right panel marker
+            if (bestDistanceStrictlyRight - bestDistance < 1.5f) {
+                panelPos = bestPanelMarkerObjectStrictlyRight.transform.position;
+            }
+            else {
+                panelPos = bestPanelMarkerObject.transform.position;
+            }
+
+
+            // old positioning system
+                // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
 
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
