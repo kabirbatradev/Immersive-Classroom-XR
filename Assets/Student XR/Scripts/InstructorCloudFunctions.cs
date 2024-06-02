@@ -1016,7 +1016,11 @@ public class InstructorCloudFunctions : MonoBehaviour
             // old positioning system
                 // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
             GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
-
+            PhotonView photonView = panelObject.GetComponent<PhotonView>();
+            if (photonView != null && photonView.Owner != PhotonNetwork.LocalPlayer)
+            {
+                photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            }
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
         }

@@ -122,9 +122,11 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
 
 
         // code for random nickname:
-        UnityEngine.Random.InitState((int)(Time.time * 10000));
+        // UnityEngine.Random.InitState((int)(Time.time * 10000));
         // string testName = "TestUser" + UnityEngine.Random.Range(0, 1000);
-        string newName = _oculusUsername + " " + UnityEngine.Random.Range(0, 10000);
+        
+        // Use 
+        string newName = _oculusUsername + " " + SystemInfo.deviceUniqueIdentifier;
 
         PhotonPun.PhotonNetwork.LocalPlayer.NickName = newName;
     }
