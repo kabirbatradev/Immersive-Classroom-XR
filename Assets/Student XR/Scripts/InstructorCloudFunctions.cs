@@ -871,7 +871,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             }
             int panelGroupNumber = GetPhotonObjectGroupNumber(panel);
 
-            Vector3 mainObjectPosition = panel.transform.position + panel.transform.right * 0.5f; // place main object to the right of the panel by 0.5 m
+            Vector3 mainObjectPosition = panel.transform.position + panel.transform.right * -0.5f; // place main object to the left wrt the panel by 0.5 m (back towards the center of the group)
 
             // instantiate
             var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
