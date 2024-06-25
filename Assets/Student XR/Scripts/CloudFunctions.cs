@@ -7,14 +7,15 @@ using PhotonRealtime = Photon.Realtime;
 
 public class CloudFunctions : MonoBehaviour
 {
-    // void Start()
-    // {
-        
-    // }
 
-    // void Update()
-    // {
-        
+    // no need for instance because all functions are static
+
+    // public CloudFunctions Instance;
+    // private void Awake() {
+    //     if (Instance == null)
+    //         Instance = this;
+    //     else
+    //         Destroy(this);
     // }
 
 
