@@ -1073,7 +1073,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             {
                 photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             }
-            
+
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
         }
