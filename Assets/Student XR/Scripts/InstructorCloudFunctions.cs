@@ -1007,20 +1007,21 @@ public class InstructorCloudFunctions : MonoBehaviour
             // now we have a bestPanelMarkerObject and a bestPanelMarkerObjectStrictlyRight (along with their distances)
             // if the strictly right one is not too far (lets say less than 1.5 meter farther than the closest one), then use that instead
                 // dont want to go too far bc then we might place the panel on a different row
-            Vector3 panelPos;
+
             // if the difference is big, then use the closest
             if (bestPanelMarkerObjectStrictlyRight == null || bestDistanceStrictlyRight - bestDistance >= 1.5f) {
-                panelPos = bestPanelMarkerObject.transform.position;
+                // keep bestPanelMarkerObject the same
             }
             // if difference is small, then use the strictly right one
             else {
-                panelPos = bestPanelMarkerObjectStrictlyRight.transform.position;
+                bestPanelMarkerObject = bestPanelMarkerObjectStrictlyRight;
             }
 
+            Transform panelTransform = bestPanelMarkerObject.transform;
 
             // old positioning system
                 // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
-            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelTransform.position, panelTransform.rotation);
 
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
