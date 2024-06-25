@@ -316,8 +316,13 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
         int value = groupNumber;
-        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
-        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+        // var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+        // by using this function (written elsewhere in this file), we make sure the local cache is always up to date
+        SetRoomCustomProperty(key, value);
+
 
     }
 
@@ -854,14 +859,16 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         DeleteAllMainObjects();
 
-        // PhotonObjectHasGroupNumber
-        // GetPhotonObjectGroupNumber()
-
         // for every side panel, create a new main object in front of it
 
         GameObject[] panels = GameObject.FindGameObjectsWithTag("SidePanel");
+        Debug.Log(panels.Length + " panels were found");
+        int i = 0;
         foreach (GameObject panel in panels) {
-
+            if (!PhotonObjectHasGroupNumber(panel)) {
+                Debug.Log("panel #" + i + " does not have a photon group number; skipping");
+                continue;
+            }
             int panelGroupNumber = GetPhotonObjectGroupNumber(panel);
 
             Vector3 mainObjectPosition = panel.transform.position + panel.transform.right * 0.5f; // place main object to the right of the panel by 0.5 m
@@ -875,7 +882,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             foreach (Transform mainObjectTransform in mainObjectContainerInstance.transform) {
                 mainObjectTransform.localScale = new Vector3(smallGroupsModeObjectScale, smallGroupsModeObjectScale, smallGroupsModeObjectScale);
             }
-            
+            i++;
         }
 
     }
@@ -962,7 +969,7 @@ public class InstructorCloudFunctions : MonoBehaviour
         // var players = PhotonNetwork.CurrentRoom.Players.Values;
         // foreach (Player player in players) {
         foreach (GameObject playerHeadObject in playerHeadObjects) {
-            Debug.Log(playerHeadObject);
+            // Debug.Log(playerHeadObject);
             Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
