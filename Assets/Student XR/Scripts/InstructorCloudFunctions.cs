@@ -1060,7 +1060,7 @@ public class InstructorCloudFunctions : MonoBehaviour
                 bestPanelMarkerObject = bestPanelMarkerObjectStrictlyRight;
             }
 
-            Vector3 panelPos = bestPanelMarkerObject.transform.position + Vector3.up * 0.5f; // shift the panel up from the marker by 0.5m
+            Vector3 panelPos = bestPanelMarkerObject.transform.position + Vector3.up * 0.25f; // shift the panel up from the marker by 0.5m
             Quaternion panelRotation = bestPanelMarkerObject.transform.rotation;
 
             GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, panelRotation);
