@@ -72,8 +72,10 @@ public class InstructorCloudFunctions : MonoBehaviour
         //         // DestroyAllPanels();
         //     }
             if (OVRInput.GetDown(OVRInput.RawButton.Y)) {
-                Debug.Log("instructor cloud function debug mode Y on controller was pressed; creating panels");
-                CreatePanelPerGroup();
+                Debug.Log("instructor cloud function debug mode Y on controller was pressed; creating main objects and panels");
+                DestroyAllPanels(); // destroy old ones first before creating new ones
+                CreatePanelPerGroup(); 
+                CreateMainObjectsForSmallGroupsMode();
             }
         }
 
@@ -737,7 +739,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-    public void CreateMainObjectsForSmallGroupsMode() {
+    public void OLDCreateMainObjectsForSmallGroupsMode() {
 
         DeleteAllMainObjects();
 
@@ -841,6 +843,39 @@ public class InstructorCloudFunctions : MonoBehaviour
                 mainObjectTransform.localScale = new Vector3(smallGroupsModeObjectScale, smallGroupsModeObjectScale, smallGroupsModeObjectScale);
             }
 
+        }
+
+    }
+
+    
+
+    // this time, we will place the object in front of the panel for each group
+    public void CreateMainObjectsForSmallGroupsMode() {
+
+        DeleteAllMainObjects();
+
+        // PhotonObjectHasGroupNumber
+        // GetPhotonObjectGroupNumber()
+
+        // for every side panel, create a new main object in front of it
+
+        GameObject[] panels = GameObject.FindGameObjectsWithTag("SidePanel");
+        foreach (GameObject panel in panels) {
+
+            int panelGroupNumber = GetPhotonObjectGroupNumber(panel);
+
+            Vector3 mainObjectPosition = panel.transform.position + panel.transform.right * 0.5f; // place main object to the right of the panel by 0.5 m
+
+            // instantiate
+            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
+            // set group number
+            SetPhotonObjectGroupNumber(mainObjectContainerInstance, panelGroupNumber);
+
+            // set the scale
+            foreach (Transform mainObjectTransform in mainObjectContainerInstance.transform) {
+                mainObjectTransform.localScale = new Vector3(smallGroupsModeObjectScale, smallGroupsModeObjectScale, smallGroupsModeObjectScale);
+            }
+            
         }
 
     }
