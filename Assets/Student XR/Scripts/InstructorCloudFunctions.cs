@@ -931,10 +931,10 @@ public class InstructorCloudFunctions : MonoBehaviour
             int groupNumber = GetPlayerGroupNumber(player);
 
             // if the player is the current player, then skip
-            if (!debugMode && player.Equals(PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
+            // if (player.Equals(PhotonNetwork.LocalPlayer)) {
+            //     Debug.Log("(skipping current player)");
+            //     continue;
+            // }
             // skip players of group number 0 (admins)
             if (groupNumber == 0) {
                 Debug.Log("skipping player with group number 0: " + player.NickName);
