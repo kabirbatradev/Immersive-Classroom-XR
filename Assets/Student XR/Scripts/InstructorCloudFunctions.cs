@@ -1060,12 +1060,10 @@ public class InstructorCloudFunctions : MonoBehaviour
                 bestPanelMarkerObject = bestPanelMarkerObjectStrictlyRight;
             }
 
-            Transform panelTransform = bestPanelMarkerObject.transform;
+            Vector3 panelPos = bestPanelMarkerObject.transform.position + Vector3.up * 0.5f; // shift the panel up from the marker by 0.5m
+            Quaternion panelRotation = bestPanelMarkerObject.transform.rotation;
 
-            // old positioning system
-                // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
-
-            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelTransform.position, panelTransform.rotation);
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, panelRotation);
 
             // set the ownership of the panel to the local player = the instructor.. isnt this redundant since we just created the panel (so its naturally owned by the local player)
             PhotonView photonView = panelObject.GetComponent<PhotonView>();
