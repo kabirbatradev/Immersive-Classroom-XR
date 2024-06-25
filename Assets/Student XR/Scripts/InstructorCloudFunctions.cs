@@ -60,17 +60,22 @@ public class InstructorCloudFunctions : MonoBehaviour
     private const float smallGroupsModeObjectScale = 1.5f;
 
     void Update() {
-        // if (debugMode) {
-        //     if (Input.GetKeyDown(KeyCode.P)) {
-        //         // p for spawning panels
-        //         CreatePanelPerGroup();
-        //     }
+        if (debugMode) {
+            if (Input.GetKeyDown(KeyCode.P)) {
+                Debug.Log("instructor cloud function debug mode P was pressed; creating panels");
+                // p for spawning panels
+                CreatePanelPerGroup();
+            }
 
         //     if (Input.GetKeyDown(KeyCode.X)) {
         //         // p for spawning panels
         //         // DestroyAllPanels();
         //     }
-        // }
+            if (OVRInput.GetDown(OVRInput.RawButton.Y)) {
+                Debug.Log("instructor cloud function debug mode Y on controller was pressed; creating panels");
+                CreatePanelPerGroup();
+            }
+        }
 
     }
     
@@ -926,10 +931,10 @@ public class InstructorCloudFunctions : MonoBehaviour
             int groupNumber = GetPlayerGroupNumber(player);
 
             // if the player is the current player, then skip
-            if (player.Equals(PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
+            // if (player.Equals(PhotonNetwork.LocalPlayer)) {
+            //     Debug.Log("(skipping current player)");
+            //     continue;
+            // }
             // skip players of group number 0 (admins)
             if (groupNumber == 0) {
                 Debug.Log("skipping player with group number 0: " + player.NickName);
