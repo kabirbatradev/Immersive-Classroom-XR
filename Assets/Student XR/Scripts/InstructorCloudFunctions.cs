@@ -149,12 +149,9 @@ public class InstructorCloudFunctions : MonoBehaviour
             CreateMainObjectsForLectureMode();
         }
         else if (currentGroupMode == GroupMode.IndividualMode) {
-            // not implemented yet, go to fallback
-            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForIndividualMode();
         }
         else if (currentGroupMode == GroupMode.SmallGroupsMode) {
-            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForSmallGroupsMode();
         }
         else {
@@ -700,9 +697,13 @@ public class InstructorCloudFunctions : MonoBehaviour
             // skips admin and local player (instructor) automatically
             SetPlayerGroupNumber(player, groupNumber);
         }
+
+        // in this case we do need panels per group
+
+        // create panels before recreating main objects so that main object can be created with respect to panel
+        DestroyAllPanels(); // destroy old ones first before creating new ones
+        CreatePanelPerGroup(); 
         RecreateMainObjectsIfTheyExist();
-        DestroyAllPanels();
-        CreatePanelPerGroup(); // in this case we do need panels per group
 
     }
 
