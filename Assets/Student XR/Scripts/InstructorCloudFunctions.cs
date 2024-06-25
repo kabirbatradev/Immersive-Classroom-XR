@@ -60,17 +60,24 @@ public class InstructorCloudFunctions : MonoBehaviour
     private const float smallGroupsModeObjectScale = 1.5f;
 
     void Update() {
-        // if (debugMode) {
-        //     if (Input.GetKeyDown(KeyCode.P)) {
-        //         // p for spawning panels
-        //         CreatePanelPerGroup();
-        //     }
+        if (debugMode) {
+            if (Input.GetKeyDown(KeyCode.P)) {
+                Debug.Log("instructor cloud function debug mode P was pressed; creating panels");
+                // p for spawning panels
+                CreatePanelPerGroup();
+            }
 
         //     if (Input.GetKeyDown(KeyCode.X)) {
         //         // p for spawning panels
         //         // DestroyAllPanels();
         //     }
-        // }
+            if (OVRInput.GetDown(OVRInput.RawButton.Y)) {
+                Debug.Log("instructor cloud function debug mode Y on controller was pressed; creating main objects and panels");
+                DestroyAllPanels(); // destroy old ones first before creating new ones
+                CreatePanelPerGroup(); 
+                CreateMainObjectsForSmallGroupsMode();
+            }
+        }
 
     }
     
@@ -144,12 +151,9 @@ public class InstructorCloudFunctions : MonoBehaviour
             CreateMainObjectsForLectureMode();
         }
         else if (currentGroupMode == GroupMode.IndividualMode) {
-            // not implemented yet, go to fallback
-            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForIndividualMode();
         }
         else if (currentGroupMode == GroupMode.SmallGroupsMode) {
-            // Debug.Log("RecreateMainObjectsIfTheyExist: fallback group mode, calling OLDCreateMainObjectContainerPerGroup");
             CreateMainObjectsForSmallGroupsMode();
         }
         else {
@@ -312,8 +316,13 @@ public class InstructorCloudFunctions : MonoBehaviour
 
         string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
         int value = groupNumber;
-        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
-        PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+        // var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(newCustomProperty);
+
+        // by using this function (written elsewhere in this file), we make sure the local cache is always up to date
+        SetRoomCustomProperty(key, value);
+
 
     }
 
@@ -695,9 +704,13 @@ public class InstructorCloudFunctions : MonoBehaviour
             // skips admin and local player (instructor) automatically
             SetPlayerGroupNumber(player, groupNumber);
         }
+
+        // in this case we do need panels per group
+
+        // create panels before recreating main objects so that main object can be created with respect to panel
+        DestroyAllPanels(); // destroy old ones first before creating new ones
+        CreatePanelPerGroup(); 
         RecreateMainObjectsIfTheyExist();
-        DestroyAllPanels();
-        CreatePanelPerGroup(); // in this case we do need panels per group
 
     }
 
@@ -731,7 +744,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
-    public void CreateMainObjectsForSmallGroupsMode() {
+    public void OLDCreateMainObjectsForSmallGroupsMode() {
 
         DeleteAllMainObjects();
 
@@ -839,6 +852,41 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     }
 
+    
+
+    // this time, we will place the object in front of the panel for each group
+    public void CreateMainObjectsForSmallGroupsMode() {
+
+        DeleteAllMainObjects();
+
+        // for every side panel, create a new main object in front of it
+
+        GameObject[] panels = GameObject.FindGameObjectsWithTag("SidePanel");
+        Debug.Log(panels.Length + " panels were found");
+        int i = 0;
+        foreach (GameObject panel in panels) {
+            if (!PhotonObjectHasGroupNumber(panel)) {
+                Debug.Log("panel #" + i + " does not have a photon group number; skipping");
+                continue;
+            }
+            int panelGroupNumber = GetPhotonObjectGroupNumber(panel);
+
+            Vector3 mainObjectPosition = panel.transform.position + panel.transform.right * -0.5f; // place main object to the left wrt the panel by 0.5 m (back towards the center of the group)
+
+            // instantiate
+            var mainObjectContainerInstance = PhotonPun.PhotonNetwork.Instantiate(mainObjectContainerPrefab.name, mainObjectPosition, mainObjectContainerPrefab.transform.rotation);
+            // set group number
+            SetPhotonObjectGroupNumber(mainObjectContainerInstance, panelGroupNumber);
+
+            // set the scale
+            foreach (Transform mainObjectTransform in mainObjectContainerInstance.transform) {
+                mainObjectTransform.localScale = new Vector3(smallGroupsModeObjectScale, smallGroupsModeObjectScale, smallGroupsModeObjectScale);
+            }
+            i++;
+        }
+
+    }
+
 
 
 
@@ -921,15 +969,15 @@ public class InstructorCloudFunctions : MonoBehaviour
         // var players = PhotonNetwork.CurrentRoom.Players.Values;
         // foreach (Player player in players) {
         foreach (GameObject playerHeadObject in playerHeadObjects) {
-            Debug.Log(playerHeadObject);
+            // Debug.Log(playerHeadObject);
             Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
             // if the player is the current player, then skip
-            if (player.Equals(PhotonNetwork.LocalPlayer)) {
-                Debug.Log("(skipping current player)");
-                continue;
-            }
+            // if (player.Equals(PhotonNetwork.LocalPlayer)) {
+            //     Debug.Log("(skipping current player)");
+            //     continue;
+            // }
             // skip players of group number 0 (admins)
             if (groupNumber == 0) {
                 Debug.Log("skipping player with group number 0: " + player.NickName);
@@ -1002,25 +1050,30 @@ public class InstructorCloudFunctions : MonoBehaviour
             // now we have a bestPanelMarkerObject and a bestPanelMarkerObjectStrictlyRight (along with their distances)
             // if the strictly right one is not too far (lets say less than 1.5 meter farther than the closest one), then use that instead
                 // dont want to go too far bc then we might place the panel on a different row
-            Vector3 panelPos;
+
             // if the difference is big, then use the closest
             if (bestPanelMarkerObjectStrictlyRight == null || bestDistanceStrictlyRight - bestDistance >= 1.5f) {
-                panelPos = bestPanelMarkerObject.transform.position;
+                // keep bestPanelMarkerObject the same
             }
             // if difference is small, then use the strictly right one
             else {
-                panelPos = bestPanelMarkerObjectStrictlyRight.transform.position;
+                bestPanelMarkerObject = bestPanelMarkerObjectStrictlyRight;
             }
 
+            Transform panelTransform = bestPanelMarkerObject.transform;
 
             // old positioning system
                 // Vector3 panelPos = new Vector3(max.x + 1, center.y+0.5f, center.z);
-            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelPos, Quaternion.identity);
+
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelTransform.position, panelTransform.rotation);
+
+            // set the ownership of the panel to the local player = the instructor.. isnt this redundant since we just created the panel (so its naturally owned by the local player)
             PhotonView photonView = panelObject.GetComponent<PhotonView>();
             if (photonView != null && photonView.Owner != PhotonNetwork.LocalPlayer)
             {
                 photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             }
+            
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
         }
