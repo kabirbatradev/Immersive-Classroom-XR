@@ -91,6 +91,9 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     [SerializeField]
     private GameObject panelMarkerPrefab;
 
+    // [SerializeField]
+    // private GameObject ToggleAnchorCreationButton;
+
 
     // [SerializeField]
     // private GameObject OVRSceneManagerObj;
@@ -132,7 +135,6 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             return;
         }
 
-        // /*
         if (alignTableMode) {
 
             // bool buttonPressed = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger);
@@ -170,7 +172,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 }
             }
         }
-        // */
+
+        // if in admin mode and B button is pressed, then toggle the create anchor mode
+        if (deviceCurrentMode == DeviceModes.Admin) {
+            if (OVRInput.GetDown(OVRInput.RawButton.B)) {
+                GetComponent<SharedAnchorControlPanel>().OnCreateModeButtonPressed();
+            }
+        }
 
 
         /*
