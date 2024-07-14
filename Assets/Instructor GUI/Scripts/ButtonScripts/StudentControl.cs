@@ -59,36 +59,66 @@ public class StudentnControl : MonoBehaviour
     {
         markers = GameObject.FindGameObjectsWithTag("SeatMarker");
         studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
+        Debug.Log("Number of students: " + studentsHeads.Length);
         int[] groupAssignment = new int[studentsHeads.Length];
+        List<List<GameObject>> dynamicArray = new List<List<GameObject>>();
+        Dictionary<int, List<GameObject>> rowDictionary = new Dictionary<int, List<GameObject>>();
 
-        List<int[]> HARDCODED = new List<int[]>();
-        HARDCODED.Add(new int[] { 1, 1, 2, 2, 3, 3 });
-        HARDCODED.Add(new int[] { 200, 200, 1, 1, 2, 2, 3, 3, 200 });
-        HARDCODED.Add(new int[] { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 300 });
-        HARDCODED.Add(new int[] { 400, 400, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 400, 400, 400 });
-        HARDCODED.Add(new int[] { 500, 500, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 500, 500, 500 });
-        HARDCODED.Add(new int[] { 600, 600, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 600, 600, 600 });
-
-        int index = 0;
+        // Group students by rows
         foreach (GameObject student in studentsHeads)
         {
             int row = findRow(student);
-            int col = findCol(student);
-            groupAssignment[index] = HARDCODED[row - 1][col - 1];
-            index++;
+            if (!rowDictionary.ContainsKey(row))
+            {
+                rowDictionary[row] = new List<GameObject>();
+            }
+            rowDictionary[row].Add(student);
         }
 
-        // printout the hardcoded
-        print("HARDCODED: ");
-        foreach (int[] row in HARDCODED)
+        // Sort each row based on their z position and add to dynamicArray
+        foreach (var row in rowDictionary)
         {
-            foreach (int col in row)
+            row.Value.Sort((x, y) => x.transform.position.x.CompareTo(y.transform.position.x));
+            dynamicArray.Add(row.Value);
+        }
+
+        List<GameObject> groupList = new List<GameObject>();
+        int groupNumber = 1;
+        int studentsPerGroup = 4;
+        int groupIndex = 0;
+
+        // Assign groups
+        while (groupList.Count < studentsHeads.Length)
+        {
+            for (int i = 0; i < dynamicArray.Count; i++)
             {
-                print(col);
+                var row = dynamicArray[i];
+                for (int j = 0; j < Math.Min(studentsPerGroup / 2, row.Count); j++)
+                {
+                    if (groupList.Count % studentsPerGroup == 0 && groupList.Count > 0)
+                    {
+                        groupNumber++;
+                        Debug.Log("Incrementing group number: " + groupNumber);
+                    }
+                    GameObject student = row[0];
+                    row.RemoveAt(0);
+                    int index = Array.IndexOf(studentsHeads, student);
+                    groupAssignment[index] = groupNumber;
+                    groupList.Add(student);
+                    if (groupList.Count % studentsPerGroup == 0 && groupList.Count > 0)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
+
+        for (int i = 0; i < studentsHeads.Length; i++)
+        {
+            Debug.Log($"Student {studentsHeads[i].name} assigned to group {groupAssignment[i]}");
+        }
     }
 
     // ------------ Button Functions ------------
