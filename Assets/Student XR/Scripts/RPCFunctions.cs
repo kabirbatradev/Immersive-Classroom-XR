@@ -33,6 +33,8 @@ public class RPCFunctions : MonoBehaviourPun
     [PunRPC]
     void KickSelfOutOfRoom()
     {
+        SampleController.Instance.Log("KickSelfOutOfRoom was called by the admin; leaving room...");
+
         // first, make sure the player is not the instructor or an admin
         // assume the instructor does not have an instance of this RPC functions script (because they also do not have CloudFunctions script)
         int myGroupNumber = CloudFunctions.GetCurrentGroupNumber();
@@ -51,7 +53,8 @@ public class RPCFunctions : MonoBehaviourPun
 
     // all students will be kicked from the room and then will rejoin
     // this allows users to have anchors reshared with them, allowing for realignment
-    void KickAllStudentsOutOfRoom() {
+    public void KickAndRejoinStudents() {
+        SampleController.Instance.Log("calling KickAndRejoinStudents");
         photonView.RPC("KickSelfOutOfRoom", RpcTarget.Others);
     }
 

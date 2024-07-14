@@ -50,6 +50,8 @@ MonoBehaviour:
   - CheckForLocalAnchors
   - OnColocatedAck
   - TestRPC
+  - KickAllStudentsOutOfTheRoom
+  - KickSelfOutOfRoom
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
