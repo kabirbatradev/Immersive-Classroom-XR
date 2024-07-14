@@ -61,7 +61,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     void Update() {
         if (debugMode) {
-            if (Input.GetKeyDown(KeyCode.P)) {
+            if (Input.GetKeyDown(KeyCode.P) || OVRInput.GetDown(OVRInput.RawButton.RThumbstick)) {
                 Debug.Log("instructor cloud function debug mode P was pressed; creating panels");
                 // p for spawning panels
                 CreatePanelPerGroup();
@@ -938,9 +938,116 @@ public class InstructorCloudFunctions : MonoBehaviour
 
 
 
+
+    // the latest algorithm uses the desk position and places the panel directly above
+    public void CreatePanelPerGroup() {
+        Debug.Log("CreatePanelPerGroup called");
+        if (panelPrefab == null) {
+            Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
+        }
+
+
+        int maxGroupNum = GetMaxGroupNumber();
+        if (maxGroupNum == 0) {
+            // all players are admins
+            Debug.Log("all players are admins; not creating any panels");
+            return;
+        }
+
+        // for each group, create min max of student positions
+        List<MinMax> groupBounds = new List<MinMax>(maxGroupNum+1); // pass in capacity
+        for (int i = 0; i < maxGroupNum+1; i++) {
+            groupBounds.Add(new MinMax());
+        }
+
+        // get all player positions
+        GameObject[] playerHeadObjects = GameObject.FindGameObjectsWithTag("PlayerHead");
+
+        foreach (GameObject playerHeadObject in playerHeadObjects) {
+            Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
+            int groupNumber = GetPlayerGroupNumber(player);
+
+            // skip players of group number 0 (admins)
+            if (groupNumber == 0) {
+                Debug.Log("skipping player with group number 0: " + player.NickName);
+                continue;
+            }
+
+            // add to corresponding min max 
+            groupBounds[groupNumber].AddPoint(playerHeadObject.transform.position);
+        }
+
+        // create a panel for each group
+        for (int i = 1; i < groupBounds.Count; i++) {
+            if (groupBounds[i].points.Count == 0) {
+                Debug.Log("there are no students in group " + i + ", skipping creation of panel");
+                continue;
+            }
+            
+            Vector3 max = groupBounds[i].max;
+            Vector3 min = groupBounds[i].min;
+            Vector3 center = (min + max) / 2;
+
+            // get the table closest to the center of the bounding box
+            // x = 1m right of right edge of bounding box (with respect to students) 
+                // right should be +x bc assuming anchor is facing whiteboard
+            // y = tableY + 0.3f + Vector3.up * 0.25f
+            // z = tableZ
+
+            GameObject[] allTables = GameObject.FindGameObjectsWithTag("AlignedTable");
+            if (allTables.Length == 0) {
+                Debug.Log("TRIED TO CREATE PANEL BUT NO TABLES FOUND");
+                continue; 
+            }
+
+            // get the closest table
+            float bestDistance = -1;
+            GameObject closestTable = null;
+            foreach (GameObject table in allTables) {
+                Vector3 tablePos = table.transform.position;
+                float distance = Vector3.Distance(center, tablePos);
+
+                if (closestTable == null || distance < bestDistance) {
+                    closestTable = table;
+                    bestDistance = distance;
+                }
+            }
+            
+            // get point on table "right ray" closest to center of bounding box right edge + 1 m right
+            // ray is defined by point and direction
+            Vector3 boundingBoxPlusRightOffset = center;
+            boundingBoxPlusRightOffset.x = max.x + 1f;
+            Vector3 closestPointAlongTableRay = Vector3.Project(boundingBoxPlusRightOffset - closestTable.transform.position, closestTable.transform.right) + closestTable.transform.position;
+
+            Vector3 panelSpawnPosition = closestPointAlongTableRay + Vector3.up * 0.6f;
+
+            // use table rotation as rotation to make sure panel and table are aligned
+            Quaternion panelRotation = closestTable.transform.rotation;
+
+            GameObject panelObject = PhotonNetwork.Instantiate(panelPrefab.name, panelSpawnPosition, panelRotation);
+            panelObject.transform.Rotate(Vector3.up, 180); // panel object is backward; rotate around 180 degrees
+
+            // set the ownership of the panel to the local player = the instructor.. isnt this redundant since we just created the panel (so its naturally owned by the local player)
+            PhotonView photonView = panelObject.GetComponent<PhotonView>();
+            if (photonView != null && photonView.Owner != PhotonNetwork.LocalPlayer)
+            {
+                photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            }
+
+            // give the panel a group number!
+            SetPhotonObjectGroupNumber(panelObject, i);
+        }
+
+    }
+
+
+
+
+
+
     // the new algorithm must place a panel at a panel marker which exist at specific positions on top of even numbered desks.
     // this algorithm picks the closest panel marker that is also to the right of the bounding box of students in the group.
-    public void CreatePanelPerGroup() {
+    public void OLDCreatePanelPerGroupUsingPanelMarkers() {
         Debug.Log("CreatePanelPerGroup called");
         if (panelPrefab == null) {
             Debug.Log("ERROR: panel prefab is not set in InstructorCloudFunctions");
