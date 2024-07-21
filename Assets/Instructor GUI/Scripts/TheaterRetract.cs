@@ -61,32 +61,6 @@ public class TheaterRetract : MonoBehaviour
         {
             wall.transform.localPosition = new Vector3(wall.transform.localPosition.x, wallPercent * -100.0f,
                 wall.transform.localPosition.z);
-
-            LineRenderer lineRenderer = wall.GetComponent<LineRenderer>();
-            if (lineRenderer == null)
-            {
-                lineRenderer = wall.AddComponent<LineRenderer>();
-            }
-
-            Vector3 topLeft = new Vector3(wall.transform.localPosition.x - (wall.transform.localScale.x / 2),
-                wall.transform.localPosition.y + (wall.transform.localScale.y / 2), wall.transform.localPosition.z);
-            Vector3 topRight = new Vector3(wall.transform.localPosition.x + (wall.transform.localScale.x / 2),
-                wall.transform.localPosition.y + (wall.transform.localScale.y / 2), wall.transform.localPosition.z);
-
-            lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, topLeft);
-            lineRenderer.SetPosition(1, topRight);
-
-            // Set the line width
-            lineRenderer.startWidth = 5f; // Adjust the thickness as needed
-            lineRenderer.endWidth = 5f;
-
-            // Set the line color to brown
-            lineRenderer.startColor = new Color(0.6f, 0.3f, 0.0f);
-            lineRenderer.endColor = new Color(0.6f, 0.3f, 0.0f);
-
-            // Optionally set the material for better appearance
-            lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         }
     }
 

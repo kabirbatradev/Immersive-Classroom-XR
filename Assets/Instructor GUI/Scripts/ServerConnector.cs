@@ -77,7 +77,7 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonPun.PhotonNetwork.ConnectUsingSettings();
+        Debug.Log("connected: " + PhotonPun.PhotonNetwork.ConnectUsingSettings());
 
         SampleController.Instance.Log("System version: " + OVRPlugin.version);
 
@@ -131,7 +131,7 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
     //     PhotonPun.PhotonNetwork.LocalPlayer.NickName = _oculusUsername;
     // }
 
-    private void OnApplicationPause(bool pause)
+    /*private void OnApplicationPause(bool pause)
     {
         if (!pause)
         {
@@ -146,14 +146,14 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
                 PhotonPun.PhotonNetwork.ConnectUsingSettings();
             }
         }
-    }
+    }*/
 
     #region [Photon Callbacks]
 
     public override void OnConnectedToMaster()
     {
         SampleController.Instance.Log("Photon::OnConnectedToMaster: successfully connected to photon: " + PhotonPun.PhotonNetwork.CloudRegion);
-
+        Debug.Log("Connect To Master: " + PhotonPun.PhotonNetwork.CloudRegion);
         if (controlPanel)
             controlPanel.ToggleRoomButtons(true);
 

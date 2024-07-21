@@ -153,8 +153,12 @@ public class TheaterModeManager : MonoBehaviour
                 Vector3.Lerp(startPosition, targetPosition, currentWallLoweredPercentage), 
                 originalWall.transform.rotation
             );
-        }
 
+            Vector3 topLeft = wall.transform.localPosition + Quaternion.Euler(wall.transform.localEulerAngles) * new Vector3(-wall.transform.localScale.x / 2, wall.transform.localScale.y / 2, 0);
+            Vector3 topRight = wall.transform.localPosition + Quaternion.Euler(wall.transform.localEulerAngles) * new Vector3(wall.transform.localScale.x / 2, wall.transform.localScale.y / 2, 0);
+            
+        }
+        
         // update ceiling clone positions
         // Vector3[] directions = {Vector3.forward, Vector3.back, Vector3.left, Vector3.right}; 
         Vector3[] directions = {Vector3.up, Vector3.down, Vector3.left, Vector3.right}; 
@@ -535,6 +539,12 @@ public class TheaterModeManager : MonoBehaviour
             clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
             // copy the scale to the clone too
             clone.transform.localScale = passthroughMeshObject.transform.localScale;
+            
+            // Show the wall thickness
+            GameObject thickness = clone.transform.GetChild(0).gameObject;
+            thickness.SetActive(true);
+            thickness.GetComponent<Renderer>().material.mainTextureScale = new Vector2(clone.transform.localScale.x, 1);
+            
             wallClones.Add(clone);
 
             // also update the height of the walls
