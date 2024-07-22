@@ -973,7 +973,7 @@ public class InstructorCloudFunctions : MonoBehaviour
             Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
-            // skip players of group number 0 (admins)
+            // skip players of group number 0 (admins and camera man)
             if (groupNumber == 0) {
                 Debug.Log("skipping player (usually camera) with group number 0: " + player.NickName);
                 continue;
@@ -1010,6 +1010,14 @@ public class InstructorCloudFunctions : MonoBehaviour
             float bestDistance = -1;
             GameObject closestTable = null;
             foreach (GameObject table in allTables) {
+
+                // get the table's row number: if odd, then skip
+                string key = "alignedTable" + table.GetPhotonView().ViewID;
+                int tableRowNumber = (int)GetRoomCustomProperty(key);
+                if (tableRowNumber % 2 == 1) {
+                    continue;
+                }
+
                 Vector3 tablePos = table.transform.position;
                 float distance = Vector3.Distance(center, tablePos);
 
@@ -1017,6 +1025,12 @@ public class InstructorCloudFunctions : MonoBehaviour
                     closestTable = table;
                     bestDistance = distance;
                 }
+            }
+
+            // if still null, then there were tables but only odd numbered tables (maybe only one table)
+            if (closestTable == null) {
+                // maybe set the closest table to the first (and likely only table)
+                closestTable = allTables[0];
             }
             
             // get point on table "right ray" closest to center of bounding box right edge + 1 m right
