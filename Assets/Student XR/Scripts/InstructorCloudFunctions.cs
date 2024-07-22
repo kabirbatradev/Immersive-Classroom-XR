@@ -402,7 +402,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             int groupNumber = GetPlayerGroupNumber(player);
 
-            // skip if group number is 0 or if instructor (local)
+            // skip if group number is 0 (camera man) or if instructor (local)
             if (groupNumber == 0 || PhotonNetwork.LocalPlayer == player) {
                 continue;
             }
@@ -696,6 +696,12 @@ public class InstructorCloudFunctions : MonoBehaviour
             Player player = playerArray[i];
             int groupNumber = groupNumbers[i];
 
+            int currentGroupNumber = GetPlayerGroupNumber(player);
+            if (currentGroupNumber == 0) {
+                // Debug.Log("attempted to set group number of camera man or admin. Skipping");
+                continue;
+            }
+
             if (groupNumber == 0) {
                 groupNumber = 999;
                 Debug.Log("Error: attempted to set group number to 0; setting to 999 as error message");
@@ -969,7 +975,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             // skip players of group number 0 (admins)
             if (groupNumber == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
+                Debug.Log("skipping player (usually camera) with group number 0: " + player.NickName);
                 continue;
             }
 
