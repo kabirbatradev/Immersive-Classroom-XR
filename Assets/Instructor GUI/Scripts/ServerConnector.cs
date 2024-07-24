@@ -131,7 +131,7 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
     //     PhotonPun.PhotonNetwork.LocalPlayer.NickName = _oculusUsername;
     // }
 
-    /*private void OnApplicationPause(bool pause)
+    private void OnApplicationPause(bool pause)
     {
         if (!pause)
         {
@@ -146,7 +146,7 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
                 PhotonPun.PhotonNetwork.ConnectUsingSettings();
             }
         }
-    }*/
+    }
 
     #region [Photon Callbacks]
 

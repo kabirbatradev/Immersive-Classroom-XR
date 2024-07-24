@@ -131,7 +131,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         PhotonPun.PhotonNetwork.LocalPlayer.NickName = newName;
     }
     
-    /*private void OnApplicationPause(bool pause)
+    private void OnApplicationPause(bool pause)
     {
         if (!pause)
         {
@@ -146,7 +146,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
                 PhotonPun.PhotonNetwork.ConnectUsingSettings();
             }
         }
-    }*/
+    }
 
     #region [Photon Callbacks]
 
