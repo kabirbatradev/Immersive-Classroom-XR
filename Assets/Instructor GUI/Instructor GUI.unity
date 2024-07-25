@@ -81270,6 +81270,7 @@ MonoBehaviour:
   laserGameObjectPrefab: {fileID: 0}
   groupNumberTextObject: {fileID: 0}
   seatMarkerPrefab: {fileID: 0}
+  panelMarkerPrefab: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

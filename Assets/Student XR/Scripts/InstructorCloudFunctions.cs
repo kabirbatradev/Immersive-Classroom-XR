@@ -402,7 +402,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             int groupNumber = GetPlayerGroupNumber(player);
 
-            // skip if group number is 0 or if instructor (local)
+            // skip if group number is 0 (camera man) or if instructor (local)
             if (groupNumber == 0 || PhotonNetwork.LocalPlayer == player) {
                 continue;
             }
@@ -696,6 +696,12 @@ public class InstructorCloudFunctions : MonoBehaviour
             Player player = playerArray[i];
             int groupNumber = groupNumbers[i];
 
+            int currentGroupNumber = GetPlayerGroupNumber(player);
+            if (currentGroupNumber == 0) {
+                // Debug.Log("attempted to set group number of camera man or admin. Skipping");
+                continue;
+            }
+
             if (groupNumber == 0) {
                 groupNumber = 999;
                 Debug.Log("Error: attempted to set group number to 0; setting to 999 as error message");
@@ -967,9 +973,9 @@ public class InstructorCloudFunctions : MonoBehaviour
             Player player = GetPlayerFromPlayerHeadObject(playerHeadObject);
             int groupNumber = GetPlayerGroupNumber(player);
 
-            // skip players of group number 0 (admins)
+            // skip players of group number 0 (admins and camera man)
             if (groupNumber == 0) {
-                Debug.Log("skipping player with group number 0: " + player.NickName);
+                Debug.Log("skipping player (usually camera) with group number 0: " + player.NickName);
                 continue;
             }
 
@@ -1004,6 +1010,14 @@ public class InstructorCloudFunctions : MonoBehaviour
             float bestDistance = -1;
             GameObject closestTable = null;
             foreach (GameObject table in allTables) {
+
+                // get the table's row number: if odd, then skip
+                string key = "alignedTable" + table.GetPhotonView().ViewID;
+                int tableRowNumber = (int)GetRoomCustomProperty(key);
+                if (tableRowNumber % 2 == 1) {
+                    continue;
+                }
+
                 Vector3 tablePos = table.transform.position;
                 float distance = Vector3.Distance(center, tablePos);
 
@@ -1011,6 +1025,12 @@ public class InstructorCloudFunctions : MonoBehaviour
                     closestTable = table;
                     bestDistance = distance;
                 }
+            }
+
+            // if still null, then there were tables but only odd numbered tables (maybe only one table)
+            if (closestTable == null) {
+                // maybe set the closest table to the first (and likely only table)
+                closestTable = allTables[0];
             }
             
             // get point on table "right ray" closest to center of bounding box right edge + 1 m right

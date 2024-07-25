@@ -507,6 +507,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private void InstantiateAlignedTable(Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight) {
 
         GameObject tableObject = PhotonPun.PhotonNetwork.Instantiate(alignedTablePrefab.name, new Vector3(0,0,0), Quaternion.identity);
+
+        // assign the table with a row number custom property so that the instructor can access this data for each table
+        int thisTableRowNumber = nextDeskRowNumber;
+        string key = "alignedTable" + tableObject.GetPhotonView().ViewID;
+        SetRoomCustomProperty(key, thisTableRowNumber);
+
+
         // Bounds tableBounds = tableObject.GetComponent<MeshFilter>().mesh.bounds;
         // mesh bounds are in local space, and renderer bounds are in global space
         Bounds tableBounds = tableObject.GetComponent<MeshRenderer>().bounds;
@@ -632,7 +639,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             value[1] = i;
             value[2] = seatsInThisRow;
             
-            string key = "marker" + newMarkerObject.GetPhotonView().ViewID;
+            // string key already exists oops
+            key = "marker" + newMarkerObject.GetPhotonView().ViewID;
             SetRoomCustomProperty(key, value);
 
             // enable the visual component of the marker for debugging purposes

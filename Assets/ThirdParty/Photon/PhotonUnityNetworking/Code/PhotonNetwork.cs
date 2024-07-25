@@ -1149,7 +1149,7 @@ namespace Photon.Pun
             }
 
             SetupLogging();
-
+            
 
             NetworkingClient.LoadBalancingPeer.TransportProtocol = appSettings.Protocol;
             NetworkingClient.ExpectedProtocol = null;
@@ -1200,7 +1200,6 @@ namespace Photon.Pun
             {
                 NetworkingClient.NameServerHost = appSettings.Server;
             }
-
 
             if (appSettings.IsBestRegion)
             {

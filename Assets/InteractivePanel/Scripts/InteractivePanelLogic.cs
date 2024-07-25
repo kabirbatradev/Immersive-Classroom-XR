@@ -178,19 +178,27 @@ public class InteractivePanelLogic : MonoBehaviour
     private void UpdateClippingBounds()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+    
         // Get the corners of the RectTransform in world space
-        Vector3[] corners = new Vector3[4];
-        GetComponent<RectTransform>().GetWorldCorners(corners);
+        Vector3[] worldCorners = new Vector3[4];
+        GetComponent<RectTransform>().GetWorldCorners(worldCorners);
 
-        // Calculate the bounding box that contains all corners
-        Bounds bounds = new Bounds(corners[0], Vector3.zero);
-        for (int i = 1; i < corners.Length; i++)
+        // Transform the corners to the local space of the boundObject
+        Vector3[] localCorners = new Vector3[4];
+        for (int i = 0; i < worldCorners.Length; i++)
         {
-            bounds.Encapsulate(corners[i]);
+            localCorners[i] = boundObject.transform.InverseTransformPoint(worldCorners[i]);
         }
 
-        Vector3 lossyScale = boundObject.transform.lossyScale;
-        boundObject.transform.localScale = new Vector3(bounds.size.x / lossyScale.x, bounds.size.y / lossyScale.y, boundObject.transform.localScale.z);
+        // Calculate the bounding box that contains all local corners
+        Bounds bounds = new Bounds(localCorners[0], Vector3.zero);
+        for (int i = 1; i < localCorners.Length; i++)
+        {
+            bounds.Encapsulate(localCorners[i]);
+        }
+
+        // Apply the bounding box size to the boundObject's local scale
+        boundObject.transform.localScale = new Vector3(bounds.size.x, bounds.size.y, boundObject.transform.localScale.z);
     }
 }
 

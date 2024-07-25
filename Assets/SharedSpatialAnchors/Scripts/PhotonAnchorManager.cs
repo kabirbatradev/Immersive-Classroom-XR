@@ -130,7 +130,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
 
         PhotonPun.PhotonNetwork.LocalPlayer.NickName = newName;
     }
-
+    
     private void OnApplicationPause(bool pause)
     {
         if (!pause)
