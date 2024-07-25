@@ -99,10 +99,42 @@ public class GameObjectTracker : MonoBehaviour
                 frameData.gameObjects.Add(data);
             }
 
-            // TODO: iterate through all panels, 
+            // iterate through all panels, 
             // separate into the actual panel and the professor head, 
             // get group number, add bounds bounds
+            GameObject[] sidePanelObjects = GameObject.FindGameObjectsWithTag("SidePanel");
+            foreach (GameObject sidePanelObject in sidePanelObjects) {
+                if (sidePanelObject == null) continue;
 
+                int objectGroupNumber = 1;
+                if (InstructorCloudFunctions.Instance.PhotonObjectHasGroupNumber(sidePanelObject)) {
+                    objectGroupNumber = InstructorCloudFunctions.Instance.GetPhotonObjectGroupNumber(sidePanelObject);
+                }
+
+                // every side panel has 2 child objects (the quiz panel and the video panel)
+                GameObject quizPanelObject = sidePanelObject.transform.GetChild(0).gameObject;
+                GameObjectData data = new GameObjectData {
+                    name = quizPanelObject.name,
+                    tag = quizPanelObject.tag,
+                    position = quizPanelObject.transform.position,
+                    rotation = quizPanelObject.transform.rotation,
+                    groupNumber = objectGroupNumber,
+                };
+                frameData.gameObjects.Add(data);
+
+                // if the agora panel doesnt exist, then dont try to log it
+                if (sidePanelObject.transform.childCount != 2) continue; 
+                GameObject agoraVideoPanel = sidePanelObject.transform.GetChild(1).gameObject;
+                data = new GameObjectData {
+                    name = agoraVideoPanel.name,
+                    tag = agoraVideoPanel.tag,
+                    position = agoraVideoPanel.transform.position,
+                    rotation = agoraVideoPanel.transform.rotation,
+                    groupNumber = objectGroupNumber,
+                };
+                frameData.gameObjects.Add(data);
+
+            }
 
 
             // foreach (GameObject student in studentsHeads)
