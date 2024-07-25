@@ -24,8 +24,11 @@ public class FrameData
     public int frameNumber;
     public List<GameObjectData> gameObjects = new List<GameObjectData>();
 
-    // TODO: record the current main object mode (lecture mode vs groups of 4 etc)
+    // record the current group mode (lecture mode vs groups of 4 etc)
+    public string currentGroupMode;
+
     // TODO: record the current ... something else...
+    // I forgot if there was something else oops
 }
 
 [Serializable]
@@ -58,6 +61,7 @@ public class GameObjectTracker : MonoBehaviour
         {
             FrameData frameData = new FrameData();
             frameData.frameNumber = Time.frameCount;
+            frameData.currentGroupMode = InstructorCloudFunctions.Instance.currentGroupMode.ToString();
 
             // iterate through all player heads, get student username and group number
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
