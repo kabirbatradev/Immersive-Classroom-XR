@@ -326,13 +326,13 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     }
 
-    private bool PhotonObjectHasGroupNumber(GameObject photonObject) {
+    public bool PhotonObjectHasGroupNumber(GameObject photonObject) {
 
         string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
         return PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key);
     }
 
-    private int GetPhotonObjectGroupNumber(GameObject photonObject) {
+    public int GetPhotonObjectGroupNumber(GameObject photonObject) {
 
         string key = "groupNum" + photonObject.GetComponent<PhotonPun.PhotonView>().ViewID;
         int objectGroupNumber = (int)PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties[key];
@@ -661,7 +661,7 @@ public class InstructorCloudFunctions : MonoBehaviour
 
     
     // helper function for getting player object from player head game object
-    private Player GetPlayerFromPlayerHeadObject(GameObject playerHead) {
+    public Player GetPlayerFromPlayerHeadObject(GameObject playerHead) {
         if (!playerHead.CompareTag("PlayerHead")) {
             Debug.Log("Error: This object is not a player head object (does not have player head tag)");
             return null;
