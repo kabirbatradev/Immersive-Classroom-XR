@@ -30,7 +30,8 @@ public class UserHeadPositionTrackerManager : PhotonPun.MonoBehaviourPunCallback
     public override void OnJoinedRoom() {
 
         // HeadPrefab exists in the resources folder so Photon should be able to access it
-        Photon.Pun.PhotonNetwork.Instantiate("MyPhotonUserHeadTracker", Vector3.zero, Quaternion.identity);
-
+        GameObject t = Photon.Pun.PhotonNetwork.Instantiate("MyPhotonUserHeadTracker", Vector3.zero, Quaternion.identity);
+        SampleController.Instance.Log(t.transform.GetChild(1).gameObject.name + t.transform.GetChild(1).gameObject.activeSelf);
+        Debug.Log(t.transform.GetChild(1).gameObject.name + t.transform.GetChild(1).gameObject.activeSelf);
     }
 }
