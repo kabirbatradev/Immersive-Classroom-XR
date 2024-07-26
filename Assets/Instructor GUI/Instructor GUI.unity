@@ -38891,7 +38891,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853474385}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7b19f4e3075b35409287f30d7898417, type: 3}
   m_Name: 
@@ -40092,6 +40092,7 @@ MonoBehaviour:
   mainObjectContainerPrefab: {fileID: 6696941777995377058, guid: bd837c161d94d014b88ed5ca34c45355, type: 3}
   panelPrefab: {fileID: 7802215343730013057, guid: 5172ecfba4fb21149ae1cc7dbc3c38b6, type: 3}
   debugMode: 0
+  currentGroupMode: 3
 --- !u!4 &1960678416
 Transform:
   m_ObjectHideFlags: 0
