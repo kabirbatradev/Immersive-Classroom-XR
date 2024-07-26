@@ -49,7 +49,7 @@ public class InteractivePanelLogic : MonoBehaviour
         qc = LoadQuiz(file);
         qi = qc.Questions[0];
         // qi = GenerateDateQuestion();
-        Shuffle(qi.Options);
+        // Shuffle(qi.Options);
         UpdateQuestion(qi);
         UpdateClippingBounds();
     }
@@ -78,7 +78,31 @@ public class InteractivePanelLogic : MonoBehaviour
         {
             if (toggle.group == toggleGroup)
             {
-                toggle.GetComponentInChildren<Image>().color = toggle.isOn ? optionOnColor : optionOffColor;
+                if (toggle.isOn)
+                {
+                    transform.parent.parent.GetComponent<PanelRPCFunctions>()
+                        .OnUserChangeOptions(toggle.GetComponentInChildren<Text>().text);
+                }
+            }
+        }
+    }
+
+    public void RenderToggleValueChanged(string option)
+    {
+        foreach (Toggle toggle in toggleGroup.GetComponentsInChildren<Toggle>())
+        {
+            if (toggle.group == toggleGroup)
+            {
+                if (toggle.GetComponentInChildren<Text>().text == option)
+                {
+                    toggle.isOn = true;
+                    toggle.GetComponentInChildren<Image>().color = optionOnColor;
+                }
+                else
+                {
+                    toggle.isOn = false;
+                    toggle.GetComponentInChildren<Image>().color = optionOffColor;
+                }
             }
         }
     }

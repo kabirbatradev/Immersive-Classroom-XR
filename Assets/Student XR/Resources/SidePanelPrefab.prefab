@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6458654212902937007}
   - component: {fileID: 4639687766186195623}
   - component: {fileID: 3477830518618809500}
+  - component: {fileID: -710995456047830019}
   m_Layer: 7
   m_Name: SidePanelPrefab
   m_TagString: SidePanel
@@ -87,6 +88,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66673c67ff118ed4fb65ff28cefa8ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-710995456047830019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802215343730013057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3955eb6ad432f874e8e8ef93bc8a47fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  script: {fileID: 8572912593256953637}
 --- !u!1001 &1471241979908929581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -264,6 +278,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3845113460649889506, guid: 61271883653b6fb448a26d2853feeba3, type: 3}
   m_PrefabInstance: {fileID: 1471241979908929581}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8572912593256953637 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7103298510242483976, guid: 61271883653b6fb448a26d2853feeba3, type: 3}
+  m_PrefabInstance: {fileID: 1471241979908929581}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ebd866307b047b41bf93f5280243099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2411341751186894768
 PrefabInstance:
   m_ObjectHideFlags: 0

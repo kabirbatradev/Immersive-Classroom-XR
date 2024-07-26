@@ -125,8 +125,8 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         // UnityEngine.Random.InitState((int)(Time.time * 10000));
         // string testName = "TestUser" + UnityEngine.Random.Range(0, 1000);
         
-        // Use 
-        string newName = _oculusUsername + " " + SystemInfo.deviceUniqueIdentifier;
+        // Use device unique identifier so that no overlapping between different users, easy tracking
+        string newName = SystemInfo.deviceUniqueIdentifier;
 
         PhotonPun.PhotonNetwork.LocalPlayer.NickName = newName;
     }

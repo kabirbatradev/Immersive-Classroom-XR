@@ -1048,11 +1048,11 @@ public class InstructorCloudFunctions : MonoBehaviour
             panelObject.transform.Rotate(Vector3.up, 180); // panel object is backward; rotate around 180 degrees
 
             // set the ownership of the panel to the local player = the instructor.. isnt this redundant since we just created the panel (so its naturally owned by the local player)
-            PhotonView photonView = panelObject.GetComponent<PhotonView>();
+            /*PhotonView photonView = panelObject.GetComponent<PhotonView>();
             if (photonView != null && photonView.Owner != PhotonNetwork.LocalPlayer)
             {
                 photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            }
+            }*/
 
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
