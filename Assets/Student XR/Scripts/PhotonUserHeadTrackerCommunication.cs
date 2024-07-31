@@ -11,6 +11,9 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
 
     public GameObject head;
 
+    // [SerializeField]
+    // private Transform centerEyeTransform;
+
     // get the photon view of the gameobject
     private void Start() {
         photonView = GetComponent<PhotonView>();
@@ -30,6 +33,7 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
         if (photonView.IsMine) {
 
             Transform localHead = UserHeadPositionTrackerManager.Instance.localHeadTransform;
+            // Transform localHead = centerEyeTransform;
 
             gameObject.transform.position = localHead.position;
             gameObject.transform.eulerAngles = localHead.eulerAngles;
@@ -52,6 +56,7 @@ public class PhotonUserHeadTrackerCommunication : MonoBehaviour, IPunObservable
                 // this script has only 1 instance, and we passed in the "center eye anchor" aka the position of the head
 
             Transform localHead = UserHeadPositionTrackerManager.Instance.localHeadTransform;
+            // Transform localHead = centerEyeTransform;
 
             stream.SendNext(localHead.position);
             stream.SendNext(localHead.eulerAngles);
