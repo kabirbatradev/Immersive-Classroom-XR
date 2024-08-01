@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class SplitStudent : MonoBehaviour
 {
@@ -39,17 +40,21 @@ public class SplitStudent : MonoBehaviour
         }
     }
 
-    // Used to split students into squares of 4
     public void SplitFour()
     {
         markers = GameObject.FindGameObjectsWithTag("Marker");
         studentsHeads = GameObject.FindGameObjectsWithTag("FakeStudent");
 
-        List<List<GameObject>> dynamicArray = new List<List<GameObject>>();
-        Dictionary<int, List<GameObject>> rowDictionary = new Dictionary<int, List<GameObject>>();
+        if (studentsHeads.Length == 0)
+        {
+            Debug.Log("No students available!");
+            return;
+        }
 
-        // Group students by rows
-        foreach (GameObject student in studentsHeads)
+        var rowDictionary = new Dictionary<int, List<GameObject>>();
+
+        // Fill dictionary with students categorized by their row
+        foreach (var student in studentsHeads)
         {
             int row = findRow(student);
             if (!rowDictionary.ContainsKey(row))
@@ -59,43 +64,78 @@ public class SplitStudent : MonoBehaviour
             rowDictionary[row].Add(student);
         }
 
-        // Sort each row based on their z position
+        // Sort students within each row by their z position
         foreach (var row in rowDictionary)
         {
             row.Value.Sort((x, y) => x.transform.position.z.CompareTo(y.transform.position.z));
-            dynamicArray.Add(row.Value);
         }
 
-        List<GameObject> groupList = new List<GameObject>();
-        int groupNumber = 1;
-        int studentsPerGroup = 4;
+        var groups = new List<List<GameObject>>();
+        List<int> keys = new List<int>(rowDictionary.Keys);
+        keys.Sort(); // Ensure rows are processed in numerical order
 
-        // Assign groups
-        while (groupList.Count < studentsHeads.Length)
+        // Pair rows and group students
+        int groupNumber = 1; // Start the group numbering from 1
+        for (int i = 0; i < keys.Count - 1; i += 2) // increment by 2 to ensure pairs (1,2), (3,4)...
         {
-            for (int i = 0; i < dynamicArray.Count; i++)
+            var row1 = rowDictionary[keys[i]];
+            var row2 = rowDictionary[keys[i + 1]];
+
+            // Continue grouping until both rows are exhausted or cannot fill another complete group
+            while (row1.Count > 0 && row2.Count > 0)
             {
-                var row = dynamicArray[i];
-                for (int j = 0; j < Math.Min(studentsPerGroup / 2, row.Count); j++)
+                var group = new List<GameObject>();
+                int count = Math.Min(2, row1.Count);
+                for (int j = 0; j < count; j++)
                 {
-                    if (groupList.Count % studentsPerGroup == 0 && groupList.Count > 0)
-                    {
-                        groupNumber++;
-                    }
-                    GameObject student = row[0];
-                    row.RemoveAt(0);
-                    student.GetComponent<FakeStudent>().group = groupNumber;
-                    groupList.Add(student);
-                    if (groupList.Count % studentsPerGroup == 0 && groupList.Count > 0)
-                    {
-                        break;
-                    }
+                    group.Add(row1[0]);
+                    row1.RemoveAt(0);
                 }
+
+                count = Math.Min(2, row2.Count);
+                for (int j = 0; j < count; j++)
+                {
+                    group.Add(row2[0]);
+                    row2.RemoveAt(0);
+                }
+
+                foreach (var student in group)
+                {
+                    student.GetComponent<FakeStudent>().group = groupNumber;
+                }
+                groups.Add(group);
+                groupNumber++; // Increment group number for each new group
             }
         }
 
+        // Handle leftovers for each row pair separately to prevent mixing
+        for (int i = 0; i < keys.Count; i++)
+        {
+            var leftoverRow = rowDictionary[keys[i]];
+            while (leftoverRow.Count > 0)
+            {
+                var group = new List<GameObject>();
+                int takeCount = Math.Min(4, leftoverRow.Count); // Try to form groups of up to 4 from leftovers
+                for (int j = 0; j < takeCount; j++)
+                {
+                    group.Add(leftoverRow[0]);
+                    leftoverRow.RemoveAt(0);
+                }
+                foreach (var student in group)
+                {
+                    student.GetComponent<FakeStudent>().group = groupNumber;
+                }
+                groups.Add(group);
+                groupNumber++; // Increment group number for each new group even with leftovers
+            }
+        }
+
+        // Optional: Update visualization or UI
         colorByGroup(studentsHeads);
     }
+
+
+
     // ------------ Button Functions ------------
 
 
@@ -154,12 +194,21 @@ public class SplitStudent : MonoBehaviour
 
     public void colorByGroup(GameObject[] studentsHeads)
     {
+        Dictionary<int, Color> groupColors = new Dictionary<int, Color>();
+
         for (int i = 0; i < studentsHeads.Length; i++)
         {
             int group = studentsHeads[i].GetComponent<FakeStudent>().group;
-            // color by rgb with group where r g and b is group number * 10
-            studentsHeads[i].GetComponent<Renderer>().material.color = new Color(group * 25 / 255f, group * 25 / 255f, group * 25 / 255f);
+            if (!groupColors.ContainsKey(group))
+            {
+                // Generate a random color for each new group using UnityEngine.Random
+                groupColors[group] = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+            }
+
+            // Assign the color to the student based on their group
+            studentsHeads[i].GetComponent<Renderer>().material.color = groupColors[group];
         }
     }
+
     // ------------ Helper Functions ------------
 }
