@@ -541,9 +541,11 @@ public class TheaterModeManager : MonoBehaviour
             clone.transform.localScale = passthroughMeshObject.transform.localScale;
             
             // Show the wall thickness
-            GameObject thickness = clone.transform.GetChild(0).gameObject;
-            thickness.SetActive(true);
-            thickness.GetComponent<Renderer>().material.mainTextureScale = new Vector2(clone.transform.localScale.x, 1);
+            clone.GetComponent<PhotonView>().RPC("ActivateThickness", RpcTarget.AllBuffered);
+            
+            // GameObject thickness = clone.transform.GetChild(0).gameObject;
+            // thickness.SetActive(true);
+            // thickness.GetComponent<Renderer>().material.mainTextureScale = new Vector2(clone.transform.localScale.x, 1);
             
             wallClones.Add(clone);
 
@@ -577,9 +579,6 @@ public class TheaterModeManager : MonoBehaviour
 
 
     }
-
-
-    
 
 
 
@@ -711,4 +710,6 @@ public class TheaterModeManager : MonoBehaviour
     }
 
     */
+    
+
 }

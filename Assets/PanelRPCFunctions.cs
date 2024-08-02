@@ -20,7 +20,7 @@ public class PanelRPCFunctions : MonoBehaviour
         script.RenderToggleValueChanged(options[2]);
         if (photonView.IsMine)
         {
-            // the instructor gui in editor
+            // This is the instructor gui in editor
             Debug.Log("User " + options[0] + " from group " + options[1] + " choose option " + options[2]);
             // also record this in a local json file
         }
@@ -32,7 +32,7 @@ public class PanelRPCFunctions : MonoBehaviour
         {
             // not the instructor gui, which is the owner
             // group number != 0, not the cameraman
-            // If you can still chang ethe panel, which means that you are in the student group
+            // If you can still change the panel, which means that you are in the student group
             string[] options = {PhotonNetwork.LocalPlayer.NickName,
                 CloudFunctions.GetCurrentGroupNumber().ToString(), option};
             photonView.RPC("UpdatePanelContent", RpcTarget.All, options);
