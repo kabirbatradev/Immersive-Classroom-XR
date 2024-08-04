@@ -9,9 +9,10 @@ public class AgoraPanelScript : MonoBehaviour
 {
 
     public const string instructorPanelCurrentGroupKey = "InstructorPanelCurrentGroup";
-    private bool panelIsVisible;
+    private bool currentInAgora = false;
     private MeshRenderer renderer;
-
+    private VideoSurface videoSurface;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,54 +21,72 @@ public class AgoraPanelScript : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+        
+        int thisPanelGroupNumber = GetThisPanelGroupNumber();
+        SampleController.Instance.Log("Initializing an Agora Panel of group number " + thisPanelGroupNumber);
+        
+        videoSurface = gameObject.AddComponent<VideoSurface>(); // important
+        renderer = GetComponent<MeshRenderer>();
+        renderer.enabled = false;
+        
+        StartCoroutine(CheckRoomProperties());
+    }
+
+    IEnumerator CheckRoomProperties()
+    {
+        while (true)
+        {
+            // check room custom property: InstructorPanelCurrentGroup
+
+            bool shouldBeInAgora = false;
+
+            if (CloudFunctions.RoomHasCustomProperty(instructorPanelCurrentGroupKey))
+            {
+                int instructorGroupNumber = (int)CloudFunctions.GetRoomCustomProperty(instructorPanelCurrentGroupKey);
+
+                int thisPanelGroupNumber = GetThisPanelGroupNumber();
+
+                if (instructorGroupNumber == 0 || instructorGroupNumber == thisPanelGroupNumber)
+                {
+                    shouldBeInAgora = true;
+                }
+            }
+            if (!currentInAgora && shouldBeInAgora)
+            {
+                AgoraManager.Instance.JoinChannel();
+            }
+            else if (currentInAgora && !shouldBeInAgora)
+            {
+                LeaveChannel();
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    public void JoinChannelEventTriggered()
+    {
         if (AgoraManager.Instance.globalUID == 0) {
             // Agora is not ready yet (not connected)
             SampleController.Instance.Log("ERROR: agora is not connected yet because global uid is 0");
             gameObject.SetActive(false);
             return;
         }
-
-        int thisPanelGroupNumber = GetThisPanelGroupNumber();
-        SampleController.Instance.Log("Initializing an Agora Panel of group number " + thisPanelGroupNumber);
-        
         uint uid = (uint)AgoraManager.Instance.globalUID;
         string channelId = AgoraManager.Instance.GetChannelName();
-        var videoSurface = gameObject.AddComponent<VideoSurface>(); // important
         videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
         videoSurface.SetEnable(true);
-
-        renderer = GetComponent<MeshRenderer>();
+        renderer.enabled = true;
+        currentInAgora = true;
     }
-
-    void Update() {
-        // check room custom property: InstructorPanelCurrentGroup
-
-        panelIsVisible = true;
-
-        if (CloudFunctions.RoomHasCustomProperty(instructorPanelCurrentGroupKey)) {
-            int instructorGroupNumber = (int)CloudFunctions.GetRoomCustomProperty(instructorPanelCurrentGroupKey);
-
-            int thisPanelGroupNumber = GetThisPanelGroupNumber();
-
-            if (instructorGroupNumber != 0 && instructorGroupNumber != thisPanelGroupNumber) {
-                panelIsVisible = false;
-            }
-        }
-        else {
-            // the instructor hasn't even joined, so dont show the panel..? but then its not even possible to create a panel, so just show it for debugging purposes
-            // panelIsVisible = false;
-        }
-
-        // to show or not to show the panel, that is the question.
-        // do not disable the object itself: this script will stop updating
-        // instead, disable the renderer
-        renderer.enabled = panelIsVisible;
-
-        // if the panel is visible, then also hear professor audio
-        uint professorUid = (uint)AgoraManager.Instance.globalUID;
-        AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(professorUid, !panelIsVisible);
+    
+    private void LeaveChannel()
+    {
+        AgoraManager.Instance.LeaveChannel();
+        videoSurface.SetEnable(false);
+        renderer.enabled = false;
+        currentInAgora = false;
     }
-
+    
     private int GetThisPanelGroupNumber() {
         // get parent panel object
         if (gameObject.transform.parent == null) {

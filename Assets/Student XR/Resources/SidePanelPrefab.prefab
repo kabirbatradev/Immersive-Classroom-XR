@@ -139,7 +139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3671272226646157870, guid: 61271883653b6fb448a26d2853feeba3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 3671272226646157870, guid: 61271883653b6fb448a26d2853feeba3, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -298,18 +298,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 1512583182958140108}
     m_Modifications:
     - target: {fileID: 1327227860338509996, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.0014685001
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327227860338509996, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.11748
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327227860338509996, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.11748
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327227860338509996, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -352,10 +340,6 @@ PrefabInstance:
     - target: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
       propertyPath: m_Name
       value: AgoraVideoPanel
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

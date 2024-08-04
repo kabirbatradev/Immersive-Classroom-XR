@@ -44,7 +44,7 @@ public class InteractivePanelLogic : MonoBehaviour
 
     void Start()
     {
-        raiseHand.onValueChanged.AddListener(UpdateRaiseHandStatus);
+        raiseHand.onValueChanged.AddListener(HandleRaiseHandStatusChanged);
         TextAsset file = Resources.Load("Quiz") as TextAsset;
         qc = LoadQuiz(file);
         qi = qc.Questions[0];
@@ -74,14 +74,18 @@ public class InteractivePanelLogic : MonoBehaviour
     
     private void HandleToggleValueChanged(bool isOn)
     {
-        foreach (Toggle toggle in toggleGroup.GetComponentsInChildren<Toggle>())
+        if (isOn)
         {
-            if (toggle.group == toggleGroup)
+            foreach (Toggle toggle in toggleGroup.GetComponentsInChildren<Toggle>())
             {
-                if (toggle.isOn)
+                if (toggle.group == toggleGroup)
                 {
-                    transform.parent.parent.GetComponent<PanelRPCFunctions>()
-                        .OnUserChangeOptions(toggle.GetComponentInChildren<Text>().text);
+                    if (toggle.isOn)
+                    {
+                        // Call RPC Function on render changed
+                        transform.parent.parent.GetComponent<PanelRPCFunctions>()
+                            .OnUserChangedOptions(toggle.GetComponentInChildren<Text>().text);
+                    }
                 }
             }
         }
@@ -95,12 +99,16 @@ public class InteractivePanelLogic : MonoBehaviour
             {
                 if (toggle.GetComponentInChildren<Text>().text == option)
                 {
+                    toggle.onValueChanged.RemoveListener(HandleToggleValueChanged);
                     toggle.isOn = true;
+                    toggle.onValueChanged.AddListener(HandleToggleValueChanged);
                     toggle.GetComponentInChildren<Image>().color = optionOnColor;
                 }
                 else
                 {
+                    toggle.onValueChanged.RemoveListener(HandleToggleValueChanged);
                     toggle.isOn = false;
+                    toggle.onValueChanged.AddListener(HandleToggleValueChanged);
                     toggle.GetComponentInChildren<Image>().color = optionOffColor;
                 }
             }
@@ -189,13 +197,18 @@ public class InteractivePanelLogic : MonoBehaviour
         }
     }
 
-    private void UpdateRaiseHandStatus(bool isOn)
+    private void HandleRaiseHandStatusChanged(bool isOn)
     {
+        // Call RPC Function on render changed
+        transform.parent.parent.GetComponent<PanelRPCFunctions>().OnUserRaisedHand(isOn);
+    }
+    
+    public void RenderRaiseHandStatusChanged(bool isOn)
+    {
+        raiseHand.onValueChanged.RemoveListener(HandleRaiseHandStatusChanged);
+        raiseHand.isOn = isOn;
+        raiseHand.onValueChanged.RemoveListener(HandleRaiseHandStatusChanged);
         raiseHand.GetComponent<Image>().sprite = isOn ? raiseHandRaised : raiseHandNotRaised;
-        if (isOn)
-        {
-            // Other logic of calling out to the instructor
-        }
     }
     
     // Update clipping bounds so that the cursor isn't shown outside of UI panel
