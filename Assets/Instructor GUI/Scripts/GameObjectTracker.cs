@@ -32,6 +32,14 @@ public class FrameData
     // record the currently active game object
     public string currentMainObjectModelName;
 
+    // theater related data:
+    // StreamTheaterModeData.Instance should constantly have these up to date
+    public float wallLoweredPercentage;
+    public float ceilingRemovedPercentage;
+    public bool ceilingVisible;
+    public int currentSkyboxIndex;
+    public string skyboxMaterialName;
+
 }
 
 [Serializable]
@@ -67,6 +75,13 @@ public class GameObjectTracker : MonoBehaviour
             frameData.currentGroupMode = InstructorCloudFunctions.Instance.currentGroupMode.ToString();
 
             frameData.currentMainObjectModelName = (string)InstructorCloudFunctions.Instance.GetRoomCustomProperty("mainObjectCurrentModelName");
+
+            frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
+            frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
+            frameData.ceilingVisible = StreamTheaterModeData.Instance.ceilingVisible;
+            frameData.currentSkyboxIndex = StreamTheaterModeData.Instance.currentSkyboxIndex;
+            frameData.skyboxMaterialName = StreamTheaterModeData.Instance.skyboxList[StreamTheaterModeData.Instance.currentSkyboxIndex].ToString();
+            // StreamTheaterModeData.Instance.skyboxList[]
 
             // iterate through all player heads, get student username and group number
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
