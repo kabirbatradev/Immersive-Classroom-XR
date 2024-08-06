@@ -15,7 +15,7 @@ public class GameObjectData
 
     public int groupNumber;
 
-    // add optional bounding box data (the player heads dont need this, but the main objects and panels should)
+    // optional bounding box data (the player heads dont need this, but the main objects and panels should)
     public Vector3 center;
     public Vector3 size;
 }
@@ -99,13 +99,21 @@ public class GameObjectTracker : MonoBehaviour
                 }
 
                 // get the subobject currently being rendered
+                Bounds worldCoordinateBounds = new(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+                bool activeMainObjectModel = false;
+                foreach (Transform mainObjectModel in mainObject.transform) {
+                    if (mainObjectModel.gameObject.activeSelf) {
+                        worldCoordinateBounds = mainObjectModel.GetComponent<Renderer>().bounds;
+                        activeMainObjectModel = true;
+                        break;
+                    }
+                }
 
-                // var r = GetComponent<Renderer>();
-                // if (r == null)
-                //     return;
-                // var bounds = r.bounds;
-                // center
-                // size
+                // if there is somehow no active model
+                if (!activeMainObjectModel) {
+                    Debug.Log("ERROR: NO ACTIVE MAIN OBJECT MODEL FOUND");
+                    continue;
+                }
 
                 GameObjectData data = new GameObjectData {
                     name = mainObject.name,
@@ -114,7 +122,11 @@ public class GameObjectTracker : MonoBehaviour
                     rotation = mainObject.transform.rotation,
                     groupNumber = objectGroupNumber,
 
+                    center = worldCoordinateBounds.center,
+                    size = worldCoordinateBounds.size,
+
                 };
+                
                 frameData.gameObjects.Add(data);
             }
 
@@ -132,24 +144,36 @@ public class GameObjectTracker : MonoBehaviour
 
                 // every side panel has 2 child objects (the quiz panel and the video panel)
                 GameObject quizPanelObject = sidePanelObject.transform.GetChild(0).gameObject;
+
+                Bounds worldCoordinateBounds = quizPanelObject.GetComponent<Renderer>().bounds;
+
                 GameObjectData data = new GameObjectData {
                     name = quizPanelObject.name,
                     tag = quizPanelObject.tag,
                     position = quizPanelObject.transform.position,
                     rotation = quizPanelObject.transform.rotation,
                     groupNumber = objectGroupNumber,
+
+                    center = worldCoordinateBounds.center,
+                    size = worldCoordinateBounds.size,
                 };
                 frameData.gameObjects.Add(data);
 
                 // if the agora panel doesnt exist, then dont try to log it
                 if (sidePanelObject.transform.childCount != 2) continue; 
                 GameObject agoraVideoPanel = sidePanelObject.transform.GetChild(1).gameObject;
+
+                worldCoordinateBounds = agoraVideoPanel.GetComponent<Renderer>().bounds;
+
                 data = new GameObjectData {
                     name = agoraVideoPanel.name,
                     tag = agoraVideoPanel.tag,
                     position = agoraVideoPanel.transform.position,
                     rotation = agoraVideoPanel.transform.rotation,
                     groupNumber = objectGroupNumber,
+
+                    center = worldCoordinateBounds.center,
+                    size = worldCoordinateBounds.size,
                 };
                 frameData.gameObjects.Add(data);
 
