@@ -16,6 +16,8 @@ public class GameObjectData
     public int groupNumber;
 
     // add optional bounding box data (the player heads dont need this, but the main objects and panels should)
+    public Vector3 center;
+    public Vector3 size;
 }
 
 [Serializable]
@@ -27,8 +29,9 @@ public class FrameData
     // record the current group mode (lecture mode vs groups of 4 etc)
     public string currentGroupMode;
 
-    // TODO: record the current ... something else...
-    // I forgot if there was something else oops
+    // record the currently active game object
+    public string currentMainObjectModelName;
+
 }
 
 [Serializable]
@@ -63,6 +66,8 @@ public class GameObjectTracker : MonoBehaviour
             frameData.frameNumber = Time.frameCount;
             frameData.currentGroupMode = InstructorCloudFunctions.Instance.currentGroupMode.ToString();
 
+            frameData.currentMainObjectModelName = (string)InstructorCloudFunctions.Instance.GetRoomCustomProperty("mainObjectCurrentModelName");
+
             // iterate through all player heads, get student username and group number
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
             foreach (GameObject studentHead in studentsHeads) {
@@ -93,12 +98,22 @@ public class GameObjectTracker : MonoBehaviour
                     objectGroupNumber = InstructorCloudFunctions.Instance.GetPhotonObjectGroupNumber(mainObject);
                 }
 
+                // get the subobject currently being rendered
+
+                // var r = GetComponent<Renderer>();
+                // if (r == null)
+                //     return;
+                // var bounds = r.bounds;
+                // center
+                // size
+
                 GameObjectData data = new GameObjectData {
                     name = mainObject.name,
                     tag = mainObject.tag,
                     position = mainObject.transform.position,
                     rotation = mainObject.transform.rotation,
                     groupNumber = objectGroupNumber,
+
                 };
                 frameData.gameObjects.Add(data);
             }
