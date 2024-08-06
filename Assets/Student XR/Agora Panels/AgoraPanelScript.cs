@@ -12,6 +12,8 @@ public class AgoraPanelScript : MonoBehaviour
     private bool currentInAgora = false;
     private MeshRenderer renderer;
     private VideoSurface videoSurface;
+
+    private int thisPanelGroupNumber;
     
     // Start is called before the first frame update
     void Start()
@@ -22,7 +24,7 @@ public class AgoraPanelScript : MonoBehaviour
             return;
         }
         
-        int thisPanelGroupNumber = GetThisPanelGroupNumber();
+        thisPanelGroupNumber = GetThisPanelGroupNumber();
         SampleController.Instance.Log("Initializing an Agora Panel of group number " + thisPanelGroupNumber);
         
         videoSurface = gameObject.AddComponent<VideoSurface>(); // important
@@ -32,31 +34,41 @@ public class AgoraPanelScript : MonoBehaviour
         StartCoroutine(CheckRoomProperties());
     }
 
-    IEnumerator CheckRoomProperties()
+    private IEnumerator CheckRoomProperties()
     {
         while (true)
         {
             // check room custom property: InstructorPanelCurrentGroup
-
+            
             bool shouldBeInAgora = false;
 
             if (CloudFunctions.RoomHasCustomProperty(instructorPanelCurrentGroupKey))
             {
                 int instructorGroupNumber = (int)CloudFunctions.GetRoomCustomProperty(instructorPanelCurrentGroupKey);
-
-                int thisPanelGroupNumber = GetThisPanelGroupNumber();
-
-                if (instructorGroupNumber == 0 || instructorGroupNumber == thisPanelGroupNumber)
+                
+                // SampleController.Instance.Log("Checking Room Property for " + thisPanelGroupNumber);
+                if (instructorGroupNumber == thisPanelGroupNumber) // instructorGroupNumber == 0 || 
                 {
                     shouldBeInAgora = true;
                 }
             }
             if (!currentInAgora && shouldBeInAgora)
             {
-                AgoraManager.Instance.JoinChannel();
+                if (!AgoraManager.Instance.isInAgoraRoom)
+                {
+                    AgoraManager.Instance.JoinChannel();
+                }
+                else
+                {
+                    JoinChannelEventTriggered();
+                }
             }
             else if (currentInAgora && !shouldBeInAgora)
             {
+                if (AgoraManager.Instance.isInAgoraRoom)
+                {
+                    AgoraManager.Instance.LeaveChannel();
+                }
                 LeaveChannel();
             }
             yield return new WaitForSeconds(1);
@@ -71,6 +83,7 @@ public class AgoraPanelScript : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+        SampleController.Instance.Log("Join Channel event triggered for panel " + thisPanelGroupNumber);
         uint uid = (uint)AgoraManager.Instance.globalUID;
         string channelId = AgoraManager.Instance.GetChannelName();
         videoSurface.SetForUser(uid, channelId, VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE);
@@ -81,7 +94,6 @@ public class AgoraPanelScript : MonoBehaviour
     
     private void LeaveChannel()
     {
-        AgoraManager.Instance.LeaveChannel();
         videoSurface.SetEnable(false);
         renderer.enabled = false;
         currentInAgora = false;

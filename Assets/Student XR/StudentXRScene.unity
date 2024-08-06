@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.46997273, g: 0.47863615, b: 0.60347337, a: 1}
+  m_IndirectSpecularColor: {r: 0.4687711, g: 0.4777162, b: 0.6032816, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -14609,6 +14609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appIdInput: {fileID: 11400000, guid: 8304baef667150447bd80d28ef3a3a5b, type: 2}
+  isInAgoraRoom: 0
   agoraPanelPrefab: {fileID: 8616125695880255286, guid: 9aa0ef71b981b6e40a7f7f77d9ff2382, type: 3}
 --- !u!114 &1937288940
 MonoBehaviour:

@@ -6,10 +6,10 @@ using UnityEngine;
 public class WallRPCFunctions : MonoBehaviour
 {
     [PunRPC]
-    public void ActivateThickness()
+    public void ActivateThickness(float x_scale)
     {
         GameObject thickness = transform.GetChild(0).gameObject;
         thickness.SetActive(true);
-        thickness.GetComponent<Renderer>().material.mainTextureScale = new Vector2(transform.localScale.x, 1);
+        thickness.GetComponent<Renderer>().material.mainTextureScale = new Vector2(x_scale, 1);
     }
 }

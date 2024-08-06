@@ -536,12 +536,11 @@ public class TheaterModeManager : MonoBehaviour
             // clone.transform.localScale += new Vector3(0.001f,0.001f,0.001f);
             // clone.transform.localScale += new Vector3(0.01f,0.01f,0.01f);
             // clone.transform.localScale += new Vector3(0.003f,0.003f,0.003f);
-            clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
             // copy the scale to the clone too
             clone.transform.localScale = passthroughMeshObject.transform.localScale;
-            
+            clone.transform.localScale += new Vector3(0.005f,0.005f,0.005f); // scale up the walls a tiny bit so that there is no tiny edge between walls with no passthrough
             // Show the wall thickness
-            clone.GetComponent<PhotonView>().RPC("ActivateThickness", RpcTarget.AllBuffered);
+            clone.GetComponent<PhotonView>().RPC("ActivateThickness", RpcTarget.AllBuffered, clone.transform.localScale.x);
             
             // GameObject thickness = clone.transform.GetChild(0).gameObject;
             // thickness.SetActive(true);

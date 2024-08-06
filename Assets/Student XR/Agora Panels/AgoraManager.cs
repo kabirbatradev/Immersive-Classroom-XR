@@ -42,6 +42,7 @@ public class AgoraManager : MonoBehaviour
     [NonSerialized]
     public int globalUID = 0;
 
+    public bool isInAgoraRoom = false;
     public GameObject agoraPanelPrefab;
 
 
@@ -194,6 +195,7 @@ public class AgoraManager : MonoBehaviour
     private void OnDestroy()
     {
         Debug.Log("OnDestroy");
+        LeaveChannel();
         if (RtcEngine == null) return;
         RtcEngine.InitEventHandler(null);
         // RtcEngine.LeaveChannel();
@@ -374,6 +376,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnJoinChannelSuccess(RtcConnection connection, int elapsed)
     {
+        _sample.isInAgoraRoom = true;
         // int build = 0;
         // Debug.Log("Agora: OnJoinChannelSuccess ");
         // _sample.Log.UpdateLog(string.Format("sdk version: ${0}",
@@ -383,7 +386,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         //                     connection.channelId, connection.localUid, elapsed));
 
         // VirtualBackground.MakeVideoView(0); // default uid for local feed 
-        
+
     }
 
     // public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
@@ -393,6 +396,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnLeaveChannel(RtcConnection connection, RtcStats stats)
     {
+        _sample.isInAgoraRoom = false;
         // _sample.Log.UpdateLog("OnLeaveChannel");
         // VirtualBackground.DestroyVideoView(0);
     }
@@ -437,8 +441,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         // also mute the instructor using their uid (we can unmute it automatically in update function of panel
         // AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(uid, true);
 
-        GameObject.FindWithTag("SidePanel").transform.GetChild(1).GetComponent<AgoraPanelScript>()
-            .JoinChannelEventTriggered();
+        GameObject.FindWithTag("SidePanel").transform.GetChild(1).GetComponent<AgoraPanelScript>().JoinChannelEventTriggered();
         // _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
     }
 

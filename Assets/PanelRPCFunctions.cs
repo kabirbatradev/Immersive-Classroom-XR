@@ -20,7 +20,7 @@ public class PanelRPCFunctions : MonoBehaviour
         }
     }
 
-    public void OnUserChangedOptions(string option)
+    public void OnUserChangedOptions(int id, string option)
     {
         if (!photonView.IsMine && CloudFunctions.GetCurrentGroupNumber() != 0)
         {
@@ -29,12 +29,12 @@ public class PanelRPCFunctions : MonoBehaviour
             // If you can still change the panel, which means that you are in the student group
             string nickname = PhotonNetwork.LocalPlayer.NickName;
             int groupNum = CloudFunctions.GetCurrentGroupNumber();
-            photonView.RPC("UpdatePanelContent", RpcTarget.All, nickname, groupNum, option);
+            photonView.RPC("UpdatePanelContent", RpcTarget.All, nickname, groupNum, option, id);
         }
     }
     
     [PunRPC]
-    public void UpdatePanelContent(string nickname, int groupNum, string option)
+    public void UpdatePanelContent(string nickname, int groupNum, string option, int id)
     {
         // update the rendering for everyone
         script.RenderToggleValueChanged(option);
@@ -42,7 +42,7 @@ public class PanelRPCFunctions : MonoBehaviour
         {
             // This is the instructor gui in editor
             // save the event to a local csv file
-            string content = $"User {nickname} from group {groupNum} choose option {option}.";
+            string content = $"User {nickname} from group {groupNum} choose option {option} on question {id}.";
             // Get the current timestamp
             string timestamp = DateTime.UtcNow.ToString("o");
             // Create the new row
@@ -84,22 +84,26 @@ public class PanelRPCFunctions : MonoBehaviour
             File.AppendAllText(path, newRow + Environment.NewLine);
         }
     }
-    
-    public void OnRequestInstructorForHelpPressed() {
-        SampleController.Instance.Log("OnRequestInstructorForHelpPressed");
 
-        int groupNumber = CloudFunctions.GetCurrentGroupNumber();
-        string key = "RequestHelpGroup" + groupNumber;
+    public void CallRPCGradeQuestion()
+    {
+        photonView.RPC("CallAllGradeQuestion", RpcTarget.All);
+    }
 
-        bool updatedValue = true;
-        // if the custom property already exists, then just toggle it
-        if (CloudFunctions.RoomHasCustomProperty(key)) {
-            updatedValue = !(bool)CloudFunctions.GetRoomCustomProperty(key);
-        }
+    [PunRPC]
+    public void CallAllGradeQuestion()
+    {
+        script.GradeQuestion();
+    }
 
-        SampleController.Instance.Log("setting request instructor help to " + updatedValue);
-        CloudFunctions.SetRoomCustomProperty(key, updatedValue);
-
+    public void CallRPCNextQuestion()
+    {
+        photonView.RPC("CallAllNextQuestion", RpcTarget.All);
     }
     
+    [PunRPC]
+    public void CallAllNextQuestion()
+    {
+        script.NextQuestion();
+    }
 }
