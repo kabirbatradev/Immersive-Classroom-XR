@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3791682103690828084}
   - component: {fileID: 67581764562382347}
   - component: {fileID: 7703466426630373111}
+  - component: {fileID: -8245008687638827244}
   m_Layer: 0
   m_Name: PassthroughWallMesh
   m_TagString: WallMesh
@@ -151,6 +152,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 0
+--- !u!114 &-8245008687638827244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874268499307850282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b59f9d443d6964c9a99c2920f6398b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2299142169295067818
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using System.IO;
+using Oculus.Interaction.Surfaces;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
@@ -42,12 +44,13 @@ public class InteractivePanelLogic : MonoBehaviour
     private QuizContainer qc;
     private QuizItem qi;
 
+    private int currentQuestionId = 0;
     void Start()
     {
-        raiseHand.onValueChanged.AddListener(UpdateRaiseHandStatus);
+        raiseHand.onValueChanged.AddListener(HandleRaiseHandStatusChanged);
         TextAsset file = Resources.Load("Quiz") as TextAsset;
         qc = LoadQuiz(file);
-        qi = qc.Questions[0];
+        qi = qc.Questions[currentQuestionId];
         // qi = GenerateDateQuestion();
         // Shuffle(qi.Options);
         UpdateQuestion(qi);
@@ -62,10 +65,10 @@ public class InteractivePanelLogic : MonoBehaviour
         for (int i = 0; i < qi.Options.Length; i++)
         {
             GameObject temp = Instantiate(optionPrefab, transform);
-            // Calculate the desired sibling index to make it the second-to-last child
-            int secondToLastIndex = Mathf.Max(transform.childCount - 2, 0);
+            // Calculate the desired sibling index to make it the last child
+            int lastIndex = Mathf.Max(transform.childCount - 1, 0);
             // Set the new object's sibling index
-            temp.transform.SetSiblingIndex(secondToLastIndex);
+            temp.transform.SetSiblingIndex(lastIndex);
             temp.GetComponent<Toggle>().group = toggleGroup;
             temp.GetComponent<Toggle>().onValueChanged.AddListener(HandleToggleValueChanged);
             temp.GetComponentInChildren<Text>().text = qi.Options[i];
@@ -74,14 +77,18 @@ public class InteractivePanelLogic : MonoBehaviour
     
     private void HandleToggleValueChanged(bool isOn)
     {
-        foreach (Toggle toggle in toggleGroup.GetComponentsInChildren<Toggle>())
+        if (isOn)
         {
-            if (toggle.group == toggleGroup)
+            foreach (Toggle toggle in toggleGroup.GetComponentsInChildren<Toggle>())
             {
-                if (toggle.isOn)
+                if (toggle.group == toggleGroup)
                 {
-                    transform.parent.parent.GetComponent<PanelRPCFunctions>()
-                        .OnUserChangeOptions(toggle.GetComponentInChildren<Text>().text);
+                    if (toggle.isOn)
+                    {
+                        // Call RPC Function on render changed
+                        transform.parent.parent.GetComponent<PanelRPCFunctions>()
+                            .OnUserChangedOptions(qi.Index, toggle.GetComponentInChildren<Text>().text);
+                    }
                 }
             }
         }
@@ -95,12 +102,16 @@ public class InteractivePanelLogic : MonoBehaviour
             {
                 if (toggle.GetComponentInChildren<Text>().text == option)
                 {
+                    toggle.onValueChanged.RemoveListener(HandleToggleValueChanged);
                     toggle.isOn = true;
+                    toggle.onValueChanged.AddListener(HandleToggleValueChanged);
                     toggle.GetComponentInChildren<Image>().color = optionOnColor;
                 }
                 else
                 {
+                    toggle.onValueChanged.RemoveListener(HandleToggleValueChanged);
                     toggle.isOn = false;
+                    toggle.onValueChanged.AddListener(HandleToggleValueChanged);
                     toggle.GetComponentInChildren<Image>().color = optionOffColor;
                 }
             }
@@ -131,8 +142,21 @@ public class InteractivePanelLogic : MonoBehaviour
                     bool isCorrect = toggle.GetComponentInChildren<Text>().text == qi.CorrectAnswer;
                     toggle.GetComponentInChildren<Image>().color = isCorrect ? optionCorrectColor : optionWrongColor;
                 }
+                toggle.interactable = false;
             }
         }
+    }
+    
+    public void NextQuestion()
+    {
+        currentQuestionId++;
+        if (currentQuestionId >= qc.Questions.Length)
+        {
+            return;
+        }
+        qi = qc.Questions[currentQuestionId];
+        UpdateQuestion(qi);
+        UpdateClippingBounds();
     }
     
     // Reads a JSON file and returns a QuizContainer object
@@ -189,24 +213,30 @@ public class InteractivePanelLogic : MonoBehaviour
         }
     }
 
-    private void UpdateRaiseHandStatus(bool isOn)
+    private void HandleRaiseHandStatusChanged(bool isOn)
     {
+        // Call RPC Function on render changed
+        transform.parent.parent.GetComponent<PanelRPCFunctions>().OnUserRaisedHand(isOn);
+    }
+    
+    public void RenderRaiseHandStatusChanged(bool isOn)
+    {
+        raiseHand.onValueChanged.RemoveListener(HandleRaiseHandStatusChanged);
+        raiseHand.isOn = isOn;
+        raiseHand.onValueChanged.AddListener(HandleRaiseHandStatusChanged);
         raiseHand.GetComponent<Image>().sprite = isOn ? raiseHandRaised : raiseHandNotRaised;
-        if (isOn)
-        {
-            // Other logic of calling out to the instructor
-        }
     }
     
     // Update clipping bounds so that the cursor isn't shown outside of UI panel
     private void UpdateClippingBounds()
     {
+        // Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
     
         // Get the corners of the RectTransform in world space
         Vector3[] worldCorners = new Vector3[4];
         GetComponent<RectTransform>().GetWorldCorners(worldCorners);
-
+        
         // Transform the corners to the local space of the boundObject
         Vector3[] localCorners = new Vector3[4];
         for (int i = 0; i < worldCorners.Length; i++)
@@ -222,7 +252,7 @@ public class InteractivePanelLogic : MonoBehaviour
         }
 
         // Apply the bounding box size to the boundObject's local scale
-        boundObject.transform.localScale = new Vector3(bounds.size.x, bounds.size.y, boundObject.transform.localScale.z);
+        boundObject.GetComponent<BoundsClipper>().Size = new Vector3(bounds.size.x, bounds.size.y, 1);
     }
 }
 

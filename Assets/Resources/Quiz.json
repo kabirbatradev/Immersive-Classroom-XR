@@ -2,15 +2,21 @@
     "Questions": [
         {
             "Index": 1,
-            "Question": "What is the capital of France?",
-            "Options": ["Paris", "London", "Berlin", "Madrid"],
-            "CorrectAnswer": "Paris"
+            "Question": "Does this neural network reach the correct prediction on this input?",
+            "Options": ["Yes", "no"],
+            "CorrectAnswer": "Yes"
         },
         {
             "Index": 2,
-            "Question": "What is the largest planet in our solar system?",
-            "Options": ["Earth", "Mars", "Jupiter", "Saturn"],
-            "CorrectAnswer": "Jupiter"
+            "Question": "What is the format of the input image?",
+            "Options": ["Binary bitmap", "Grayscale", "RGB"],
+            "CorrectAnswer": "Grayscale"
+        },
+        {
+            "Index": 3,
+            "Question": "How many fully connected layers are there in this neural network?",
+            "Options": ["1", "2", "3", "4"],
+            "CorrectAnswer": "2"
         }
     ]
 }

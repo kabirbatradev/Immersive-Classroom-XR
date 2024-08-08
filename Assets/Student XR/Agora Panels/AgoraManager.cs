@@ -10,6 +10,7 @@ using System;
 
 // to make the permission helper work
 using Agora_RTC_Plugin.API_Example;
+using ExitGames.Client.Photon.StructWrapping;
 
 public class AgoraManager : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class AgoraManager : MonoBehaviour
     [NonSerialized]
     public int globalUID = 0;
 
+    public bool isInAgoraRoom = false;
     public GameObject agoraPanelPrefab;
 
 
@@ -59,7 +61,7 @@ public class AgoraManager : MonoBehaviour
         SampleController.Instance.Log("starting Agora Manager after photon connects");
         LoadAssetData();
         InitEngine();
-        JoinChannel();
+        // JoinChannel();
 
         // PermissionHelper.RequestMicrophontPermission();
         // PermissionHelper.RequestCameraPermission();
@@ -83,22 +85,6 @@ public class AgoraManager : MonoBehaviour
 //             }
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        // PermissionHelper.RequestMicrophontPermission();
-        // PermissionHelper.RequestCameraPermission();
-
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // quick test: press x to create panel at 0, 0, 0
-        // if (OVRInput.GetDown(OVRInput.RawButton.X))
-        // {
-        //     Debug.Log("space key was pressed");
-        //     TestCreateNewAgoraPanel(globalUID, GetChannelName());
-        // }
-    }
-
     //Show data in AgoraBasicProfile
     [ContextMenu("ShowAgoraBasicProfileData")]
     private void LoadAssetData()
@@ -109,15 +95,10 @@ public class AgoraManager : MonoBehaviour
         _channelName = _appIdInput.channelName;
 
     }
-
-    // private bool CheckAppId()
-    // {
-    //     Log = new Logger(LogText);
-    //     return Log.DebugAssert(_appID.Length > 10, "Please fill in your appId in API-Example/profile/appIdInput.asset");
-    // }
-
+    
     private void InitEngine()
     {
+        SampleController.Instance.Log("Init Engine Agora Manager.");
         RtcEngine = Agora.Rtc.RtcEngine.CreateAgoraRtcEngine();
         UserEventCallbackHandler handler = new UserEventCallbackHandler(this);
         RtcEngineContext context = new RtcEngineContext();
@@ -127,25 +108,28 @@ public class AgoraManager : MonoBehaviour
         context.areaCode = AREA_CODE.AREA_CODE_GLOB;
         RtcEngine.Initialize(context);
         RtcEngine.InitEventHandler(handler);
-
-        // RtcEngine = Agora.Rtc.RtcEngine.CreateAgoraRtcEngine();
-        // UserEventHandler handler = new UserEventHandler(this);
-        // RtcEngineContext context = new RtcEngineContext(_appID, 0,
-        //                             CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
-        //                             AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_DEFAULT);
-        // RtcEngine.Initialize(context);
-        // RtcEngine.InitEventHandler(handler);
     }
 
-    private void JoinChannel()
+    public void JoinChannel()
     {
-        RtcEngine.EnableAudio();
-        RtcEngine.EnableVideo(); // dont enable video for students since that doesnt even exist? i think this broke things
+        SampleController.Instance.Log("Join Channel Agora Manager.");
+        // RtcEngine.EnableAudio();
+        RtcEngine.EnableVideo(); 
 
         RtcEngine.MuteLocalAudioStream(true); // mute the audio of the student
 
-        RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
+        RtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE);
         RtcEngine.JoinChannel(_token, _channelName, "", 0);
+    }
+    
+    public void LeaveChannel()
+    {
+        SampleController.Instance.Log("Leave Channel Agora Manager.");
+        Debug.Log("Leaving " + _channelName);
+        // Leave the channel
+        RtcEngine.LeaveChannel();
+        // Disable the video module
+        RtcEngine.DisableVideo();
     }
 
 //         private void InitLogFilePath()
@@ -211,9 +195,10 @@ public class AgoraManager : MonoBehaviour
     private void OnDestroy()
     {
         Debug.Log("OnDestroy");
+        LeaveChannel();
         if (RtcEngine == null) return;
         RtcEngine.InitEventHandler(null);
-        RtcEngine.LeaveChannel();
+        // RtcEngine.LeaveChannel();
         RtcEngine.Dispose();
     }
 
@@ -221,34 +206,7 @@ public class AgoraManager : MonoBehaviour
     {
         return _channelName;
     }
-
-    // internal void CopyFile(string fromFile, string toFile)
-    // {
-    //     if (Application.platform == RuntimePlatform.Android)
-    //     {
-    //         using (UnityWebRequest request = UnityWebRequest.Get(fromFile))
-    //         {
-    //             request.timeout = 3;
-    //             request.downloadHandler = new DownloadHandlerFile(toFile);
-    //             request.SendWebRequest();
-
-    //             float time = Time.time;
-
-    //             while (!request.isDone)
-    //             {
-    //             }
-    //             request.Abort();
-
-    //             request.disposeDownloadHandlerOnDispose = true;
-    //             request.Dispose();
-    //         }
-    //     }
-    //     else
-    //     {
-    //         File.Copy(fromFile, toFile, true);
-    //     }
-    // }
-
+    
 
     #region -- Video Render UI Logic ---
 
@@ -418,6 +376,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnJoinChannelSuccess(RtcConnection connection, int elapsed)
     {
+        _sample.isInAgoraRoom = true;
         // int build = 0;
         // Debug.Log("Agora: OnJoinChannelSuccess ");
         // _sample.Log.UpdateLog(string.Format("sdk version: ${0}",
@@ -427,7 +386,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         //                     connection.channelId, connection.localUid, elapsed));
 
         // VirtualBackground.MakeVideoView(0); // default uid for local feed 
-        
+
     }
 
     // public override void OnRejoinChannelSuccess(RtcConnection connection, int elapsed)
@@ -437,6 +396,7 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
 
     public override void OnLeaveChannel(RtcConnection connection, RtcStats stats)
     {
+        _sample.isInAgoraRoom = false;
         // _sample.Log.UpdateLog("OnLeaveChannel");
         // VirtualBackground.DestroyVideoView(0);
     }
@@ -479,10 +439,9 @@ internal class UserEventCallbackHandler : IRtcEngineEventHandler
         }
 
         // also mute the instructor using their uid (we can unmute it automatically in update function of panel
-        AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(uid, true);
+        // AgoraManager.Instance.RtcEngine.MuteRemoteAudioStream(uid, true);
 
-
-
+        GameObject.FindWithTag("SidePanel").transform.GetChild(1).GetComponent<AgoraPanelScript>().JoinChannelEventTriggered();
         // _sample.TestCreateNewAgoraPanel(uid, _sample.GetChannelName());
     }
 

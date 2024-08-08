@@ -1056,6 +1056,11 @@ public class InstructorCloudFunctions : MonoBehaviour
 
             // give the panel a group number!
             SetPhotonObjectGroupNumber(panelObject, i);
+            
+            /*// test multiple panels for cameraman mode
+            GameObject panelObject1 = PhotonNetwork.Instantiate(panelPrefab.name, panelSpawnPosition + new Vector3(0, 0.8f, 0), panelRotation);
+            panelObject1.transform.Rotate(Vector3.up, 180); // panel object is backward; rotate around 180 degrees
+            SetPhotonObjectGroupNumber(panelObject1, i);*/
         }
 
     }
@@ -1312,6 +1317,7 @@ public class InstructorCloudFunctions : MonoBehaviour
     // 0 means all groups
     // -1 means no group selected
     public void SetInstructorPanelCurrentGroup(int groupNumber) {
+        Debug.Log("set panel to" + groupNumber);
         SetRoomCustomProperty("InstructorPanelCurrentGroup", groupNumber);
     }
 

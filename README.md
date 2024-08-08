@@ -3,7 +3,7 @@
 **Immersive Visualization in Large Lecture (IVLL)** is a project for an in-progress research paper. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will alow students to view immersive 3D visualizations to enhance their learning, all the while seeing elements of the real world to avoid cybersickness.
 
 ### HMD (Head Mounted Display) Features:
-- Mixed reality passthrough (you can see the real world).
+- Mixed reality passthrough (you can see the real world while wearing the headset).
 - Shared coordinate space (users see virtual objects in the same physical space).
 - Custom interactable virtual objects.
 - Student and object group partitioning: A student in group 1 cannot see or interact with objects in group 2.
@@ -23,7 +23,7 @@
 
 ### Note:
 
-This repository builds off of (and heavily modifies) the Unity-SharedSpatialAnchors sample by Meta.
+This repository uses the Unity-SharedSpatialAnchors sample by Meta as a starting point.
 
 Sample App Architecture: https://developer.oculus.com/documentation/unity/unity-ssa-sf/
 
