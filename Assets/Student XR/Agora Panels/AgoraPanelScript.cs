@@ -65,7 +65,7 @@ public class AgoraPanelScript : MonoBehaviour
             }
             else if (currentInAgora && !shouldBeInAgora)
             {
-                if (AgoraManager.Instance.isInAgoraRoom)
+                if (AgoraManager.Instance.isInAgoraRoom && CloudFunctions.GetCurrentGroupNumber() != 0)
                 {
                     AgoraManager.Instance.LeaveChannel();
                 }

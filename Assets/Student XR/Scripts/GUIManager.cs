@@ -151,19 +151,15 @@ public class GUIManager : MonoBehaviour
         }
     }
 
-
-
-    
-
-    
-
-
-
     private void SetGroupNumber(int groupNumber) {
         PhotonRealtime.Player LocalPlayer = Photon.Pun.PhotonNetwork.LocalPlayer;
         LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { "groupNumber", groupNumber } });
         // also set locally for faster updates
         LocalPlayer.CustomProperties["groupNumber"] = groupNumber;
+        if (groupNumber == 0)
+        {
+            AgoraManager.Instance.JoinChannel();
+        }
     }
 
     private int GetCurrentGroupNumber() {
