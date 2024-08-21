@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+using Photon.Realtime;
+
 public class StudentnControl : MonoBehaviour
 {
     public GameObject[] markers;
@@ -61,6 +63,26 @@ public class StudentnControl : MonoBehaviour
         Debug.Log("Number of students: " + studentsHeads.Length);
         int[] groupAssignment = new int[studentsHeads.Length];
         Dictionary<int, List<GameObject>> rowDictionary = new Dictionary<int, List<GameObject>>();
+
+        // List<GameObject> cameraManFiltered = new();
+
+        // foreach (GameObject studentHead in studentsHeads)
+        // {
+        //     Player studentPlayer = InstructorCloudFunctions.Instance.GetPlayerFromPlayerHeadObject(studentHead);
+        //     if (studentPlayer == null)
+        //     {
+        //         // the head does not have a player
+        //         continue;
+        //     }
+        //     int currentGroupNumber = InstructorCloudFunctions.Instance.GetPlayerGroupNumber(studentPlayer);
+        //     if (currentGroupNumber == 0)
+        //     {
+        //         continue;
+        //     }
+        //     cameraManFiltered.Add(studentHead);
+        // }
+
+        // studentsHeads = cameraManFiltered.ToArray();
 
         // Group students by rows
         foreach (GameObject student in studentsHeads)

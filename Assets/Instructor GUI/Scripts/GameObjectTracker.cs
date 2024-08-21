@@ -68,13 +68,44 @@ public class GameObjectTracker : MonoBehaviour
 
     private IEnumerator RecordData()
     {
+        Debug.Log("RecordData calls called");
         while (true)
         {
+            Debug.Log("Recording data...");
             FrameData frameData = new FrameData();
             frameData.frameNumber = Time.frameCount;
             frameData.currentGroupMode = InstructorCloudFunctions.Instance.currentGroupMode.ToString();
 
-            frameData.currentMainObjectModelName = (string)InstructorCloudFunctions.Instance.GetRoomCustomProperty("mainObjectCurrentModelName");
+            bool youSuck = false;
+
+            try
+            {
+
+                if (InstructorCloudFunctions.Instance.RoomHasCustomProperty("mainObjectCurrentModelName"))
+                {
+                    Debug.Log("has custom property = " + InstructorCloudFunctions.Instance.RoomHasCustomProperty("mainObjectCurrentModelName"));
+                    frameData.currentMainObjectModelName = (string)InstructorCloudFunctions.Instance.GetRoomCustomProperty("mainObjectCurrentModelName");
+                }
+                else
+                {
+                    Debug.Log("has custom property = " + InstructorCloudFunctions.Instance.RoomHasCustomProperty("mainObjectCurrentModelName"));
+                    frameData.currentMainObjectModelName = "No Main Object Model";
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.Log("not connected to server; not logging data on this iteration");
+                youSuck = true;
+            }
+
+            if (youSuck)
+            {
+                yield return new WaitForSeconds(1f / recordFrequency); // should restart the while loop 
+                continue;
+            }
+
+
 
             frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
             frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
@@ -85,14 +116,16 @@ public class GameObjectTracker : MonoBehaviour
 
             // iterate through all player heads, get student username and group number
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
-            foreach (GameObject studentHead in studentsHeads) {
+            foreach (GameObject studentHead in studentsHeads)
+            {
                 if (studentHead == null) continue;
 
                 Player studentPlayer = InstructorCloudFunctions.Instance.GetPlayerFromPlayerHeadObject(studentHead);
                 int studentGroupNumber = InstructorCloudFunctions.Instance.GetPlayerGroupNumber(studentPlayer);
                 string studentName = studentPlayer.NickName;
 
-                GameObjectData data = new GameObjectData {
+                GameObjectData data = new GameObjectData
+                {
                     name = studentHead.name + " " + studentName,
                     tag = studentHead.tag,
                     position = studentHead.transform.position,
@@ -105,19 +138,23 @@ public class GameObjectTracker : MonoBehaviour
 
             // iterate though all main objects, get group number, add bounds
             GameObject[] mainObjects = GameObject.FindGameObjectsWithTag("MainObjectContainer");
-            foreach (GameObject mainObject in mainObjects) {
+            foreach (GameObject mainObject in mainObjects)
+            {
                 if (mainObject == null) continue;
 
                 int objectGroupNumber = 1;
-                if (InstructorCloudFunctions.Instance.PhotonObjectHasGroupNumber(mainObject)) {
+                if (InstructorCloudFunctions.Instance.PhotonObjectHasGroupNumber(mainObject))
+                {
                     objectGroupNumber = InstructorCloudFunctions.Instance.GetPhotonObjectGroupNumber(mainObject);
                 }
 
                 // get the subobject currently being rendered
                 Bounds worldCoordinateBounds = new(new Vector3(0, 0, 0), new Vector3(0, 0, 0));
                 bool activeMainObjectModel = false;
-                foreach (Transform mainObjectModel in mainObject.transform) {
-                    if (mainObjectModel.gameObject.activeSelf) {
+                foreach (Transform mainObjectModel in mainObject.transform)
+                {
+                    if (mainObjectModel.gameObject.activeSelf)
+                    {
                         worldCoordinateBounds = mainObjectModel.GetComponent<Renderer>().bounds;
                         activeMainObjectModel = true;
                         break;
@@ -125,12 +162,14 @@ public class GameObjectTracker : MonoBehaviour
                 }
 
                 // if there is somehow no active model
-                if (!activeMainObjectModel) {
+                if (!activeMainObjectModel)
+                {
                     Debug.Log("ERROR: NO ACTIVE MAIN OBJECT MODEL FOUND");
                     continue;
                 }
 
-                GameObjectData data = new GameObjectData {
+                GameObjectData data = new GameObjectData
+                {
                     name = mainObject.name,
                     tag = mainObject.tag,
                     position = mainObject.transform.position,
@@ -141,7 +180,7 @@ public class GameObjectTracker : MonoBehaviour
                     size = worldCoordinateBounds.size,
 
                 };
-                
+
                 frameData.gameObjects.Add(data);
             }
 
@@ -149,11 +188,13 @@ public class GameObjectTracker : MonoBehaviour
             // separate into the actual panel and the professor head, 
             // get group number, add bounds bounds
             GameObject[] sidePanelObjects = GameObject.FindGameObjectsWithTag("SidePanel");
-            foreach (GameObject sidePanelObject in sidePanelObjects) {
+            foreach (GameObject sidePanelObject in sidePanelObjects)
+            {
                 if (sidePanelObject == null) continue;
 
                 int objectGroupNumber = 1;
-                if (InstructorCloudFunctions.Instance.PhotonObjectHasGroupNumber(sidePanelObject)) {
+                if (InstructorCloudFunctions.Instance.PhotonObjectHasGroupNumber(sidePanelObject))
+                {
                     objectGroupNumber = InstructorCloudFunctions.Instance.GetPhotonObjectGroupNumber(sidePanelObject);
                 }
 
@@ -162,7 +203,8 @@ public class GameObjectTracker : MonoBehaviour
 
                 Bounds worldCoordinateBounds = quizPanelObject.GetComponent<Renderer>().bounds;
 
-                GameObjectData data = new GameObjectData {
+                GameObjectData data = new GameObjectData
+                {
                     name = quizPanelObject.name,
                     tag = quizPanelObject.tag,
                     position = quizPanelObject.transform.position,
@@ -175,12 +217,13 @@ public class GameObjectTracker : MonoBehaviour
                 frameData.gameObjects.Add(data);
 
                 // if the agora panel doesnt exist, then dont try to log it
-                if (sidePanelObject.transform.childCount != 2) continue; 
+                if (sidePanelObject.transform.childCount != 2) continue;
                 GameObject agoraVideoPanel = sidePanelObject.transform.GetChild(1).gameObject;
 
                 worldCoordinateBounds = agoraVideoPanel.GetComponent<Renderer>().bounds;
 
-                data = new GameObjectData {
+                data = new GameObjectData
+                {
                     name = agoraVideoPanel.name,
                     tag = agoraVideoPanel.tag,
                     position = agoraVideoPanel.transform.position,
