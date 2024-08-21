@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appIdInput: {fileID: 11400000, guid: 8304baef667150447bd80d28ef3a3a5b, type: 2}
-  _webcamName: NexiGo N60 FHD Webcam
+  _webcamName: OBS Virtual Camera
   _resolution: {x: 600, y: 600}
 --- !u!1 &14918079
 GameObject:

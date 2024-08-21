@@ -11,30 +11,30 @@ using UnityEngine.Android;
 #endif
 public class AgoraJoinVideoInstructor : MonoBehaviour
 {
-    private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
-    
+    //private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
+
     [SerializeField]
     private AppIdInput _appIdInput;
-    
+
     [SerializeField]
-    private string _webcamName = "NexiGo N60 FHD Webcam"; //"OBS Virtual Camera";
-    
+    private string _webcamName = "OBS Virtual Camera"; //"OBS Virtual Camera";
+
     [SerializeField]
     private Vector2Int _resolution = new Vector2Int(600, 600); // Resolution of Video
-    
+
     private string _appID = "";
     private string _token = "";
     private string _channelName = "";
 
-    
+
     internal VideoSurface ThisView;
     internal IRtcEngine RtcEngine;
-    
+
     void Awake()
     {
-        CheckPermissions();
+        //CheckPermissions();
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +45,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         ListAvailableWebcams();
         SetWebCamByName(_webcamName);
     }
-    
+
     [ContextMenu("ShowAgoraBasicProfileData")]
     private void LoadAssetData()
     {
@@ -56,10 +56,10 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
 
     }
 
-    
-    private void CheckPermissions() 
+
+    private void CheckPermissions()
     {
-        #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
         foreach (string permission in permissionList)
         {
             if (!Permission.HasUserAuthorizedPermission(permission))
@@ -67,9 +67,9 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
                 Permission.RequestUserPermission(permission);
             }
         }
-        #endif
+#endif
     }
-    
+
     private void SetupVideoSDKEngine()
     {
         // Create an IRtcEngine instance
@@ -81,14 +81,14 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         RtcEngine.Initialize(context);
         // RtcEngine.DisableAudio();
     }
-    
+
     // Create a user event handler instance and set it as the engine event handler
     private void InitEventHandler()
     {
         UserEventHandler handler = new UserEventHandler(this);
         RtcEngine.InitEventHandler(handler);
     }
-    
+
     private void SetupUI()
     {
         GameObject go = GameObject.Find("ThisView");
@@ -99,7 +99,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         go = GameObject.Find("JoinVideoBtn");
         go.GetComponent<Button>().onClick.AddListener(Join);
     }
-    
+
     void SetWebCamByName(string webcamName)
     {
         // Get the list of available video devices
@@ -116,7 +116,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
             }
         }
     }
-    
+
     void ListAvailableWebcams()
     {
         var videoDeviceManager = RtcEngine.GetVideoDeviceManager();
@@ -127,7 +127,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
             Debug.Log("Device Name: " + device.deviceName);
         }
     }
-    
+
     public void Join()
     {
         // Enable the video module
@@ -151,7 +151,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         // Join a channel
         RtcEngine.JoinChannel(_token, _channelName, 0, options);
     }
-    
+
     public void Leave()
     {
         Debug.Log("Leaving " + _channelName);
@@ -162,7 +162,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         // Stop local video rendering
         ThisView.SetEnable(false);
     }
-    
+
     void OnApplicationQuit()
     {
         if (RtcEngine != null)
@@ -173,7 +173,7 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
             RtcEngine = null;
         }
     }
-    
+
     // Implement your own EventHandler class by inheriting the IRtcEngineEventHandler interface class implementation
     internal class UserEventHandler : IRtcEngineEventHandler
     {
@@ -182,31 +182,31 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
         {
             _videoSample = videoSample;
         }
-        
+
         // error callback
         public override void OnError(int err, string msg)
         {
             Debug.LogError(msg);
         }
-        
+
         // Triggered when a local user successfully joins the channel
         public override void OnJoinChannelSuccess(RtcConnection connection, int elapsed)
         {
-            _videoSample.ThisView.SetForUser(0,"");
+            _videoSample.ThisView.SetForUser(0, "");
         }
-        
+
         // When the SDK receives the first frame of a remote video stream and successfully decodes it, the OnUserJoined callback is triggered.
         public override void OnUserJoined(RtcConnection connection, uint uid, int elapsed)
         {
             Debug.Log("Remote user joined");
         }
-        
+
         // This callback is triggered when a remote user leaves the current channel
         public override void OnUserOffline(RtcConnection connection, uint uid, USER_OFFLINE_REASON_TYPE reason)
         {
             Debug.Log("Remote user offline");
         }
-        
-        
+
+
     }
 }
