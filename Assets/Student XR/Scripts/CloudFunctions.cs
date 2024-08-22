@@ -80,5 +80,19 @@ public class CloudFunctions : MonoBehaviour
         return PhotonNetwork.CurrentRoom != null;
     }
 
+    public static int GetPlayerPresetGroupNumber(PhotonRealtime.Player player) {
+        bool groupNumberExists = player.CustomProperties.ContainsKey("groupNumberPreset");
+        int groupNumber = groupNumberExists ? (int)player.CustomProperties["groupNumberPreset"] : 999;
+        return groupNumber;
+    }
+    public static void SetPlayerPresetGroupNumber(PhotonRealtime.Player player, int presetGroupNumber) {
+        string key = "groupNumberPreset";
+        int value = presetGroupNumber;
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // update on server
+        player.SetCustomProperties(newCustomProperty);
+        // update locally because server will update local cached hashmap with delay
+        player.CustomProperties[key] = value;
+    }
 
 }
