@@ -11,7 +11,7 @@ using UnityEngine.Android;
 #endif
 public class AgoraJoinVideoInstructor : MonoBehaviour
 {
-    private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
+    // private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
 
     [SerializeField]
     private AppIdInput _appIdInput;
@@ -57,18 +57,18 @@ public class AgoraJoinVideoInstructor : MonoBehaviour
     }
 
 
-    private void CheckPermissions()
-    {
-#if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
-        foreach (string permission in permissionList)
-        {
-            if (!Permission.HasUserAuthorizedPermission(permission))
-            {
-                Permission.RequestUserPermission(permission);
-            }
-        }
-#endif
-    }
+    //     private void CheckPermissions()
+    //     {
+    // #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
+    //         foreach (string permission in permissionList)
+    //         {
+    //             if (!Permission.HasUserAuthorizedPermission(permission))
+    //             {
+    //                 Permission.RequestUserPermission(permission);
+    //             }
+    //         }
+    // #endif
+    //     }
 
     private void SetupVideoSDKEngine()
     {
