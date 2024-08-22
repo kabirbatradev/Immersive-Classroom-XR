@@ -103,7 +103,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     
 
-
+    [SerializeField]
+    private GameObject presetGroupButtonColumn;
     public void Start() {
         laserGameObjects = new List<GameObject>();
         // initialize laser renderer
@@ -125,6 +126,19 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // if (isInstructorGUIToggle) {
         //     defaultGroupNumber = 0;
         // }
+
+
+        // Generate preset group buttons on start up:
+        // int i = 0;
+        // // presetGroupButtonColumn's child's child is the button itself
+        // GameObject button = presetGroupButtonColumn.transform.GetChild(0).GetChild(0).gameObject;
+        // // button has GetComponent Button with onclick that is already set to the function but we need to change the arg
+        // button.GetComponent<Button>().onClick.AddListener(delegate { CloudFunctions.SetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer, i); });
+        //     // button's child's child is label, which has textmeshpro text
+        // // duplicate presetGroupButtonColumn for each column
+        // GameObject buttonClone = Instantiate(button);
+        // buttonClone.transform.SetParent(button.transform.parent, false);
+        
     } 
 
 
