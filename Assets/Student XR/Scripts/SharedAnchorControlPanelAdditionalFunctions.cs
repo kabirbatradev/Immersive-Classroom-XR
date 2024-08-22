@@ -101,10 +101,13 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private enum DeviceModes {Admin, Student, Camera};
     private DeviceModes deviceCurrentMode = DeviceModes.Student;
 
+
     
 
     [SerializeField]
     private GameObject presetGroupButtonColumn;
+    private List<GameObject> presetGroupButtonAllColumns;
+
     public void Start() {
         laserGameObjects = new List<GameObject>();
         // initialize laser renderer
@@ -133,6 +136,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
         // duplicate presetGroupButtonColumn for each column (6 columns)
         List<GameObject> columnObjects = new();
+        presetGroupButtonAllColumns = columnObjects;
         columnObjects.Add(presetGroupButtonColumn);
         for (int columns = 1; columns < 6; columns++) {
             GameObject columnClone = Instantiate(presetGroupButtonColumn);
@@ -166,10 +170,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 i++;
             }
         }
+    }
 
-        
-        
-    } 
+    public void OnTogglePresetGroupButtonAllColumns() {
+        SampleController.Instance.Log("OnTogglePresetGroupButtonAllColumns was pressed, toggling " + presetGroupButtonAllColumns.Count + " columns");
+        foreach (GameObject column in presetGroupButtonAllColumns) {
+            column.SetActive(!column.activeSelf);
+        }
+    }
 
 
     public void Update() {
