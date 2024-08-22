@@ -56,8 +56,14 @@ public class StudentnControl : MonoBehaviour
         InstructorCloudFunctions.Instance.AssignEachPlayerHeadToSpecificGroupNumber(studentsHeads, groupAssignment);
     }
 
+    public void SplitFourPresetGroupNumbers() {
+        Debug.Log("SplitFourPresetGroupNumbers called");
+        InstructorCloudFunctions.Instance.SmallGroupsModeWithPresetGroupNumbers();
+    }
+
     public void SplitFour()
     {
+        Debug.Log("SplitFour (not manual) called");
         markers = GameObject.FindGameObjectsWithTag("SeatMarker");
         studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
         Debug.Log("Number of students: " + studentsHeads.Length);

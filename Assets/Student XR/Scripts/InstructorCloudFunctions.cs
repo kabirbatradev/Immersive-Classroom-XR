@@ -133,6 +133,21 @@ public class InstructorCloudFunctions : MonoBehaviour
         return maxGroupNumber;
     }
 
+    public int GetPlayerPresetGroupNumber(PhotonRealtime.Player player) {
+        bool groupNumberExists = player.CustomProperties.ContainsKey("groupNumberPreset");
+        int groupNumber = groupNumberExists ? (int)player.CustomProperties["groupNumberPreset"] : 999;
+        return groupNumber;
+    }
+    public void SetPlayerPresetGroupNumber(PhotonRealtime.Player player, int presetGroupNumber) {
+        string key = "groupNumberPreset";
+        int value = presetGroupNumber;
+        var newCustomProperty = new ExitGames.Client.Photon.Hashtable { { key, value } };
+        // update on server
+        player.SetCustomProperties(newCustomProperty);
+        // update locally because server will update local cached hashmap with delay
+        player.CustomProperties[key] = value;
+    }
+
 
     // call the correct "create main object" function depending on which group mode is currently set
     public void CreateMainObjectContainerPerGroup() {
@@ -719,7 +734,44 @@ public class InstructorCloudFunctions : MonoBehaviour
         RecreateMainObjectsIfTheyExist();
 
     }
+    
+    public void SmallGroupsModeWithPresetGroupNumbers() {
 
+        // set current group mode and laser length
+        currentGroupMode = GroupMode.SmallGroupsMode;
+        SetRoomCustomProperty(laserLengthKey, smallGroupsModeLaserLength);
+
+        // go through all players and set their group number to their preset group number
+        GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
+        foreach (GameObject studentHead in studentsHeads) {
+
+            Player studentPlayer = GetPlayerFromPlayerHeadObject(studentHead);
+            if (studentPlayer == null)
+            {
+                // the head does not have a player
+                continue;
+            }
+            int currentGroupNumber = GetPlayerGroupNumber(studentPlayer);
+            if (currentGroupNumber == 0)
+            {
+                continue;
+            }
+
+            int presetGroupNumber = GetPlayerPresetGroupNumber(studentPlayer);
+            if (presetGroupNumber == 999) {
+                Debug.Log("error: head has player but preset group number was not set!");
+                continue;
+            }
+            
+            SetPlayerGroupNumber(studentPlayer, presetGroupNumber);
+        }
+
+        // create panels before recreating main objects so that main object can be created with respect to panel
+        DestroyAllPanels(); // destroy old ones first before creating new ones
+        CreatePanelPerGroup(); 
+        RecreateMainObjectsIfTheyExist();
+
+    }
 
 
 
