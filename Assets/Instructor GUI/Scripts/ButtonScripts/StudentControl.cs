@@ -65,24 +65,27 @@ public class StudentnControl : MonoBehaviour
         Dictionary<int, List<GameObject>> rowDictionary = new Dictionary<int, List<GameObject>>();
 
         // List<GameObject> cameraManFiltered = new();
-
         // foreach (GameObject studentHead in studentsHeads)
         // {
         //     Player studentPlayer = InstructorCloudFunctions.Instance.GetPlayerFromPlayerHeadObject(studentHead);
         //     if (studentPlayer == null)
         //     {
         //         // the head does not have a player
+        //         Debug.Log("bad: head does not have player; skipping");
         //         continue;
         //     }
         //     int currentGroupNumber = InstructorCloudFunctions.Instance.GetPlayerGroupNumber(studentPlayer);
         //     if (currentGroupNumber == 0)
         //     {
+        //         Debug.Log("bad: head has player but group number is 0; skipping");
         //         continue;
         //     }
+        //     Debug.Log("good: head has player and valid group number; adding to list :D");
         //     cameraManFiltered.Add(studentHead);
         // }
-
+        // Debug.Log("Number of students after filtering" + cameraManFiltered.Count);
         // studentsHeads = cameraManFiltered.ToArray();
+        // Debug.Log("Number of students after filtering + ToArray: " + studentsHeads.Length);
 
         // Group students by rows
         foreach (GameObject student in studentsHeads)
