@@ -321,6 +321,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
             // write the current group number using currentUserGroupNumber
             textbox.text = "Group Number: " + currentUserGroupNumber;
+            textbox.text += "\nPreset Group Number: " + CloudFunctions.GetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer);
             
         }
 
