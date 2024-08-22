@@ -11,7 +11,7 @@ using UnityEngine.Android;
 #endif
 public class AgoraJoinVideoInstructor : MonoBehaviour
 {
-    //private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
+    private ArrayList permissionList = new ArrayList() { Permission.Camera, Permission.Microphone };
 
     [SerializeField]
     private AppIdInput _appIdInput;
