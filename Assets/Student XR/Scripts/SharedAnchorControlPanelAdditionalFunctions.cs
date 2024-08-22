@@ -863,7 +863,11 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         alignTableMode = true;
     }
 
-
+    
+    public void OnSetPresetGroupNumber(int groupNumber) {
+        SampleController.Instance.Log("Setting preset group number to " + groupNumber);
+        CloudFunctions.SetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer, groupNumber);
+    }
 
     public void OnSetGroupNumber(int groupNumber) {
         SampleController.Instance.Log("Setting group number to " + groupNumber);
