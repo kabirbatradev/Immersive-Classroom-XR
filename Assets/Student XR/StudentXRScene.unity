@@ -2398,6 +2398,11 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
+--- !u!4 &197030590 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5419501688880497647, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
+  m_PrefabInstance: {fileID: 2982998299393685461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &203731180
 GameObject:
   m_ObjectHideFlags: 0
@@ -20945,6 +20950,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578791309}
   m_CullTransparentMesh: 1
+--- !u!1 &1580922063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1580922064}
+  m_Layer: 0
+  m_Name: Custom Hand Ref Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1580922064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580922063}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7536572, y: -0.4090008, z: -0.51429343, w: 0.014882148}
+  m_LocalPosition: {x: -0.205, y: -0.128, z: 0.317}
+  m_LocalScale: {x: 0.09460098, y: 0.09460099, z: 0.09460099}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 197030590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1590541643
 GameObject:
   m_ObjectHideFlags: 0
@@ -29963,6 +29999,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5414912244175594821, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 51011437}
+    - targetCorrespondingSourceObject: {fileID: 5419501688880497647, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1580922064}
     - targetCorrespondingSourceObject: {fileID: 5414912244175589697, guid: 60fa00281e83b294583adc31df520fbe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1929030171}
@@ -31218,6 +31257,8 @@ MonoBehaviour:
   seatMarkerPrefab: {fileID: 3226519048542732199, guid: f05482441d888844f81aaa6364c11f47, type: 3}
   panelMarkerPrefab: {fileID: 3226519048542732199, guid: ea43e13eb01277c47952971a1910ee95, type: 3}
   presetGroupButtonColumn: {fileID: 1841182437}
+  originalRefPoint: {fileID: 504459020}
+  customHandRefPoint: {fileID: 1580922064}
 --- !u!224 &8607079647158505907 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8607079647650679341, guid: bac340b17ae71864ab3a424b042a3ce7, type: 3}
