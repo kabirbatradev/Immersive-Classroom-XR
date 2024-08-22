@@ -129,15 +129,45 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
 
         // Generate preset group buttons on start up:
-        // int i = 0;
-        // // presetGroupButtonColumn's child's child is the button itself
-        // GameObject button = presetGroupButtonColumn.transform.GetChild(0).GetChild(0).gameObject;
-        // // button has GetComponent Button with onclick that is already set to the function but we need to change the arg
-        // button.GetComponent<Button>().onClick.AddListener(delegate { CloudFunctions.SetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer, i); });
-        //     // button's child's child is label, which has textmeshpro text
-        // // duplicate presetGroupButtonColumn for each column
-        // GameObject buttonClone = Instantiate(button);
-        // buttonClone.transform.SetParent(button.transform.parent, false);
+        int i = 1;
+
+        // duplicate presetGroupButtonColumn for each column (6 columns)
+        List<GameObject> columnObjects = new();
+        columnObjects.Add(presetGroupButtonColumn);
+        for (int columns = 1; columns < 6; columns++) {
+            GameObject columnClone = Instantiate(presetGroupButtonColumn);
+            columnClone.transform.SetParent(presetGroupButtonColumn.transform.parent, false);
+            columnObjects.Add(columnClone);
+        }
+
+        foreach (GameObject columnObject in columnObjects) {
+
+            // columnObject's child's child is the button itself
+            GameObject button = columnObject.transform.GetChild(0).GetChild(0).gameObject;
+
+            // duplicate the button (5 buttons)
+            List<GameObject> buttonObjects = new();
+            buttonObjects.Add(button);
+            for (int row = 1; row < 6; row++) {
+                GameObject buttonClone = Instantiate(button);
+                buttonClone.transform.SetParent(button.transform.parent, false);
+                buttonObjects.Add(buttonClone);
+            }
+
+            foreach (GameObject buttonObject in buttonObjects) {
+                // button has GetComponent Button with onclick
+                int localVariableForDelegateGroupNumber = i;
+                buttonObject.GetComponent<Button>().onClick.AddListener(delegate { CloudFunctions.SetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer, localVariableForDelegateGroupNumber); });
+                // button's child's child is label, which has textmeshpro text
+                GameObject label = buttonObject.transform.GetChild(0).GetChild(0).gameObject;
+                TextMeshProUGUI textbox = label.GetComponent<TextMeshProUGUI>();
+                textbox.text = i.ToString();
+
+                i++;
+            }
+        }
+
+        
         
     } 
 
