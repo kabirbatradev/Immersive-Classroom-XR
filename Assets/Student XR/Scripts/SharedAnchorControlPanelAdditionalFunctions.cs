@@ -148,7 +148,7 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // duplicate the button (5 buttons)
             List<GameObject> buttonObjects = new();
             buttonObjects.Add(button);
-            for (int row = 1; row < 6; row++) {
+            for (int row = 1; row < 5; row++) {
                 GameObject buttonClone = Instantiate(button);
                 buttonClone.transform.SetParent(button.transform.parent, false);
                 buttonObjects.Add(buttonClone);
