@@ -190,8 +190,18 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         SampleController.Instance.Log("Photon::OnJoinedRoom: joined room: " + PhotonPun.PhotonNetwork.CurrentRoom.Name);
 
         controlPanel.RoomText.text = "Room: " + PhotonPun.PhotonNetwork.CurrentRoom.Name;
+        
+        // SampleController.Instance.Log("userids before: ");
+        // foreach (string userId in GetUserList().Select(userId => userId.ToString()).ToArray()) {
+        //     SampleController.Instance.Log("userid: " + userId);
+        // }
 
         AddUserToUserListState(_oculusUserId);
+
+        // SampleController.Instance.Log("userids after: ");
+        // foreach (string userId in GetUserList().Select(userId => userId.ToString()).ToArray()) {
+        //     SampleController.Instance.Log("userid: " + userId);
+        // }
 
         foreach (var player in PhotonPun.PhotonNetwork.CurrentRoom.Players.Values)
         {
@@ -578,7 +588,11 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         {
             return;
         }
-        
+
+        // old code:
+        // userList.Add(userId);
+        // SaveUserList(userList);
+
         // Check if the share would succeed on this new account (run only on headsets, not instructor gui)
         photonView.RPC("ShareAnchorsWithNewAdded", PhotonPun.RpcTarget.All, userId.ToString());
     }
@@ -603,6 +617,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         var setValue = new ExitGames.Client.Photon.Hashtable { { UserIdsKey, userListAsString } };
 
         PhotonPun.PhotonNetwork.CurrentRoom.SetCustomProperties(setValue);
+        // triggers callback function OnRoomPropertiesUpdate
     }
 
     private void AddToUsernameList(string username)
