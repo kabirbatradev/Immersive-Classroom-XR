@@ -749,17 +749,19 @@ public class InstructorCloudFunctions : MonoBehaviour
             if (studentPlayer == null)
             {
                 // the head does not have a player
+                Debug.Log("This player head does not have a player associated with it");
                 continue;
             }
             int currentGroupNumber = GetPlayerGroupNumber(studentPlayer);
             if (currentGroupNumber == 0)
             {
+                Debug.Log("had has player; This player has group number = 0, so must be admin (skipping)");
                 continue;
             }
 
             int presetGroupNumber = GetPlayerPresetGroupNumber(studentPlayer);
             if (presetGroupNumber == 999) {
-                Debug.Log("error: head has player but preset group number was not set!");
+                Debug.Log("error: head has player but 'preset group number' was not set!");
                 continue;
             }
             

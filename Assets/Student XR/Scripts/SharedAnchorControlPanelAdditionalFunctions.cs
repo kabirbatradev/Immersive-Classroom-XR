@@ -101,8 +101,12 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
     private enum DeviceModes {Admin, Student, Camera};
     private DeviceModes deviceCurrentMode = DeviceModes.Student;
 
+
     
 
+    [SerializeField]
+    private GameObject presetGroupButtonColumn;
+    private List<GameObject> presetGroupButtonAllColumns;
 
     public void Start() {
         laserGameObjects = new List<GameObject>();
@@ -125,11 +129,73 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
         // if (isInstructorGUIToggle) {
         //     defaultGroupNumber = 0;
         // }
-    } 
 
 
+        // Generate preset group buttons on start up:
+        int i = 1;
+
+        // duplicate presetGroupButtonColumn for each column (6 columns)
+        List<GameObject> columnObjects = new();
+        presetGroupButtonAllColumns = columnObjects;
+        columnObjects.Add(presetGroupButtonColumn);
+        for (int columns = 1; columns < 6; columns++) {
+            GameObject columnClone = Instantiate(presetGroupButtonColumn);
+            columnClone.transform.SetParent(presetGroupButtonColumn.transform.parent, false);
+            columnObjects.Add(columnClone);
+        }
+
+        foreach (GameObject columnObject in columnObjects) {
+
+            // columnObject's child's child is the button itself
+            GameObject button = columnObject.transform.GetChild(0).GetChild(0).gameObject;
+
+            // duplicate the button (5 buttons)
+            List<GameObject> buttonObjects = new();
+            buttonObjects.Add(button);
+            for (int row = 1; row < 5; row++) {
+                GameObject buttonClone = Instantiate(button);
+                buttonClone.transform.SetParent(button.transform.parent, false);
+                buttonObjects.Add(buttonClone);
+            }
+
+            foreach (GameObject buttonObject in buttonObjects) {
+                // button has GetComponent Button with onclick
+                int localVariableForDelegateGroupNumber = i;
+                buttonObject.GetComponent<Button>().onClick.AddListener(delegate { CloudFunctions.SetPlayerPresetGroupNumber(PhotonNetwork.LocalPlayer, localVariableForDelegateGroupNumber); });
+                // button's child's child is label, which has textmeshpro text
+                GameObject label = buttonObject.transform.GetChild(0).GetChild(0).gameObject;
+                TextMeshProUGUI textbox = label.GetComponent<TextMeshProUGUI>();
+                textbox.text = i.ToString();
+
+                i++;
+            }
+        }
+    }
+
+    public void OnTogglePresetGroupButtonAllColumns() {
+        SampleController.Instance.Log("OnTogglePresetGroupButtonAllColumns was pressed, toggling " + presetGroupButtonAllColumns.Count + " columns");
+        foreach (GameObject column in presetGroupButtonAllColumns) {
+            column.SetActive(!column.activeSelf);
+        }
+    }
+    [SerializeField]
+    private Transform originalRefPoint;
+    [SerializeField]
+    private Transform customHandRefPoint;
     public void Update() {
-
+        // SampleController.Instance.Log("is hand tracking = " + OVRInput.IsControllerConnected(OVRInput.Controller.Hands));
+        // Vector3(-0.204999998,-0.128000006,0.317000002)
+        // Vector3(333.696564,121.662254,137.884964)
+        // Vector3(0.094600983,0.0946009904,0.0946009904)
+        // UnityEditor.TransformWorldPlacementJSON:{"position":{"x":-0.20499999821186067,"y":-0.12800000607967378,"z":0.31700000166893008},"rotation":{"x":-0.7536572217941284,"y":-0.40900081396102908,"z":-0.5142934322357178,"w":0.014882148243486882},"scale":{"x":0.09460098296403885,"y":0.09460099041461945,"z":0.09460099041461945}}
+        
+        // attach the control panel (gameObject) to the new reference point if using handtracking
+        if (OVRInput.IsControllerConnected(OVRInput.Controller.Hands)) {
+            gameObject.transform.SetParent(customHandRefPoint, false);
+        }
+        else {
+            gameObject.transform.SetParent(originalRefPoint, false);
+        }
 
         if (PhotonPun.PhotonNetwork.CurrentRoom == null) {
             return;

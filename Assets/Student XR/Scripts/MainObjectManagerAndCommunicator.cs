@@ -43,6 +43,17 @@ public class MainObjectManagerAndCommunicator : MonoBehaviour
             }
         }
 
+        // // index based main object selection (too much work to make everything work with this)
+        // if (RoomHasCustomProperty("mainObjectCurrentModelIndex")) {
+        //     int activeObjectIndex = (int)GetRoomCustomProperty("mainObjectCurrentModelIndex");
+
+        //     for (int i = 0; i < transform.childCount; i++) {
+        //         Transform child = transform.GetChild(i);
+        //         GameObject potentialModel = child.gameObject;
+        //         potentialModel.SetActive(i == activeObjectIndex);
+        //     }
+        // }
+
     }
 
 
