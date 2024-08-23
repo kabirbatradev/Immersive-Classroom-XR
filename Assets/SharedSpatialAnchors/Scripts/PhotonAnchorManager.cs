@@ -459,7 +459,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
     }
     
     [PhotonPun.PunRPC]
-    private void ShareAnchorsWithNewAdded(ulong _userid)
+    private void ShareAnchorsWithNewAdded(string _userid_s)
     {
         foreach (SharedAnchor anchor in SampleController.Instance.GetLocalPlayerSharedAnchors())
         {
@@ -472,6 +472,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
             ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
             OVRSpatialAnchor.SaveOptions saveOptions;
             saveOptions.Storage = OVRSpace.StorageLocation.Cloud;
+            ulong _userid = ulong.Parse(_userid_s);
             if (_userid == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
             spaceUserList.Add(new OVRSpaceUser(_userid));
             latest_userid = _userid;
@@ -488,12 +489,13 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
             return;
         }
         
-        photonView.RPC("OnShareAnchorsNewCompleted",  PhotonPun.RpcTarget.All, latest_userid);
+        photonView.RPC("OnShareAnchorsNewCompleted",  PhotonPun.RpcTarget.All, latest_userid.ToString());
     }
     
     [PhotonPun.PunRPC]
-    private void OnShareAnchorsNewCompleted(ulong user_id)
+    private void OnShareAnchorsNewCompleted(string user_id_s)
     {
+        ulong user_id = ulong.Parse(user_id_s);
         if (user_id == _oculusUserId)
         {
             Debug.Log("Try sharing succeeded");
@@ -578,7 +580,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         }
         
         // Check if the share would succeed on this new account (run only on headsets, not instructor gui)
-        photonView.RPC("ShareAnchorsWithNewAdded", PhotonPun.RpcTarget.All, userId);
+        photonView.RPC("ShareAnchorsWithNewAdded", PhotonPun.RpcTarget.All, userId.ToString());
     }
 
     public void RemoveUserFromUserListState(ulong userId)
