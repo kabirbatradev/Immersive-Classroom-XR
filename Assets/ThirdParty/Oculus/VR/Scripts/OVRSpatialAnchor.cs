@@ -537,6 +537,20 @@ public class OVRSpatialAnchor : MonoBehaviour
     public static void Share(ICollection<OVRSpatialAnchor> anchors, ICollection<OVRSpaceUser> users,
         Action<ICollection<OVRSpatialAnchor>, OperationResult> onComplete = null)
     {
+        // Debug.Log("inside the share function");
+        // Development.LogRequest(0, $"testing the log request function to see how it works");
+        // Development.Log("testing the log version instead of log request");
+
+        // if (users.Count == 0) {
+        //     // success code
+        //     MultiAnchorCompletionDelegates[0] = new MultiAnchorDelegatePair
+        //     {
+        //         Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //         Delegate = onComplete
+        //     };
+        //     return;
+        // }
+
         if (anchors == null)
             throw new ArgumentNullException(nameof(anchors));
 
@@ -549,60 +563,60 @@ public class OVRSpatialAnchor : MonoBehaviour
             handles[i++] = user._handle;
         }
         
-        // new code:
-        ulong lastRequestId = 0;
-        foreach (var handle in handles) {
-            var oneHandleArray = new NativeArray<ulong>(1, Allocator.Temp);
-            oneHandleArray[i] = handle;
+        // // new code:
+        // ulong lastRequestId = 0;
+        // foreach (var handle in handles) {
+        //     var oneHandleArray = new NativeArray<ulong>(1, Allocator.Temp);
+        //     oneHandleArray[0] = handle;
 
-            var shareResultInsideLoop = OVRPlugin.ShareSpaces(spaces, oneHandleArray, out var requestIdInsideLoop);
-            if (shareResultInsideLoop.IsSuccess())
-            {
-                // Development.LogRequest(requestId, $"Sharing {(uint)spaces.Length} spatial anchors...");
+        //     var shareResultInsideLoop = OVRPlugin.ShareSpaces(spaces, oneHandleArray, out var requestIdInsideLoop);
+        //     if (shareResultInsideLoop.IsSuccess())
+        //     {
+        //         // Development.LogRequest(requestId, $"Sharing {(uint)spaces.Length} spatial anchors...");
 
-                // MultiAnchorCompletionDelegates[requestId] = new MultiAnchorDelegatePair
-                // {
-                //     Anchors = CopyAnchorListIntoListFromPool(anchors),
-                //     Delegate = onComplete
-                // };
-                Development.LogRequest(requestIdInsideLoop, $"Sharing single spatial anchor to {oneHandleArray}; no error");
-            }
-            else
-            {
-                // Development.LogError(
-                //     $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
-                // onComplete?.Invoke(anchors, (OperationResult)shareResult);
-                Development.LogRequest(requestIdInsideLoop, $"ERROR: failed to share single spatial anchor to {oneHandleArray}");
+        //         // MultiAnchorCompletionDelegates[requestId] = new MultiAnchorDelegatePair
+        //         // {
+        //         //     Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //         //     Delegate = onComplete
+        //         // };
+        //         Development.LogRequest(requestIdInsideLoop, $"Sharing single spatial anchor to {oneHandleArray}; no error");
+        //     }
+        //     else
+        //     {
+        //         // Development.LogError(
+        //         //     $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
+        //         // onComplete?.Invoke(anchors, (OperationResult)shareResult);
+        //         Development.LogRequest(requestIdInsideLoop, $"ERROR: failed to share single spatial anchor to {oneHandleArray}");
 
-            }
-            lastRequestId = requestIdInsideLoop;
-        }
+        //     }
+        //     lastRequestId = requestIdInsideLoop;
+        // }
 
-        // run success code:
-        MultiAnchorCompletionDelegates[lastRequestId] = new MultiAnchorDelegatePair
-        {
-            Anchors = CopyAnchorListIntoListFromPool(anchors),
-            Delegate = onComplete
-        };
+        // // run success code:
+        // MultiAnchorCompletionDelegates[lastRequestId] = new MultiAnchorDelegatePair
+        // {
+        //     Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //     Delegate = onComplete
+        // };
 
         // original code:
-        // var shareResult = OVRPlugin.ShareSpaces(spaces, handles, out var requestId);
-        // if (shareResult.IsSuccess())
-        // {
-        //     Development.LogRequest(requestId, $"Sharing {(uint)spaces.Length} spatial anchors...");
+        var shareResult = OVRPlugin.ShareSpaces(spaces, handles, out var requestId);
+        if (shareResult.IsSuccess())
+        {
+            Development.LogRequest(requestId, $"Sharing {(uint)spaces.Length} spatial anchors...");
 
-        //     MultiAnchorCompletionDelegates[requestId] = new MultiAnchorDelegatePair
-        //     {
-        //         Anchors = CopyAnchorListIntoListFromPool(anchors),
-        //         Delegate = onComplete
-        //     };
-        // }
-        // else
-        // {
-        //     Development.LogError(
-        //         $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
-        //     onComplete?.Invoke(anchors, (OperationResult)shareResult);
-        // }
+            MultiAnchorCompletionDelegates[requestId] = new MultiAnchorDelegatePair
+            {
+                Anchors = CopyAnchorListIntoListFromPool(anchors),
+                Delegate = onComplete
+            };
+        }
+        else
+        {
+            Development.LogError(
+                $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
+            onComplete?.Invoke(anchors, (OperationResult)shareResult);
+        }
         
     }
 
