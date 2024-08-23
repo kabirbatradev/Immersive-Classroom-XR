@@ -201,10 +201,17 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             // attach the control panel (gameObject) to the new reference point if using handtracking
             if (OVRInput.IsControllerConnected(OVRInput.Controller.Hands)) {
                 gameObject.transform.SetParent(customHandRefPoint, false);
+
             }
             else {
                 gameObject.transform.SetParent(originalRefPoint, false);
             }
+
+
+            // if hand tracking and preset group is already set, then dont show the control panel (disable the first child "pointable canvas")
+            bool shouldDisablePanel = OVRInput.IsControllerConnected(OVRInput.Controller.Hands) && PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("groupNumberPreset");
+            gameObject.transform.GetChild(0).gameObject.SetActive(!shouldDisablePanel);
+
 
         }
 
