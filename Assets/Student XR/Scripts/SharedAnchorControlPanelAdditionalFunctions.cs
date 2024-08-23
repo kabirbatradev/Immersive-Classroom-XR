@@ -104,8 +104,8 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
 
     
 
-    [SerializeField]
-    private GameObject presetGroupButtonColumn;
+    // [SerializeField]
+    public GameObject presetGroupButtonColumn;
     private List<GameObject> presetGroupButtonAllColumns;
 
     public void Start() {
@@ -178,10 +178,10 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
             column.SetActive(!column.activeSelf);
         }
     }
-    [SerializeField]
-    private Transform originalRefPoint;
-    [SerializeField]
-    private Transform customHandRefPoint;
+    // [SerializeField]
+    public Transform originalRefPoint;
+    // [SerializeField]
+    public Transform customHandRefPoint;
     public void Update() {
         // SampleController.Instance.Log("is hand tracking = " + OVRInput.IsControllerConnected(OVRInput.Controller.Hands));
         // Vector3(-0.204999998,-0.128000006,0.317000002)
