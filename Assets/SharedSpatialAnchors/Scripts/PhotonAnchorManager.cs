@@ -61,6 +61,8 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
     private readonly HashSet<string> _usernameList = new HashSet<string>();
     private List<GameObject> lobbyRowList = new List<GameObject>();
 
+    private ulong latest_userid = 0;
+    
     #region [Monobehaviour Methods]
 
     private void Awake()
@@ -455,7 +457,51 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         Debug.Log(nameof(CheckForAnchorsShared) + " : set of uuids shared: " + uuids.Count);
         SharedAnchorLoader.Instance.LoadAnchorsFromRemote(uuids);
     }
+    
+    [PhotonPun.PunRPC]
+    private void ShareAnchorsWithNewAdded(ulong _userid)
+    {
+        foreach (SharedAnchor anchor in SampleController.Instance.GetLocalPlayerSharedAnchors())
+        {
+            if (!anchor.IsReadyToShare())
+            {
+                return;
+            }
 
+            SampleController.Instance.Log("ReshareAnchor: re-sharing anchor with one new user in the room");
+            ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
+            OVRSpatialAnchor.SaveOptions saveOptions;
+            saveOptions.Storage = OVRSpace.StorageLocation.Cloud;
+            if (_userid == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
+            spaceUserList.Add(new OVRSpaceUser(_userid));
+            latest_userid = _userid;
+            OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { anchor._spatialAnchor }, spaceUserList, OnShareNewComplete);
+        }
+    }
+    
+    private void OnShareNewComplete(ICollection<OVRSpatialAnchor> spatialAnchors, OVRSpatialAnchor.OperationResult result)
+    {
+        SampleController.Instance.Log(nameof(OnShareNewComplete) + latest_userid + " Result: " + result);
+
+        if (result != OVRSpatialAnchor.OperationResult.Success)
+        {
+            return;
+        }
+        
+        photonView.RPC("OnShareAnchorsNewCompleted",  PhotonPun.RpcTarget.All, latest_userid);
+    }
+    
+    [PhotonPun.PunRPC]
+    private void OnShareAnchorsNewCompleted(ulong user_id)
+    {
+        if (user_id == _oculusUserId)
+        {
+            Debug.Log("Try sharing succeeded");
+            var userList = GetUserList();
+            userList.Add(user_id);
+            SaveUserList(userList);
+        }
+    }
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
         if (propertiesThatChanged.ContainsKey(UserIdsKey))
@@ -530,9 +576,9 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         {
             return;
         }
-
-        userList.Add(userId);
-        SaveUserList(userList);
+        
+        // Check if the share would succeed on this new account (run only on headsets, not instructor gui)
+        photonView.RPC("ShareAnchorsWithNewAdded", PhotonPun.RpcTarget.All, userId);
     }
 
     public void RemoveUserFromUserListState(ulong userId)

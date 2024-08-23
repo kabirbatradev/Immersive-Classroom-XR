@@ -52,7 +52,7 @@ public class SharedAnchor : MonoBehaviour
     [SerializeField]
     private Color greenColor;
 
-    private OVRSpatialAnchor _spatialAnchor;
+    public OVRSpatialAnchor _spatialAnchor;
 
     public bool IsSavedLocally
     {
@@ -158,7 +158,7 @@ public class SharedAnchor : MonoBehaviour
         });
     }
 
-    private bool IsReadyToShare()
+    public bool IsReadyToShare()
     {
         if (!Photon.Pun.PhotonNetwork.IsConnected)
         {

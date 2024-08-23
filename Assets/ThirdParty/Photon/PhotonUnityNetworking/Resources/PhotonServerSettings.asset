@@ -58,6 +58,8 @@ MonoBehaviour:
   - CallAllGradeQuestions
   - CallAllGradeQuestion
   - CallAllNextQuestion
+  - OnShareAnchorsNewCompleted
+  - ShareAnchorsWithNewAdded
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
