@@ -9862,7 +9862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &603980714
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34702,7 +34702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1649751369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90865,6 +90865,9 @@ MonoBehaviour:
   groupNumberTextObject: {fileID: 0}
   seatMarkerPrefab: {fileID: 0}
   panelMarkerPrefab: {fileID: 0}
+  presetGroupButtonColumn: {fileID: 0}
+  originalRefPoint: {fileID: 0}
+  customHandRefPoint: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
