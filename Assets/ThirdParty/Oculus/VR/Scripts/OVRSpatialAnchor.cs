@@ -312,12 +312,16 @@ public class OVRSpatialAnchor : MonoBehaviour
     /// Invoked when the share operation completes. May be null. Delegate parameter is
     /// - `OperationResult`: An error code that indicates whether the share operation succeeded or not.
     /// </param>
-    public void Share(OVRSpaceUser user, Action<OperationResult> onComplete = null)
+    public void Share(OVRSpaceUser user, Action<OVRSpaceUser, OperationResult> onComplete = null)
     {
         var task = ShareAsync(user);
         if (onComplete != null)
         {
-            task.ContinueWith(onComplete);
+            task.ContinueWith(t =>
+            {
+                var result = t; // Get the OperationResult from the task
+                onComplete(user, t); // Pass the ShareResult to the callback
+            });
         }
     }
 
@@ -537,19 +541,69 @@ public class OVRSpatialAnchor : MonoBehaviour
     public static void Share(ICollection<OVRSpatialAnchor> anchors, ICollection<OVRSpaceUser> users,
         Action<ICollection<OVRSpatialAnchor>, OperationResult> onComplete = null)
     {
+        // Debug.Log("inside the share function");
+        // Development.LogRequest(0, $"testing the log request function to see how it works");
+        // Development.Log("testing the log version instead of log request");
+
+        // if (users.Count == 0) {
+        //     // success code
+        //     MultiAnchorCompletionDelegates[0] = new MultiAnchorDelegatePair
+        //     {
+        //         Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //         Delegate = onComplete
+        //     };
+        //     return;
+        // }
+
         if (anchors == null)
             throw new ArgumentNullException(nameof(anchors));
 
         using var spaces = ToNativeArray(anchors);
 
         var handles = new NativeArray<ulong>(users.Count, Allocator.Temp);
-        using var disposer = handles;
         int i = 0;
         foreach (var user in users)
         {
             handles[i++] = user._handle;
         }
+        
+        // // new code:
+        // ulong lastRequestId = 0;
+        // foreach (var handle in handles) {
+        //     var oneHandleArray = new NativeArray<ulong>(1, Allocator.Temp);
+        //     oneHandleArray[0] = handle;
 
+        //     var shareResultInsideLoop = OVRPlugin.ShareSpaces(spaces, oneHandleArray, out var requestIdInsideLoop);
+        //     if (shareResultInsideLoop.IsSuccess())
+        //     {
+        //         // Development.LogRequest(requestId, $"Sharing {(uint)spaces.Length} spatial anchors...");
+
+        //         // MultiAnchorCompletionDelegates[requestId] = new MultiAnchorDelegatePair
+        //         // {
+        //         //     Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //         //     Delegate = onComplete
+        //         // };
+        //         Development.LogRequest(requestIdInsideLoop, $"Sharing single spatial anchor to {oneHandleArray}; no error");
+        //     }
+        //     else
+        //     {
+        //         // Development.LogError(
+        //         //     $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
+        //         // onComplete?.Invoke(anchors, (OperationResult)shareResult);
+        //         Development.LogRequest(requestIdInsideLoop, $"ERROR: failed to share single spatial anchor to {oneHandleArray}");
+
+        //     }
+        //     lastRequestId = requestIdInsideLoop;
+        // }
+
+        // // run success code:
+        // MultiAnchorCompletionDelegates[lastRequestId] = new MultiAnchorDelegatePair
+        // {
+        //     Anchors = CopyAnchorListIntoListFromPool(anchors),
+        //     Delegate = onComplete
+        // };
+
+        // original code:
         var shareResult = OVRPlugin.ShareSpaces(spaces, handles, out var requestId);
         if (shareResult.IsSuccess())
         {
@@ -567,6 +621,7 @@ public class OVRSpatialAnchor : MonoBehaviour
                 $"{nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)}  failed with error {shareResult}.");
             onComplete?.Invoke(anchors, (OperationResult)shareResult);
         }
+        
     }
 
     private OVRTask<OperationResult> ShareAsyncInternal(List<OVRSpaceUser> users)

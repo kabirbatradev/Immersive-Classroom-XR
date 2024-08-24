@@ -111,12 +111,12 @@ public class CachedSharedAnchor : MonoBehaviour
     }
 
     private bool IsReadyToShare() {
-        var userIds = PhotonAnchorManager.GetUserList().Select(userId => userId.ToString()).ToArray();
-        if (userIds.Length == 0)
-        {
-            SampleController.Instance.Log("Can't share - no users to share with or can't get the user ids through photon custom properties");
-            return false;
-        }
+        // var userIds = PhotonAnchorManager.GetUserList().Select(userId => userId.ToString()).ToArray();
+        // if (userIds.Length == 0)
+        // {
+        //     SampleController.Instance.Log("Can't share - no users to share with or can't get the user ids through photon custom properties");
+        //     return false;
+        // }
 
         if (_spatialAnchor == null)
         {

@@ -516,7 +516,7 @@ public class ServerConnector : PhotonPun.MonoBehaviourPunCallbacks
         object data;
         if (propertiesThatChanged.TryGetValue(SceneApiSceneCaptureStrategy.RoomDataKey, out data))
         {
-            SampleController.Instance.Log("Room data recieved from master client.");
+            SampleController.Instance.Log("Room data received from master client.");
             DeserializeToScene((byte[])data);
         }
     }
