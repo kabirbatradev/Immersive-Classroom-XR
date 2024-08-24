@@ -312,12 +312,16 @@ public class OVRSpatialAnchor : MonoBehaviour
     /// Invoked when the share operation completes. May be null. Delegate parameter is
     /// - `OperationResult`: An error code that indicates whether the share operation succeeded or not.
     /// </param>
-    public void Share(OVRSpaceUser user, Action<OperationResult> onComplete = null)
+    public void Share(OVRSpaceUser user, Action<OVRSpaceUser, OperationResult> onComplete = null)
     {
         var task = ShareAsync(user);
         if (onComplete != null)
         {
-            task.ContinueWith(onComplete);
+            task.ContinueWith(t =>
+            {
+                var result = t; // Get the OperationResult from the task
+                onComplete(user, t); // Pass the ShareResult to the callback
+            });
         }
     }
 

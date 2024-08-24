@@ -25,6 +25,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PhotonPun = Photon.Pun;
 
 /// <summary>
 /// Controls anchor data and anchor control panel behavior.
@@ -206,6 +207,7 @@ public class SharedAnchor : MonoBehaviour
 
                 var userIds = PhotonAnchorManager.GetUserList().Select(userId => userId.ToString()).ToArray();
                 ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
+                
                 foreach (string strUsername in userIds)
                 {
                     ulong parsedId = ulong.Parse(strUsername);
@@ -248,7 +250,7 @@ public class SharedAnchor : MonoBehaviour
         OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { _spatialAnchor }, spaceUserList, OnShareComplete);
     }
 
-    private static void OnShareComplete(ICollection<OVRSpatialAnchor> spatialAnchors, OVRSpatialAnchor.OperationResult result)
+    private void OnShareComplete(ICollection<OVRSpatialAnchor> spatialAnchors, OVRSpatialAnchor.OperationResult result)
     {
         SampleController.Instance.Log(nameof(OnShareComplete) + " Result: " + result);
 
@@ -258,6 +260,24 @@ public class SharedAnchor : MonoBehaviour
             {
                 spatialAnchor.GetComponent<SharedAnchor>().shareIcon.color = Color.red;
             }
+
+            if (!PhotonPun.PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("userids"))
+            {
+                SampleController.Instance.Log("NO USERS.");
+                return;
+            }
+            
+            // Try to find the mole
+            SampleController.Instance.Log("Try to find the mole.");
+            OVRSpatialAnchor.SaveOptions saveOptions;
+            saveOptions.Storage = OVRSpace.StorageLocation.Cloud;
+            foreach (string strUsername in PhotonAnchorManager.GetUsers())
+            {
+                ulong parsedId = ulong.Parse(strUsername);
+                if (parsedId == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
+                _spatialAnchor.Share(new OVRSpaceUser(parsedId), OnShareCompleteIndividual);
+            }
+            
             return;
         }
 
@@ -274,7 +294,28 @@ public class SharedAnchor : MonoBehaviour
 
         PhotonAnchorManager.Instance.PublishAnchorUuids(uuids, (uint)uuids.Length, true);
     }
+    
+    private void OnShareCompleteIndividual(OVRSpaceUser user, OVRSpatialAnchor.OperationResult result)
+    {
+        SampleController.Instance.Log(nameof(OnShareCompleteIndividual) + " " + user.Id + " Result: " + result);
 
+        if (result != OVRSpatialAnchor.OperationResult.Success)
+        {
+            // kick the mole out
+            SampleController.Instance.Log("Kick " +  user.Id + " out.");
+            var userList = PhotonAnchorManager.GetUserList();
+            var isUnknownUserId = !userList.Contains(user.Id);
+
+            if (isUnknownUserId)
+            {
+                return;
+            }
+
+            userList.Remove(user.Id);
+            PhotonAnchorManager.SaveUserList(userList);
+        }
+    }
+    
     public void OnAlignButtonPressed()
     {
         SampleController.Instance.Log("OnAlignButtonPressed: aligning to anchor");

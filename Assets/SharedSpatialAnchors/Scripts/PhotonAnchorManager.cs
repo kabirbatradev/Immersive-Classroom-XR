@@ -479,27 +479,28 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
             }
 
             SampleController.Instance.Log("ReshareAnchor: re-sharing anchor with one new user in the room");
-            ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
+            //ICollection<OVRSpaceUser> spaceUserList = new List<OVRSpaceUser>();
             OVRSpatialAnchor.SaveOptions saveOptions;
             saveOptions.Storage = OVRSpace.StorageLocation.Cloud;
             ulong _userid = ulong.Parse(_userid_s);
             if (_userid == 0) continue; // do not share the anchor with a user with the id of 0 (e.g. the instructor gui)
-            spaceUserList.Add(new OVRSpaceUser(_userid));
-            latest_userid = _userid;
-            OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { anchor._spatialAnchor }, spaceUserList, OnShareNewComplete);
+            // spaceUserList.Add(new OVRSpaceUser(_userid));
+            // latest_userid = _userid;
+            // OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { anchor._spatialAnchor }, spaceUserList, OnShareNewComplete);
+            anchor._spatialAnchor.Share(new OVRSpaceUser(_userid), OnShareNewComplete);
         }
     }
     
-    private void OnShareNewComplete(ICollection<OVRSpatialAnchor> spatialAnchors, OVRSpatialAnchor.OperationResult result)
+    private void OnShareNewComplete(OVRSpaceUser user, OVRSpatialAnchor.OperationResult result)
     {
-        SampleController.Instance.Log(nameof(OnShareNewComplete) + latest_userid + " Result: " + result);
+        SampleController.Instance.Log(nameof(OnShareNewComplete)  + " Result: " + result);
 
         if (result != OVRSpatialAnchor.OperationResult.Success)
         {
             return;
         }
         
-        photonView.RPC("OnShareAnchorsNewCompleted",  PhotonPun.RpcTarget.All, latest_userid.ToString());
+        photonView.RPC("OnShareAnchorsNewCompleted", PhotonPun.RpcTarget.All, user.Id.ToString());
     }
     
     [PhotonPun.PunRPC]
@@ -508,7 +509,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         ulong user_id = ulong.Parse(user_id_s);
         if (user_id == _oculusUserId)
         {
-            Debug.Log("Try sharing succeeded");
+            SampleController.Instance.Log("Successfully get shared anchor." + user_id_s);
             var userList = GetUserList();
             userList.Add(user_id);
             SaveUserList(userList);
@@ -520,6 +521,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         {
             foreach (SharedAnchor anchor in SampleController.Instance.GetLocalPlayerSharedAnchors())
             {
+                // Share it with the new added ones already
                 anchor.ReshareAnchor();
             }
         }
@@ -611,7 +613,7 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
         SaveUserList(userList);
     }
 
-    private static void SaveUserList(HashSet<ulong> userList)
+    public static void SaveUserList(HashSet<ulong> userList)
     {
         var userListAsString = string.Join(Separator.ToString(), userList);
         var setValue = new ExitGames.Client.Photon.Hashtable { { UserIdsKey, userListAsString } };
