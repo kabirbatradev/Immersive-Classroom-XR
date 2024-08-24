@@ -53,7 +53,11 @@ public class SharedAnchor : MonoBehaviour
     [SerializeField]
     private Color greenColor;
 
-    public OVRSpatialAnchor _spatialAnchor;
+    private OVRSpatialAnchor _spatialAnchor;
+
+    public OVRSpatialAnchor GetSpatialAnchor(){
+        return _spatialAnchor;
+    }
 
     public bool IsSavedLocally
     {
