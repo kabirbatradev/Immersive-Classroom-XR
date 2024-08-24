@@ -487,7 +487,8 @@ public class PhotonAnchorManager : PhotonPun.MonoBehaviourPunCallbacks
             // spaceUserList.Add(new OVRSpaceUser(_userid));
             // latest_userid = _userid;
             // OVRSpatialAnchor.Share(new List<OVRSpatialAnchor> { anchor._spatialAnchor }, spaceUserList, OnShareNewComplete);
-            anchor._spatialAnchor.Share(new OVRSpaceUser(_userid), OnShareNewComplete);
+            // anchor._spatialAnchor.Share(new OVRSpaceUser(_userid), OnShareNewComplete);
+            anchor.GetSpatialAnchor().Share(new OVRSpaceUser(_userid), OnShareNewComplete);
         }
     }
     
