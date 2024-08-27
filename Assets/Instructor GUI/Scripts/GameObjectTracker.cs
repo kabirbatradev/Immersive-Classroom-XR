@@ -105,13 +105,15 @@ public class GameObjectTracker : MonoBehaviour
                 continue;
             }
 
+            Debug.Log("Recording data in progress...");
 
 
-            frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
-            frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
-            frameData.ceilingVisible = StreamTheaterModeData.Instance.ceilingVisible;
-            frameData.currentSkyboxIndex = StreamTheaterModeData.Instance.currentSkyboxIndex;
-            frameData.skyboxMaterialName = StreamTheaterModeData.Instance.skyboxList[StreamTheaterModeData.Instance.currentSkyboxIndex].ToString();
+
+            // frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
+            // frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
+            // frameData.ceilingVisible = StreamTheaterModeData.Instance.ceilingVisible;
+            // frameData.currentSkyboxIndex = StreamTheaterModeData.Instance.currentSkyboxIndex;
+            // frameData.skyboxMaterialName = StreamTheaterModeData.Instance.skyboxList[StreamTheaterModeData.Instance.currentSkyboxIndex].ToString();
             // StreamTheaterModeData.Instance.skyboxList[]
 
             // iterate through all player heads, get student username and group number

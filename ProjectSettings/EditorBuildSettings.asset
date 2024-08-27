@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Student XR/StudentXRScene.unity
     guid: 2362e9c3da4f10f4fa79a2e5220b9cb0
   - enabled: 0
@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Student XR/Agora Panels/AgoraTestScene.unity
     guid: 1ff942389ad7ad54cb6e73246cb1a20d
-  - enabled: 0
+  - enabled: 1
     path: Assets/Instructor GUI/Instructor GUI.unity
     guid: d885d6e665f627c49a79b79180f650b9
   m_configObjects:

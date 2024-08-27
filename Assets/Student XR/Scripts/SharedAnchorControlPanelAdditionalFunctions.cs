@@ -357,14 +357,14 @@ public class SharedAnchorControlPanelAdditionalFunctions : MonoBehaviour
                 // jk its not default i guess
 
 
-            else if (isMainObjectContainer && isInstructorGUIToggle) {
-                // if this object is the main object container, then instructor should not see it, but should still be able to access the photon view
-                // therefore, we will deactivate the subobjects of the container
+            // else if (isMainObjectContainer && isInstructorGUIToggle) {
+            //     // if this object is the main object container, then instructor should not see it, but should still be able to access the photon view
+            //     // therefore, we will deactivate the subobjects of the container
 
-                foreach (GameObject mainObj in obj.transform) {
-                    mainObj.gameObject.SetActive(false);
-                }
-            }
+            //     foreach (GameObject mainObj in obj.transform) {
+            //         mainObj.gameObject.SetActive(false);
+            //     }
+            // }
 
             // filter by group number:
 

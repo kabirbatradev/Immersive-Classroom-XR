@@ -32,12 +32,14 @@ public class UserHeadSphereController : MonoBehaviour
         var ownerPlayer = headTrackerPhotonView.Owner;
 
         int groupNumber = SharedAnchorControlPanelAdditionalFunctions.defaultGroupNumber;
-        if (ownerPlayer.CustomProperties.ContainsKey("groupNumber")) {
+        if (ownerPlayer.CustomProperties.ContainsKey("groupNumber"))
+        {
             groupNumber = (int)ownerPlayer.CustomProperties["groupNumber"];
 
             // Debug.Log("group number: " + groupNumber);
         }
-        else {
+        else
+        {
             // Debug.Log("group number not set");
         }
         float maxGroupNumber = 7.0f;
