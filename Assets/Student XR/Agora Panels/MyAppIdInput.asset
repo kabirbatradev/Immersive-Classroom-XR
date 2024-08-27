@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310468f085ef24732beac714c9bb64fd, type: 3}
   m_Name: MyAppIdInput
   m_EditorClassIdentifier: 
-  appID: 3c017c3f73344b9aa27ae350b3f36910
-  token: 007eJxTYFDcs2uJ+I1Ao/g1t6J5GrSn/up8khC2foJPwte4uxlLGXUVGIyTDQzNk43TzI2NTUySLBMTjcwTU41NDZKM04zNLA0N2DSPpDUEMjJszbVgZmSAQBCfmyElNTffOSMxLy81h4EBAA1fIQU=
+  appID: bdc633609174435fac550e6180aaa33e
+  token: 007eJxTYDhYe/S9J0PJwbV298UO7hGa0NYSL3TsReOtmD+nD4q/aFdVYEhKSTYzNjYzsDQ0NzExNk1LTDY1NUg1M7QwSExMNDZOFVp1Nq0hkJEhyiSQlZEBAkF8boaU1Nx854zEvLzUHAYGALz0Iyk=
   channelName: demoChannel
