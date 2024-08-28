@@ -13,6 +13,8 @@ public class GameObjectData
     public Vector3 position;
     public Quaternion rotation;
 
+    // TODO collect scale as well; whichever value is scaled by the gizmo
+
     public int groupNumber;
 
     // optional bounding box data (the player heads dont need this, but the main objects and panels should)
