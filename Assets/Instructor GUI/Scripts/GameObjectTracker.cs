@@ -110,13 +110,11 @@ public class GameObjectTracker : MonoBehaviour
             Debug.Log("Recording data in progress...");
 
 
-
-            // frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
-            // frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
-            // frameData.ceilingVisible = StreamTheaterModeData.Instance.ceilingVisible;
-            // frameData.currentSkyboxIndex = StreamTheaterModeData.Instance.currentSkyboxIndex;
-            // frameData.skyboxMaterialName = StreamTheaterModeData.Instance.skyboxList[StreamTheaterModeData.Instance.currentSkyboxIndex].ToString();
-            // StreamTheaterModeData.Instance.skyboxList[]
+            frameData.wallLoweredPercentage = StreamTheaterModeData.Instance.wallLoweredPercentage;
+            frameData.ceilingRemovedPercentage = StreamTheaterModeData.Instance.ceilingRemovedPercentage;
+            frameData.ceilingVisible = StreamTheaterModeData.Instance.ceilingVisible;
+            frameData.currentSkyboxIndex = StreamTheaterModeData.Instance.currentSkyboxIndex;
+            frameData.skyboxMaterialName = StreamTheaterModeData.Instance.skyboxList[StreamTheaterModeData.Instance.currentSkyboxIndex].ToString();
 
             // iterate through all player heads, get student username and group number
             GameObject[] studentsHeads = GameObject.FindGameObjectsWithTag("PlayerHead");
