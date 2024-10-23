@@ -1,5 +1,0 @@
-C:/Users/kabir/Documents/GitHub/Unity-SharedSpatialAnchors - ChangeVersion/.utmp/RelWithDebInfo/2y243b63/arm64-v8a/CMakeFiles/edit_cache.dir
-C:/Users/kabir/Documents/GitHub/Unity-SharedSpatialAnchors - ChangeVersion/.utmp/RelWithDebInfo/2y243b63/arm64-v8a/CMakeFiles/rebuild_cache.dir
-C:/Users/kabir/Documents/GitHub/Unity-SharedSpatialAnchors - ChangeVersion/.utmp/RelWithDebInfo/2y243b63/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
-C:/Users/kabir/Documents/GitHub/Unity-SharedSpatialAnchors - ChangeVersion/.utmp/RelWithDebInfo/2y243b63/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
-C:/Users/kabir/Documents/GitHub/Unity-SharedSpatialAnchors - ChangeVersion/.utmp/RelWithDebInfo/2y243b63/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
