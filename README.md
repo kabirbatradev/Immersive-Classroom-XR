@@ -1,6 +1,22 @@
-# immersive-visualization-in-large-lecture
+# Immersive-Visualization-in-Large-Lecture
 
-**Immersive Visualization in Large Lecture (IVLL)** is a project for a research paper and user study. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will alow students to view immersive 3D visualizations to enhance their learning, all the while seeing the real world to avoid cybersickness.
+**Immersive Visualization in Large Lecture (IVLL)** is a project for a research paper and user study. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will allow students to view immersive 3D visualizations to enhance their learning, all the while seeing the real world to avoid cybersickness.
+
+### Pictures taken using camera mode headset:
+<div style="display: flex; justify-content: center;">
+    <img src="readmeImages/elephants.jpg" width="30%" style="padding:2px;">
+    <img src="readmeImages/instructorHelp.jpg" width="30%" style="padding:2px;">
+</div>
+<div style="display: flex; justify-content: center;">
+<!-- <div float="left"> -->
+    <img src="readmeImages/neuralNetwork.jpg" width="30%" style="padding:2px;">
+    <img src="readmeImages/quizPanels.jpg" width="30%" style="padding:2px;">
+</div>
+
+- Top left: 360 theater mode with safari video 
+- Top right: Instructor help panel
+- Bottom left: Neural network visualization floating above classroom
+- Bottom right: Graded quiz question panels 
 
 ### HMD (Head Mounted Display) Features:
 - Shared coordinate space: Students see virtual objects in the same physical space.
@@ -11,8 +27,8 @@
 - Automatic group partitioning algorithms: Students can be assigned to their own individual group, groups of 4, group by desk row, or the whole class is in one group.
 - Switch between breakout groups and large lecture: In breakout groups, every group has their own virtual interactable objects. In large lecture mode, one large uninteractable object is present at the front of the class.
 - Quiz Side Panel: Instructor can instantiate an interactable floating panel placed next to each group containing an quiz questions. 
-- Instructor help: When students request for help, a floating panel showing the instructor’s face appears (laptop camera feed), allowing the instructor to easily converse with students across the room.
-- Camera device: The camera headset can see all objects regardless of group number.
+- Instructor help: When students request for help, a floating panel showing the instructor's face appears (laptop camera feed), allowing the instructor to easily converse with students across the room.
+- Camera mode headset: The camera headset can see all objects regardless of group number.
 
 ### Additional Instructor GUI Display Features:
 - Presentation Object Control: Instantiate, cycle between, and rotate 3D objects currently being displayed to the classroom.
@@ -23,9 +39,6 @@
 
 
 ### Note:
-
-This repository uses the Unity-SharedSpatialAnchors sample by Meta as a starting point.
-
-Sample App Architecture: https://developer.oculus.com/documentation/unity/unity-ssa-sf/
-
-Github Repository: https://github.com/oculus-samples/Unity-SharedSpatialAnchors
+- This repository uses the Unity-SharedSpatialAnchors sample by Meta as a starting point.
+- Sample App Architecture: https://developer.oculus.com/documentation/unity/unity-ssa-sf/
+- Github Repository: https://github.com/oculus-samples/Unity-SharedSpatialAnchors
