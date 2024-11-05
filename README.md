@@ -1,6 +1,6 @@
-# Immersive-Visualization-in-Large-Lecture
+# Immersive-Classroom-XR
 
-**Immersive Visualization in Large Lecture (IVLL)** is a project for a research paper and user study. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This will allow students to view immersive 3D visualizations to enhance their learning, all the while seeing the real world to avoid cybersickness.
+**Immersive Classroom XR** is an XR app for a research paper and user study. The goal is to deploy mixed reality (MR) devices in a large lecture environment. This allows students to view immersive 3D visualizations to enhance their learning, all the while seeing the real world to avoid cybersickness.
 
 ### Pictures taken using camera mode headset:
 <div style="display: flex; justify-content: center;">
